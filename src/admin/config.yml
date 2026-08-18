@@ -280,6 +280,7 @@ collections:
                   - Bodoni Moda
                   - Playfair Display
                   - IBM Plex Serif
+                  - Josefin Slab
               - name: displayScale
                 label: Heading size
                 widget: number
