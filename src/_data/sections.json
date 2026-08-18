@@ -59,6 +59,16 @@
       "intro": "Everything else.",
       "empty": "Reading, listening, thinking out loud. No particular subject and no particular schedule.",
       "hidden": true
+    },
+    {
+      "key": "microscopy",
+      "name": "Microscopy",
+      "exp": "10⁻⁶ m",
+      "x": "20",
+      "blurb": "Microscopy blurb",
+      "intro": "Microscopy intro",
+      "empty": "Microscopy IS EMPTY",
+      "hidden": false
     }
   ]
 }
