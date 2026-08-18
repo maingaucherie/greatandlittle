@@ -1,0 +1,41 @@
+{#
+  base.njk — the shell every page is wrapped in.
+
+  Handles <head>, fonts, the stylesheet link, and the footer. Whatever the
+  page provides becomes {{ content }} in the middle.
+
+  Front matter a page can set:
+    title        used in the browser tab
+    description  the meta description
+    wide         set true to skip vertical centring (for long pages)
+#}<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>{% if title and title != site.title %}{{ title }} — {{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
+<meta name="description" content="{{ description or site.tagline }}">
+
+{# Fonts: Fraunces for display, IBM Plex Sans for body, IBM Plex Mono for
+   labels. Change here and it changes on every page at once. #}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="/style.css">
+<link rel="alternate" type="application/atom+xml" href="/feed.xml" title="{{ site.title }}">
+</head>
+<body>
+
+<div class="wrap{% if wide %} wrap-top{% endif %}">
+{{ content | safe }}
+</div>
+
+<footer>
+  <span class="status">{{ site.status }}</span>
+  <span>{{ site.place }}</span>
+</footer>
+
+</body>
+</html>

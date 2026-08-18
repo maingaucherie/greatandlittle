@@ -1,0 +1,655 @@
+/* ==========================================================================
+   GREAT & LITTLE — stylesheet
+   One file for the whole site. Every page links to this.
+
+   Layout of this file:
+     1. Tokens        — colours and sizes. Change things here first.
+     2. Base          — body, background, default text
+     3. Type          — headings, lede, eyebrow
+     4. Scale bar     — the interactive rail on the homepage
+     5. Section list  — the list of sections under the rail
+     6. Interior      — shared bits for /optics/, /bench/ etc.
+     7. Life page     — the simulation stage and buttons
+     8. Footer
+     9. Motion        — animations, and the reduced-motion opt-out
+    10. Narrow        — phone and small-tablet overrides
+   ========================================================================== */
+
+
+/* ==========================================================================
+   1. TOKENS
+   These are CSS custom properties. Every colour and the page width are
+   defined ONCE here and referenced everywhere else as var(--name).
+   Change a value here and it updates across all seven pages at once.
+   Do not hardcode a colour further down the file — add a token instead.
+   ========================================================================== */
+
+:root{
+  /* Backgrounds, darkest to lightest. The body gradient blends these three. */
+  --pitch:#0C080E;      /* near-black plum — bottom of the page gradient */
+  --ground:#160E1B;     /* mid aubergine — middle of the gradient */
+  --aubergine:#2A1730;  /* lifted aubergine — top of the gradient, the glow */
+
+  --raised:#3A2142;     /* one step up from the background: major tick marks */
+
+  /* Text. Two levels only — full strength and muted. Resist adding a third. */
+  --ink:#EFE7F1;        /* headings and primary text (a warm off-white) */
+  --ink-soft:#A594AC;   /* body copy, captions, anything secondary */
+
+  --rule:#402A48;       /* hairlines, borders, dividers */
+
+  /* The single accent. Used for the ampersand, markers, buttons, links.
+     If you want a different accent colour, change these two and nothing else. */
+  --brass:#C9A24E;
+  --brass-wash:rgba(201,162,78,0.09);  /* same colour at 9% — hover backgrounds */
+
+  --measure:64rem;      /* max content width (~1024px). Raise for a wider site. */
+}
+
+
+/* ==========================================================================
+   2. BASE
+   ========================================================================== */
+
+*{box-sizing:border-box;}   /* padding counts inside a width, not on top of it */
+html,body{margin:0;padding:0;}
+
+body{
+  min-height:100svh;   /* svh not vh — avoids the mobile URL-bar jump */
+
+  /* The page background. Reads as a glow at the top fading to black.
+     radial-gradient(SIZE at POSITION, colour stop, colour stop, colour stop)
+     "140% 100% at 50% -10%" = a wide ellipse centred above the top edge. */
+  background:
+    radial-gradient(140% 100% at 50% -10%, var(--aubergine) 0%, var(--ground) 45%, var(--pitch) 100%);
+  background-attachment:fixed;   /* gradient stays put while content scrolls */
+
+  color:var(--ink);
+  font-family:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:16px;
+  line-height:1.6;
+
+  /* Column layout: .wrap grows to fill, footer pinned to the bottom. */
+  display:flex;
+  flex-direction:column;
+  -webkit-font-smoothing:antialiased;   /* thinner text rendering on dark */
+}
+
+/* The centred content column, used on every page. */
+.wrap{
+  width:100%;
+  max-width:var(--measure);
+  margin:0 auto;
+
+  /* clamp(MIN, PREFERRED, MAX) — padding scales with viewport but never
+     goes below the min or above the max. Used all over this file. */
+  padding:clamp(2rem,6vw,4.5rem) clamp(1.25rem,5vw,3rem);
+
+  flex:1 1 auto;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;              /* vertically centres short pages */
+  gap:clamp(2.5rem,7vw,4.5rem);        /* space between masthead and scale bar */
+}
+
+a{color:inherit;}   /* kill the default blue; each link styles itself */
+
+
+/* ==========================================================================
+   3. TYPE
+   ========================================================================== */
+
+/* Small monospace label above a heading. Used for the domain and for
+   "Scale bar". The wide letter-spacing is what makes it read as a label. */
+.eyebrow{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:0.7rem;
+  letter-spacing:0.22em;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+  margin:0 0 1.25rem;
+}
+
+/* The homepage wordmark. */
+h1{
+  font-family:"Fraunces",Georgia,serif;
+
+  /* Fraunces is a variable font with custom axes:
+       SOFT — 0 is sharp corners, 100 is rounded
+       WONK — 1 turns on the odd angled terminals (the character)
+       opsz — optical size; higher = more contrast between thick and thin
+     Set opsz near the actual display size for the intended look. */
+  font-variation-settings:"SOFT" 0,"WONK" 1,"opsz" 96;
+
+  font-weight:400;
+  font-size:clamp(2.75rem,11vw,6.5rem);
+  line-height:0.95;        /* under 1 so the two words sit tight together */
+  letter-spacing:-0.02em;  /* large type needs tightening */
+  margin:0;
+}
+
+h1 .amp{
+  font-style:italic;
+  color:var(--brass);
+  padding:0 0.06em;
+}
+
+/* Intro paragraph under a heading. */
+.lede{
+  margin:1.75rem 0 0;
+  max-width:38ch;    /* ch = width of a "0". Caps line length for readability. */
+  font-size:clamp(1rem,2.4vw,1.15rem);
+  color:var(--ink-soft);
+}
+
+
+/* ==========================================================================
+   4. SCALE BAR
+   Structure:
+     .rail          positioning context, draws the baseline
+       .ticks       decorative tick marks, evenly spaced by flexbox
+       .markers     the clickable section links, absolutely positioned
+         .marker    one link — has a .flag (label), .dot, and .stem
+     .rail-ends     the "10⁻¹⁰ m" / "10²⁶ m" captions below
+
+   To MOVE a marker: edit its style="--x:NN%" in the HTML, not here.
+   To ADD a marker: copy an <a class="marker"> block in index.html.
+   ========================================================================== */
+
+.scale-caption{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:0.68rem;
+  letter-spacing:0.16em;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+  margin:0 0 2.5rem;
+  display:flex;
+  align-items:center;
+  gap:0.75rem;
+}
+/* The rule trailing off to the right of "Scale bar". */
+.scale-caption::after{content:"";flex:1 1 auto;height:1px;background:var(--rule);}
+
+.rail{
+  position:relative;   /* markers position themselves against this */
+  height:5.5rem;       /* raise if flags start colliding with the masthead */
+  border-bottom:1px solid var(--raised);   /* the baseline itself */
+}
+
+/* Decorative ticks. Flexbox spaces them evenly — the number of <div>s in
+   the HTML is the number of ticks. Add or remove divs there to change density. */
+.ticks{position:absolute;inset:auto 0 0 0;display:flex;align-items:flex-end;height:100%;}
+.ticks div{flex:1 1 0;position:relative;}
+.ticks div::before{
+  content:"";
+  position:absolute;bottom:0;left:0;
+  width:1px;height:0.5rem;background:var(--rule);
+  transform-origin:bottom;                    /* grow upward from the baseline */
+  animation:grow 0.5s ease-out backwards;     /* delays are set inline in HTML */
+}
+/* Ticks marked data-major in the HTML are taller and brighter. */
+.ticks div[data-major]::before{height:1.1rem;background:var(--raised);}
+
+.markers{position:absolute;inset:0;}
+
+/* One section marker. --x is set inline per marker and is its position
+   along the bar as a percentage from the left. */
+.marker{
+  position:absolute;
+  bottom:0;
+  left:var(--x);
+  transform:translateX(-50%);   /* centres the dot ON the position, not beside it */
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-end;
+  height:100%;
+  width:3rem;
+  text-decoration:none;
+}
+
+/* NOTE ON ORDER: the HTML source order is flag, dot, stem — but flex `order`
+   flips them so they stack visually as flag (top), dot, stem (bottom).
+   Source order is what screen readers and tab order follow; `order` only
+   changes the painting. Lower order number = higher up the column. */
+.marker .stem{
+  width:2px;height:1.9rem;
+  background:var(--brass);
+  transform-origin:bottom;
+  transition:height 0.18s ease;   /* grows on hover */
+}
+
+.marker .dot{
+  width:0.55rem;height:0.55rem;
+  border-radius:50%;
+  background:var(--ground);        /* hollow — fills with brass on hover */
+  border:2px solid var(--brass);
+  margin-bottom:-0.1rem;           /* closes the seam between dot and stem */
+  order:-1;
+  transition:transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+}
+
+.marker .flag{
+  order:-2;
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:0.63rem;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  white-space:nowrap;              /* labels must not wrap mid-word */
+  color:var(--brass);
+  margin-bottom:0.5rem;
+  opacity:0;                       /* hidden until hover/focus */
+  transform:translateY(0.25rem);
+  transition:opacity 0.18s ease, transform 0.18s ease;
+  pointer-events:none;             /* the label must not block the link */
+}
+
+/* THREE TRIGGERS, one appearance:
+     :hover         — mouse
+     :focus-visible — keyboard tabbing
+     .is-active     — added by the script when you hover the matching list row
+   All three are listed on every rule below so the behaviours stay identical. */
+.marker:hover .flag,
+.marker:focus-visible .flag,
+.marker.is-active .flag{opacity:1;transform:none;}
+
+.marker:hover .dot,
+.marker:focus-visible .dot,
+.marker.is-active .dot{
+  transform:scale(1.35);
+  background:var(--brass);
+  box-shadow:0 0 0.9rem rgba(201,162,78,0.55);   /* the glow */
+}
+
+.marker:hover .stem,
+.marker:focus-visible .stem,
+.marker.is-active .stem{height:2.8rem;}
+
+.marker:focus-visible{outline:2px solid var(--brass);outline-offset:4px;border-radius:2px;}
+
+.rail-ends{
+  display:flex;
+  justify-content:space-between;   /* one caption left, one right */
+  margin-top:0.7rem;
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:0.66rem;
+  color:var(--ink-soft);
+}
+
+
+/* ==========================================================================
+   5. SECTION LIST
+   The list under the rail. This is the real navigation — it works without
+   JavaScript, without hover, and on phones where the flags are hidden.
+   Each row is a 2-column grid: [scale figure] [name and blurb].
+   ========================================================================== */
+
+.sections{list-style:none;margin:2.75rem 0 0;padding:0;border-top:1px solid var(--rule);}
+.sections li{border-bottom:1px solid var(--rule);}
+
+.sections a{
+  display:grid;
+  grid-template-columns:7rem 1fr;   /* fixed scale column, flexible text column */
+  gap:0.25rem 1.5rem;
+  align-items:baseline;             /* aligns the figure to the name's baseline */
+  padding:1.1rem 0.5rem 1.1rem 0.25rem;
+  text-decoration:none;
+  transition:background 0.15s ease, padding 0.15s ease;
+}
+
+/* Hover nudges the row right slightly — a small physical cue. */
+.sections a:hover,.sections a:focus-visible{background:var(--brass-wash);padding-left:0.75rem;}
+.sections a:focus-visible{outline:none;box-shadow:inset 3px 0 0 var(--brass);}
+
+.sections .exp{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:0.72rem;
+  color:var(--brass);
+  letter-spacing:0.06em;
+}
+
+.sections .name{
+  font-family:"Fraunces",Georgia,serif;
+  font-variation-settings:"SOFT" 0,"WONK" 1,"opsz" 32;   /* lower opsz at small size */
+  font-size:1.35rem;
+  line-height:1.2;
+}
+
+/* grid-column:2 pushes the blurb under the name, not under the scale figure. */
+.sections .blurb{grid-column:2;font-size:0.9rem;color:var(--ink-soft);max-width:52ch;}
+
+
+/* ==========================================================================
+   6. INTERIOR PAGES
+   Shared by /optics/, /onscreen/, /bench/, /sky/, /void/, /life/.
+   ========================================================================== */
+
+.backlink{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:0.7rem;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+  text-decoration:none;
+  display:inline-flex;
+  gap:0.5rem;
+  margin-bottom:2.5rem;
+}
+.backlink:hover{color:var(--brass);}
+
+.page-title{
+  font-family:"Fraunces",Georgia,serif;
+  font-variation-settings:"SOFT" 0,"WONK" 1,"opsz" 72;
+  font-weight:400;
+  font-size:clamp(2.25rem,8vw,4rem);
+  line-height:1;
+  margin:0;
+}
+
+/* The scale figure above an interior page title. */
+.page-scale{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:0.7rem;
+  letter-spacing:0.16em;
+  text-transform:uppercase;
+  color:var(--brass);
+  margin:0 0 1rem;
+}
+
+/* "Nothing published here yet" box. Delete these blocks from the HTML
+   once a section has real content — this rule can stay. */
+.empty{
+  margin-top:3rem;
+  padding:2.5rem 2rem;
+  border:1px dashed var(--rule);   /* dashed = provisional */
+  max-width:46ch;
+}
+.empty p{margin:0;color:var(--ink-soft);}
+.empty p + p{margin-top:0.85rem;}   /* only spaces the SECOND paragraph onward */
+
+
+/* ==========================================================================
+   7. LIFE PAGE
+   ========================================================================== */
+
+/* The box the simulation sits in. Currently holds a placeholder; drop an
+   <iframe> inside and it fills the box automatically (see .stage iframe). */
+.stage{
+  margin-top:2.5rem;
+  border:1px solid var(--rule);
+  background:rgba(0,0,0,0.28);
+  aspect-ratio:3 / 2;      /* box keeps this shape at any width */
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:2rem;
+}
+
+.stage .placeholder{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:0.72rem;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+  max-width:34ch;
+  line-height:1.9;
+}
+
+.stage iframe{width:100%;height:100%;border:0;display:block;}
+
+.stage-note{
+  margin-top:0.85rem;
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:0.66rem;
+  letter-spacing:0.06em;
+  color:var(--ink-soft);
+}
+
+.actions{display:flex;flex-wrap:wrap;gap:0.75rem;margin-top:2rem;}
+
+/* Outlined button that fills in on hover. Reusable on any page. */
+.button{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:0.7rem;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  text-decoration:none;
+  padding:0.85rem 1.4rem;
+  border:1px solid var(--brass);
+  color:var(--brass);
+  transition:background 0.15s ease, color 0.15s ease;
+}
+.button:hover,.button:focus-visible{background:var(--brass);color:var(--pitch);}
+
+/* Add class="button quiet" for a secondary action alongside a primary one. */
+.button.quiet{border-color:var(--rule);color:var(--ink-soft);}
+.button.quiet:hover,.button.quiet:focus-visible{border-color:var(--ink-soft);background:transparent;color:var(--ink);}
+
+/* Wrap body copy in <div class="prose"> on any page. This is what blog
+   posts should use — h2 renders as a small brass mono label, not a big serif. */
+.prose{max-width:60ch;margin-top:3rem;}
+.prose h2{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:0.7rem;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  color:var(--brass);
+  font-weight:500;
+  margin:2.5rem 0 0.85rem;
+}
+.prose p{margin:0 0 1rem;color:var(--ink-soft);}
+
+
+/* ==========================================================================
+   8. FOOTER
+   ========================================================================== */
+
+footer{
+  border-top:1px solid var(--rule);
+  padding:1.25rem clamp(1.25rem,5vw,3rem);
+  width:100%;
+  max-width:var(--measure);
+  margin:0 auto;
+  display:flex;
+  flex-wrap:wrap;                  /* stacks instead of squashing on narrow screens */
+  gap:0.5rem 1.5rem;
+  justify-content:space-between;
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:0.68rem;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+}
+.status{color:var(--brass);}
+
+
+/* ==========================================================================
+   9. MOTION
+   ========================================================================== */
+
+@keyframes grow{from{transform:scaleY(0);}to{transform:scaleY(1);}}
+@keyframes rise{from{opacity:0;transform:translateY(0.5rem);}to{opacity:1;transform:none;}}
+
+/* Staggered page-load sequence. `backwards` means the element holds the
+   "from" state during its delay instead of flashing visible first. */
+.masthead > *{animation:rise 0.7s ease-out backwards;}
+.masthead .eyebrow{animation-delay:0.05s;}
+.masthead h1{animation-delay:0.15s;}
+.masthead .lede{animation-delay:0.3s;}
+.scale{animation:rise 0.7s 0.45s ease-out backwards;}
+
+/* Respects the OS "reduce motion" setting. Some people get motion sickness
+   from animation. Leave this in and keep it last so it wins. */
+@media (prefers-reduced-motion:reduce){
+  *,*::before{animation:none !important;transition:none !important;}
+}
+
+
+/* ==========================================================================
+   10. NARROW SCREENS
+   Everything above is written mobile-friendly first; these are the few
+   overrides needed below 44rem (~704px).
+   ========================================================================== */
+
+@media (max-width:44rem){
+  .rail{height:4rem;}
+  .marker .flag{display:none;}         /* labels would collide — list takes over */
+  .sections a{grid-template-columns:1fr;gap:0.3rem;}   /* single column */
+  .sections .blurb{grid-column:1;}
+  .stage{aspect-ratio:1 / 1;}          /* squarer box suits a portrait screen */
+}
+
+
+/* ==========================================================================
+   11. ENTRY LISTS
+   The list of posts on a section page. Same visual language as the section
+   list on the homepage, so the site feels consistent one level down.
+   ========================================================================== */
+
+.entries{list-style:none;margin:3rem 0 0;padding:0;border-top:1px solid var(--rule);}
+.entries li{border-bottom:1px solid var(--rule);}
+
+.entries a{
+  display:grid;
+  grid-template-columns:7rem 1fr;
+  gap:0.25rem 1.5rem;
+  align-items:baseline;
+  padding:1.1rem 0.5rem 1.1rem 0.25rem;
+  text-decoration:none;
+  transition:background 0.15s ease, padding 0.15s ease;
+}
+.entries a:hover,.entries a:focus-visible{background:var(--brass-wash);padding-left:0.75rem;}
+.entries a:focus-visible{outline:none;box-shadow:inset 3px 0 0 var(--brass);}
+
+/* Left column: a date for posts, a score for reviews. */
+.entries .entry-date{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:0.72rem;
+  color:var(--brass);
+  letter-spacing:0.04em;
+}
+
+.entries .entry-score{
+  font-family:"Fraunces",Georgia,serif;
+  font-variation-settings:"SOFT" 0,"WONK" 1,"opsz" 40;
+  font-size:1.6rem;
+  color:var(--brass);
+  line-height:1;
+}
+
+.entries .entry-title{
+  font-family:"Fraunces",Georgia,serif;
+  font-variation-settings:"SOFT" 0,"WONK" 1,"opsz" 32;
+  font-size:1.35rem;
+  line-height:1.2;
+}
+
+.entries .entry-meta{
+  grid-column:2;
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:0.66rem;
+  color:var(--ink-soft);
+  letter-spacing:0.04em;
+}
+
+.entries .entry-blurb{grid-column:2;font-size:0.9rem;color:var(--ink-soft);max-width:52ch;}
+
+
+/* ==========================================================================
+   12. SCORECARD
+   Sits above the body of an On Screen review. Three axes, always the same
+   three, so numbers stay comparable between entries.
+   ========================================================================== */
+
+.scorecard{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:2.5rem;
+  margin-top:2.5rem;
+  padding:1.75rem 2rem;
+  border:1px solid var(--rule);
+  background:rgba(0,0,0,0.22);
+}
+
+.score-total{display:flex;flex-direction:column;gap:0.35rem;}
+
+.score-figure{
+  font-family:"Fraunces",Georgia,serif;
+  font-variation-settings:"SOFT" 0,"WONK" 1,"opsz" 96;
+  font-size:3.5rem;
+  line-height:0.9;
+  color:var(--brass);
+}
+
+.score-label{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:0.62rem;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+}
+
+.score-rows{display:grid;gap:0.5rem;margin:0;flex:1 1 16rem;}
+.score-rows > div{
+  display:flex;
+  align-items:baseline;
+  gap:0.75rem;
+  border-bottom:1px dotted var(--rule);
+  padding-bottom:0.35rem;
+}
+.score-rows dt{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:0.66rem;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+  flex:1 1 auto;
+}
+.score-rows dd{
+  margin:0;
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:0.95rem;
+  color:var(--ink);
+}
+.score-rows dd span{font-size:0.66rem;color:var(--ink-soft);}
+
+/* "Identified as — Olympus BH-2, c. 1980" */
+.identified{
+  margin:1.25rem 0 0;
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:0.7rem;
+  letter-spacing:0.06em;
+  color:var(--ink);
+}
+.identified span{
+  color:var(--ink-soft);
+  text-transform:uppercase;
+  letter-spacing:0.16em;
+  font-size:0.62rem;
+  margin-right:0.5rem;
+}
+
+/* Long pages should start at the top rather than being vertically centred. */
+.wrap-top{justify-content:flex-start;}
+
+/* Headings and images inside post bodies. */
+.prose img{max-width:100%;height:auto;border:1px solid var(--rule);display:block;margin:1.5rem 0;}
+.prose h3{font-family:"IBM Plex Sans",sans-serif;font-size:1rem;color:var(--ink);margin:2rem 0 0.5rem;}
+.prose a{color:var(--brass);text-decoration:underline;text-underline-offset:0.2em;}
+.prose blockquote{
+  margin:1.5rem 0;padding-left:1.25rem;
+  border-left:2px solid var(--brass);color:var(--ink-soft);font-style:italic;
+}
+.prose code{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:0.88em;background:rgba(0,0,0,0.3);padding:0.15em 0.4em;
+}
+
+@media (max-width:44rem){
+  .entries a{grid-template-columns:1fr;gap:0.3rem;}
+  .entries .entry-meta,.entries .entry-blurb{grid-column:1;}
+  .scorecard{gap:1.5rem;padding:1.5rem;}
+}

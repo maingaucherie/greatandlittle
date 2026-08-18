@@ -1,0 +1,65 @@
+{#
+  scalebar.njk — the navigation.
+
+  Everything here is generated from src/_data/sections.json. To move a marker,
+  rename a section, or add a new one, edit that file — never this one.
+
+  Two halves showing the same sections:
+    .rail      the visual bar (needs hover; labels hidden on phones)
+    .sections  the plain list (always works — this is the real navigation)
+  Matching data-key values tie a marker to its row so they highlight together.
+#}
+<section class="scale">
+  <p class="scale-caption">Scale bar</p>
+
+  <div class="rail">
+
+    {# Decorative ticks. Flexbox spaces them evenly; data-major = taller. #}
+    <div class="ticks" aria-hidden="true">
+      {% for i in range(0, 18) %}<div{% if i % 3 == 0 %} data-major{% endif %} style="--d:{{ 0.5 + i * 0.05 }}s"></div>{% endfor %}
+    </div>
+
+    {# Markers. --x is the position along the bar: 0% is 10⁻¹⁰ m at the far
+       left, 100% is 10²⁶ m at the far right. That's 36 decades, so to place
+       a section at 10^N metres:  x = (N + 10) / 36 * 100
+       Markers closer than about 6% apart will have their labels collide. #}
+    <nav class="markers" aria-label="Sections">
+      {% for s in sections.list %}
+      <a class="marker" href="/{{ s.key }}/" style="--x:{{ s.x }}" data-key="{{ s.key }}">
+        <span class="flag">{{ s.name }}</span><span class="dot"></span><span class="stem"></span>
+      </a>
+      {% endfor %}
+    </nav>
+  </div>
+
+  <div class="rail-ends">
+    <span>{{ site.railLeft }}</span>
+    <span>{{ site.railRight }}</span>
+  </div>
+
+  <ul class="sections">
+    {% for s in sections.list %}
+    <li><a href="/{{ s.key }}/" data-key="{{ s.key }}">
+      <span class="exp">{{ s.exp }}</span>
+      <span class="name">{{ s.name }}</span>
+      <span class="blurb">{{ s.blurb }}</span>
+    </a></li>
+    {% endfor %}
+  </ul>
+</section>
+
+{#
+  Cross-highlighting between the bar and the list. Decoration only —
+  delete this and every link still works.
+#}
+<script>
+  const link = (key, on) => {
+    document.querySelectorAll('[data-key="' + key + '"]')
+      .forEach(el => el.classList.toggle('is-active', on));
+  };
+  document.querySelectorAll('[data-key]').forEach(el => {
+    const key = el.dataset.key;
+    ['mouseenter', 'focus'].forEach(e => el.addEventListener(e, () => link(key, true)));
+    ['mouseleave', 'blur'].forEach(e => el.addEventListener(e, () => link(key, false)));
+  });
+</script>

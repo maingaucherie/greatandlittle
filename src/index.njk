@@ -1,0 +1,14 @@
+---
+layout: base.njk
+---
+{#
+  The homepage. Masthead plus the scale bar.
+  The section list is generated from _data/sections.json.
+#}
+<header class="masthead">
+  <p class="eyebrow">{{ site.domain }}</p>
+  <h1>Great <span class="amp">&amp;</span> Little</h1>
+  <p class="lede">{{ site.tagline }}</p>
+</header>
+
+{% include "scalebar.njk" %}

@@ -1,0 +1,157 @@
+# ============================================================================
+# Sveltia CMS configuration
+#
+# This file describes what you can edit and which fields each thing has.
+# The CMS reads it, draws the matching forms, and writes markdown files
+# into your repo when you hit publish.
+#
+# Adding a field here makes it appear in the editor immediately. Using that
+# field on the page is a separate step — edit the matching template in
+# src/_includes/.
+# ============================================================================
+
+# --- Where content is stored ------------------------------------------------
+backend:
+  name: github
+  repo: YOUR-GITHUB-USERNAME/greatandlittle   # <-- change this
+  branch: main
+  # The OAuth worker that lets "Log in with GitHub" work. See the README for
+  # the ten-minute setup; without it the login button does nothing.
+  base_url: https://YOUR-AUTH-WORKER.workers.dev   # <-- change this
+
+# Lets you run the CMS against local files during development.
+# With this on, `npx eleventy --serve` plus visiting /admin/ opens a folder
+# picker instead of asking for GitHub — nothing is committed.
+local_backend: true
+
+# Where uploaded images go, and the path used to reference them in markdown.
+media_folder: "src/uploads"
+public_folder: "/uploads"
+
+# Publishing mode. "simple" commits straight to main and the site rebuilds.
+# Change to "editorial_workflow" if you'd rather posts sit as drafts in a
+# pull request until you approve them.
+publish_mode: simple
+
+collections:
+
+  # ==========================================================================
+  # POSTS — everything except On Screen reviews
+  # ==========================================================================
+  - name: posts
+    label: Posts
+    label_singular: Post
+    folder: src/posts
+    create: true
+    # The filename. {{year}}-{{month}}-{{day}}-{{slug}} gives you
+    # 2026-08-17-fixing-the-z2.md — sortable and readable.
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    # What the entry list in the CMS shows for each post.
+    summary: "{{title}}  ·  {{section}}"
+    sortable_fields: [date, title]
+    fields:
+      - { name: title, label: Title, widget: string }
+
+      - { name: date, label: Date, widget: datetime, format: "YYYY-MM-DD",
+          date_format: "DD MMMM YYYY", time_format: false }
+
+      # Which section the post files under. These values must match the
+      # "key" values in src/_data/sections.json.
+      - name: section
+        label: Section
+        widget: select
+        default: void
+        options:
+          - { label: "Optics", value: optics }
+          - { label: "The Bench", value: bench }
+          - { label: "Life", value: life }
+          - { label: "Overhead", value: sky }
+          - { label: "The Void", value: void }
+
+      - { name: summary, label: Summary, widget: text, required: false,
+          hint: "One or two lines. Shown under the title and in section lists." }
+
+      - { name: body, label: Body, widget: markdown }
+
+  # ==========================================================================
+  # REVIEWS — the On Screen section. Same as a post plus the scorecard.
+  # ==========================================================================
+  - name: reviews
+    label: On Screen
+    label_singular: Review
+    folder: src/reviews
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    summary: "{{title}}  ·  {{year}}"
+    sortable_fields: [date, title]
+    fields:
+      - { name: title, label: Title, widget: string,
+          hint: "Usually the film or show, plus the scene if it needs one." }
+
+      - { name: date, label: Published, widget: datetime, format: "YYYY-MM-DD",
+          date_format: "DD MMMM YYYY", time_format: false }
+
+      - { name: year, label: Year of release, widget: number,
+          required: false, value_type: int, min: 1890, max: 2100 }
+
+      - { name: instrument, label: Instrument identified, widget: string,
+          required: false,
+          hint: "What it actually is, as best you can tell. e.g. Olympus BH-2, c. 1980" }
+
+      - { name: summary, label: Summary, widget: text, required: false }
+
+      # The three scoring axes. Keeping them identical on every entry is what
+      # makes a ranking page possible later.
+      - name: scores
+        label: Scores
+        widget: object
+        fields:
+          - { name: instrument, label: "Right instrument for the setting",
+              widget: number, value_type: int, min: 0, max: 10, default: 5 }
+          - { name: usage, label: "Used correctly",
+              widget: number, value_type: int, min: 0, max: 10, default: 5 }
+          - { name: plausibility, label: "Could they see that",
+              widget: number, value_type: int, min: 0, max: 10, default: 5 }
+
+      - { name: body, label: Body, widget: markdown }
+
+  # ==========================================================================
+  # SETTINGS — single files rather than a folder of many entries
+  # ==========================================================================
+  - name: settings
+    label: Settings
+    files:
+
+      - name: site
+        label: Site details
+        file: src/_data/site.json
+        fields:
+          - { name: title, label: Site title, widget: string }
+          - { name: domain, label: Domain, widget: string }
+          - { name: url, label: Full URL, widget: string }
+          - { name: tagline, label: Tagline, widget: text }
+          - { name: status, label: Footer status line, widget: string }
+          - { name: place, label: Footer place, widget: string }
+          - { name: railLeft, label: Scale bar — left caption, widget: string }
+          - { name: railRight, label: Scale bar — right caption, widget: string }
+
+      - name: sections
+        label: Sections and scale bar
+        file: src/_data/sections.json
+        fields:
+          - name: list
+            label: Sections
+            widget: list
+            # Drag to reorder; order here is the order on the homepage list.
+            fields:
+              - { name: key, label: "Key (also the URL and folder name)", widget: string,
+                  hint: "Lowercase, no spaces. Changing this changes the section's URL." }
+              - { name: name, label: Display name, widget: string }
+              - { name: exp, label: "Scale figure", widget: string,
+                  hint: "e.g. 10⁻⁸ m" }
+              - { name: x, label: "Position on the bar", widget: string,
+                  hint: "A percentage from the left, e.g. 28%. For 10^N metres: (N + 10) / 36 × 100" }
+              - { name: blurb, label: "Blurb (homepage list)", widget: text }
+              - { name: intro, label: "Intro (section page)", widget: text }
+              - { name: empty, label: "Empty-state text", widget: text,
+                  hint: "Shown when the section has no posts yet." }

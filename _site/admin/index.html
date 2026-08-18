@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Content manager — Great and Little</title>
+<!-- Keeps this page out of search results. -->
+<meta name="robots" content="noindex">
+</head>
+<body>
+<!--
+  This one script tag is the entire CMS. It reads config.yml (next to this
+  file), talks to GitHub, and renders the editing interface.
+
+  Visit /admin/ on the live site to use it. On localhost it will offer to
+  open your local folder directly instead of going through GitHub, which is
+  handy for testing without committing anything.
+
+  The version is pinned rather than floating on @latest so an upstream
+  release can't change the editor under you unannounced. Bump it
+  deliberately when you want new features.
+-->
+<script src="https://unpkg.com/@sveltia/cms@0.113.5/dist/sveltia-cms.js" type="module"></script>
+</body>
+</html>

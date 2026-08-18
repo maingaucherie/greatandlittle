@@ -1,0 +1,51 @@
+{#
+  review.njk — layout for one On Screen review.
+
+  Same as a post, but with the scorecard above the body. Scores come from
+  the front matter and are set in the CMS with sliders.
+#}
+---
+layout: base.njk
+wide: true
+---
+<article>
+  <a class="backlink" href="/onscreen/"><span aria-hidden="true">&#8592;</span> On Screen</a>
+
+  <p class="page-scale">
+    <time datetime="{{ date | isoDate }}">{{ date | readableDate }}</time>
+    {% if year %} · {{ year }}{% endif %}
+  </p>
+  <h1 class="page-title">{{ title }}</h1>
+  {% if summary %}<p class="lede">{{ summary }}</p>{% endif %}
+
+  {# --- Scorecard. Every review is judged on the same three axes so the
+         numbers stay comparable across entries. --- #}
+  <div class="scorecard">
+    <div class="score-total">
+      <span class="score-figure">{{ scores | meanScore }}</span>
+      <span class="score-label">Overall</span>
+    </div>
+    <dl class="score-rows">
+      <div>
+        <dt>Right instrument</dt>
+        <dd>{{ scores.instrument if scores.instrument is defined else "—" }}<span>/10</span></dd>
+      </div>
+      <div>
+        <dt>Used correctly</dt>
+        <dd>{{ scores.usage if scores.usage is defined else "—" }}<span>/10</span></dd>
+      </div>
+      <div>
+        <dt>Could they see that</dt>
+        <dd>{{ scores.plausibility if scores.plausibility is defined else "—" }}<span>/10</span></dd>
+      </div>
+    </dl>
+  </div>
+
+  {% if instrument %}
+  <p class="identified"><span>Identified as</span> {{ instrument }}</p>
+  {% endif %}
+
+  <div class="prose">
+    {{ content | safe }}
+  </div>
+</article>

@@ -1,0 +1,85 @@
+---
+# ============================================================================
+# Generates one page per section: /optics/, /onscreen/, /bench/, etc.
+#
+# Eleventy "pagination" here means: take the sections list, make one page
+# for each item. size:1 = one section per page. The permalink turns the
+# section's key into its URL.
+#
+# Add a section to _data/sections.json and its page appears automatically.
+# ============================================================================
+pagination:
+  data: sections.list
+  size: 1
+  alias: section
+permalink: "/{{ section.key }}/"
+layout: base.njk
+wide: true
+eleventyComputed:
+  title: "{{ section.name }}"
+  description: "{{ section.intro }}"
+---
+<div>
+  <a class="backlink" href="/"><span aria-hidden="true">&#8592;</span> Great &amp; Little</a>
+  <p class="page-scale">{{ section.exp }}</p>
+  <h1 class="page-title">{{ section.name }}</h1>
+  <p class="lede">{{ section.intro }}</p>
+
+  {% if section.key == "life" %}
+  {# --- The Life section gets the simulation stage above its post list --- #}
+  <div class="stage">
+    {# Replace this placeholder with an <iframe src="..."> when the embed
+       is ready. The CSS already sizes an iframe to fill this box. #}
+    <p class="placeholder">
+      Simulation goes here<br>&mdash;<br>replace this block with the embed
+    </p>
+  </div>
+  <p class="stage-note">Browser version runs on Pyodide. Expect a few seconds to load and fewer generations per second than the real thing.</p>
+
+  <div class="actions">
+    <a class="button" href="#">Download the Python version</a>
+    <a class="button quiet" href="#">Source</a>
+  </div>
+  {% endif %}
+
+  {% if section.key == "onscreen" %}
+    {# --- On Screen lists reviews, which carry scores --- #}
+    {% set entries = collections.reviews %}
+    {% if entries.length %}
+    <ul class="entries">
+      {% for entry in entries %}
+      <li><a href="{{ entry.url }}">
+        <span class="entry-score">{{ entry.data.scores | meanScore }}</span>
+        <span class="entry-title">{{ entry.data.title }}</span>
+        <span class="entry-meta">
+          <time datetime="{{ entry.data.date | isoDate }}">{{ entry.data.date | readableDate }}</time>
+          {% if entry.data.instrument %} · {{ entry.data.instrument }}{% endif %}
+        </span>
+        {% if entry.data.summary %}<span class="entry-blurb">{{ entry.data.summary }}</span>{% endif %}
+      </a></li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <div class="empty"><p>{{ section.empty }}</p><p>Nothing published here yet.</p></div>
+    {% endif %}
+
+  {% else %}
+    {# --- Every other section lists ordinary posts --- #}
+    {% set entries = collections.posts | inSection(section.key) %}
+    {% if entries.length %}
+    <ul class="entries">
+      {% for entry in entries %}
+      <li><a href="{{ entry.url }}">
+        <span class="entry-date">
+          <time datetime="{{ entry.data.date | isoDate }}">{{ entry.data.date | readableDate }}</time>
+        </span>
+        <span class="entry-title">{{ entry.data.title }}</span>
+        {% if entry.data.summary %}<span class="entry-blurb">{{ entry.data.summary }}</span>{% endif %}
+      </a></li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <div class="empty"><p>{{ section.empty }}</p><p>Nothing published here yet.</p></div>
+    {% endif %}
+  {% endif %}
+</div>

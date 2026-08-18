@@ -1,0 +1,28 @@
+---
+# Atom feed so people can follow the site in an RSS reader.
+# Combines posts and reviews into one chronological stream.
+permalink: /feed.xml
+eleventyExcludeFromCollections: true
+---
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>{{ site.title }}</title>
+  <subtitle>{{ site.tagline }}</subtitle>
+  <link href="{{ site.url }}/feed.xml" rel="self"/>
+  <link href="{{ site.url }}/"/>
+  <id>{{ site.url }}/</id>
+  {%- set all = collections.posts.concat(collections.reviews) %}
+  {%- set latest = all | sort(true, false, "date") %}
+  <updated>{% if latest.length %}{{ latest[0].date.toISOString() }}{% endif %}</updated>
+  {%- for entry in latest %}
+  <entry>
+    <title>{{ entry.data.title }}</title>
+    <link href="{{ site.url }}{{ entry.url }}"/>
+    <id>{{ site.url }}{{ entry.url }}</id>
+    <updated>{{ entry.date.toISOString() }}</updated>
+    {%- if entry.data.summary %}
+    <summary>{{ entry.data.summary }}</summary>
+    {%- endif %}
+  </entry>
+  {%- endfor %}
+</feed>

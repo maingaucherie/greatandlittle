@@ -1,0 +1,14 @@
+# Cloudflare deploy settings.
+#
+# With the repo connected to Cloudflare, a push to main triggers:
+#   build command:  npm run build
+#   output:         _site
+#
+# compatibility_date should be roughly the date you set this up. It pins
+# runtime behaviour so a future platform change can't alter your site.
+
+name = "greatandlittle"
+compatibility_date = "2026-08-17"
+
+[assets]
+directory = "./_site"

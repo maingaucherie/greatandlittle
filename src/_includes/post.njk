@@ -1,0 +1,23 @@
+{#
+  post.njk — layout for a single ordinary post.
+  Used by everything in src/posts/. The markdown body becomes {{ content }}.
+#}
+---
+layout: base.njk
+wide: true
+---
+<article>
+  <a class="backlink" href="/{{ section }}/">
+    <span aria-hidden="true">&#8592;</span> {{ section | sectionName }}
+  </a>
+
+  <p class="page-scale">
+    <time datetime="{{ date | isoDate }}">{{ date | readableDate }}</time>
+  </p>
+  <h1 class="page-title">{{ title }}</h1>
+  {% if summary %}<p class="lede">{{ summary }}</p>{% endif %}
+
+  <div class="prose">
+    {{ content | safe }}
+  </div>
+</article>
