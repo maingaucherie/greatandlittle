@@ -1,0 +1,26 @@
+{
+  "_comment": "The size domains shown beneath the scale bar, and the settings for the fisheye lens. Bands must be contiguous and cover the whole range from the bar's low exponent to its high one.",
+
+  "low": -10,
+  "high": 26,
+
+  "lens": {
+    "enabled": true,
+    "width": 1.5,
+    "strength": 1.5,
+    "snap": 44
+  },
+
+  "bands": [
+    { "name": "atoms",      "from": -10, "to": -9,  "weight": 0.18 },
+    { "name": "molecules",  "from": -9,  "to": -7,  "weight": 0.28 },
+    { "name": "cells",      "from": -7,  "to": -4,  "weight": 0.46 },
+    { "name": "grains",     "from": -4,  "to": -2,  "weight": 0.64 },
+    { "name": "people",     "from": -2,  "to": 1,   "weight": 0.92 },
+    { "name": "landscapes", "from": 1,   "to": 4,   "weight": 0.64 },
+    { "name": "planets",    "from": 4,   "to": 8,   "weight": 0.46 },
+    { "name": "stars",      "from": 8,   "to": 12,  "weight": 0.34 },
+    { "name": "galaxies",   "from": 12,  "to": 20,  "weight": 0.24 },
+    { "name": "cosmos",     "from": 20,  "to": 26,  "weight": 0.16 }
+  ]
+}

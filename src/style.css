@@ -154,19 +154,23 @@ h1 .amp{
 
 /* ==========================================================================
    4. SCALE BAR
-   Structure:
-     .rail          positioning context, draws the baseline
-       .ticks       decorative tick marks, evenly spaced by flexbox
-       .markers     the clickable section links, absolutely positioned
-         .marker    one link — has a .flag (label), .dot, and .stem
-     .rail-ends     the "10⁻¹⁰ m" / "10²⁶ m" captions below
 
-   To MOVE a marker: edit its style="--x:NN%" in the HTML, not here.
-   To ADD a marker: copy an <a class="marker"> block in index.html.
+   Two positioning modes:
+
+   Default (no JavaScript, or reduced motion): ticks, markers and bands sit
+   at their plain linear positions using left:var(--x). Everything works and
+   nothing moves.
+
+   .is-warped (added by the script): positions come from transform instead,
+   recalculated every frame by the fisheye. left is zeroed so the two don't
+   add together.
+
+   To move a marker edit its section in _data/sections.json. To change the
+   bands or the lens, edit _data/scale.json. Never this file.
    ========================================================================== */
 
 .scale-caption{
-  font-family:var(--mono-font,var(--font-mono));
+  font-family:var(--font-mono);
   font-size:0.68rem;
   letter-spacing:0.16em;
   text-transform:uppercase;
@@ -176,115 +180,168 @@ h1 .amp{
   align-items:center;
   gap:0.75rem;
 }
-/* The rule trailing off to the right of "Scale bar". */
 .scale-caption::after{content:"";flex:1 1 auto;height:1px;background:var(--rule);}
 
 .rail{
-  position:relative;   /* markers position themselves against this */
-  height:5.5rem;       /* raise if flags start colliding with the masthead */
-  border-bottom:1px solid var(--raised);   /* the baseline itself */
+  position:relative;
+  height:5.5rem;
+  border-bottom:1px solid var(--raised);
 }
 
-/* Decorative ticks. Flexbox spaces them evenly — the number of <div>s in
-   the HTML is the number of ticks. Add or remove divs there to change density. */
-.ticks{position:absolute;inset:auto 0 0 0;display:flex;align-items:flex-end;height:100%;}
-.ticks div{flex:1 1 0;position:relative;}
-.ticks div::before{
-  content:"";
-  position:absolute;bottom:0;left:0;
-  width:1px;height:0.5rem;background:var(--rule);
-  transform-origin:bottom;                    /* grow upward from the baseline */
-  animation:grow 0.5s ease-out backwards;     /* delays are set inline in HTML */
+.ticks{position:absolute;inset:0;}
+
+.tick{
+  position:absolute;
+  bottom:0;
+  left:var(--x);
+  width:1px;
+  height:0.5rem;
+  background:var(--rule);
+  transform-origin:bottom;
+  animation:grow 0.5s ease-out backwards;
 }
-/* Ticks marked data-major in the HTML are taller and brighter. */
-.ticks div[data-major]::before{height:1.1rem;background:var(--raised);}
+.tick.major{height:1.1rem;background:var(--raised);}
+
+.is-warped .tick{left:0;animation:none;}
 
 .markers{position:absolute;inset:0;}
 
-/* One section marker. --x is set inline per marker and is its position
-   along the bar as a percentage from the left. */
 .marker{
   position:absolute;
   bottom:0;
   left:var(--x);
-  transform:translateX(-50%);   /* centres the dot ON the position, not beside it */
+  margin-left:-1.75rem;   /* half the hit area, so the dot sits on --x */
+  width:3.5rem;           /* generous hit area around a 7px dot */
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:flex-end;
   height:100%;
-  width:3rem;
   text-decoration:none;
 }
 
-/* NOTE ON ORDER: the HTML source order is flag, dot, stem — but flex `order`
-   flips them so they stack visually as flag (top), dot, stem (bottom).
-   Source order is what screen readers and tab order follow; `order` only
-   changes the painting. Lower order number = higher up the column. */
+.is-warped .marker{left:0;}
+
 .marker .stem{
   width:2px;height:1.9rem;
   background:var(--brass);
   transform-origin:bottom;
-  transition:height 0.18s ease;   /* grows on hover */
+  transition:height 0.18s ease;
 }
 
 .marker .dot{
   width:0.55rem;height:0.55rem;
   border-radius:50%;
-  background:var(--ground);        /* hollow — fills with brass on hover */
+  background:var(--ground);
   border:2px solid var(--brass);
-  margin-bottom:-0.1rem;           /* closes the seam between dot and stem */
+  margin-bottom:-0.1rem;
   order:-1;
   transition:transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
 }
 
 .marker .flag{
   order:-2;
-  font-family:var(--mono-font,var(--font-mono));
+  font-family:var(--font-mono);
   font-size:0.63rem;
   letter-spacing:0.08em;
   text-transform:uppercase;
-  white-space:nowrap;              /* labels must not wrap mid-word */
+  white-space:nowrap;
   color:var(--brass);
   margin-bottom:0.5rem;
-  opacity:0;                       /* hidden until hover/focus */
+  opacity:0;
   transform:translateY(0.25rem);
   transition:opacity 0.18s ease, transform 0.18s ease;
-  pointer-events:none;             /* the label must not block the link */
+  pointer-events:none;
 }
 
-/* THREE TRIGGERS, one appearance:
-     :hover         — mouse
-     :focus-visible — keyboard tabbing
-     .is-active     — added by the script when you hover the matching list row
-   All three are listed on every rule below so the behaviours stay identical. */
+/* Four ways a marker lights up — pointer, keyboard, the list below, and the
+   lens locking onto it. All look identical on purpose. */
 .marker:hover .flag,
 .marker:focus-visible .flag,
-.marker.is-active .flag{opacity:1;transform:none;}
+.marker.is-active .flag,
+.marker.is-locked .flag{opacity:1;transform:none;}
 
 .marker:hover .dot,
 .marker:focus-visible .dot,
-.marker.is-active .dot{
-  transform:scale(1.35);
+.marker.is-active .dot,
+.marker.is-locked .dot{
+  transform:scale(1.4);
   background:var(--brass);
-  box-shadow:0 0 0.9rem rgba(201,162,78,0.55);   /* the glow */
+  box-shadow:0 0 0.9rem rgba(201,162,78,0.55);
 }
 
 .marker:hover .stem,
 .marker:focus-visible .stem,
-.marker.is-active .stem{height:2.8rem;}
+.marker.is-active .stem,
+.marker.is-locked .stem{height:2.6rem;}
 
 .marker:focus-visible{outline:2px solid var(--brass);outline-offset:4px;border-radius:2px;}
 
+/* ---- size domain bands --------------------------------------------------
+   A thin strip at rest, growing when the bar is hovered or focused.
+   --weight is the band's brightness: brightest at human scale, falling off
+   toward both ends. Set per band in _data/scale.json.
+   ------------------------------------------------------------------------ */
+
+.bands{
+  position:relative;
+  height:0.6rem;
+  transition:height 0.25s ease;
+}
+.scale.is-open .bands{height:1.7rem;}
+
+.band{
+  position:absolute;
+  top:0;
+  left:var(--from);
+  width:var(--w);
+  height:100%;
+  background:rgba(201,162,78,var(--weight));
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+.is-warped .band{left:0;}
+
+.band-label{
+  font-family:var(--font-mono);
+  font-size:0.6rem;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  white-space:nowrap;
+  color:var(--brass);
+  opacity:0;
+  transition:opacity 0.18s ease;
+}
+/* Dark text on the brighter bands, brass on the dim ones. */
+.band[data-dark] .band-label{color:var(--pitch);}
+/* The script adds .fits only when the label actually has room. */
+.band.fits .band-label{opacity:1;}
+
 .rail-ends{
   display:flex;
-  justify-content:space-between;   /* one caption left, one right */
+  justify-content:space-between;
+  align-items:baseline;
+  gap:1rem;
   margin-top:0.7rem;
-  font-family:var(--mono-font,var(--font-mono));
+  font-family:var(--font-mono);
   font-size:0.66rem;
   color:var(--ink-soft);
 }
 
+/* Names whatever the lens is currently over. */
+.rail-readout{
+  color:var(--brass);
+  opacity:0;
+  transition:opacity 0.2s ease;
+  text-align:center;
+  flex:1 1 auto;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.rail-readout.on{opacity:1;}
 
 /* ==========================================================================
    5. SECTION LIST

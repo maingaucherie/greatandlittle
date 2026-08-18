@@ -1,35 +1,38 @@
 {#
   scalebar.njk — the full-size navigation on the homepage.
 
-  Everything here is generated from src/_data/sections.json. To move a
-  marker, rename a section, or add one, edit that file — never this one.
+  Three layers over one coordinate space:
+    .ticks    one mark per decade
+    .markers  the section links, positioned by their --x percentage
+    .bands    the size domains (atoms, cells, people, ...)
 
-  Toggles live in src/_data/options.json under "home":
-    tickCount           how many tick marks along the bar
-    majorEvery          every Nth tick is drawn taller
-    showRailCaptions    the "10⁻¹⁰ m — the lattice" captions under the bar
+  Without JavaScript everything sits at its plain linear position and all
+  links work. With JavaScript, a fisheye lens follows the pointer and warps
+  the whole space — ticks, markers and bands together, since they all read
+  from the same map() function.
 
-  Two halves showing the same sections:
-    .rail      the visual bar (needs hover; labels hidden on phones)
-    .sections  the plain list (always works — this is the real navigation)
-  Matching data-key values tie a marker to its row so they highlight together.
+  Data:
+    _data/sections.json  the markers and their positions
+    _data/scale.json     the bands and the lens settings
+    _data/options.json   tick count, captions
 #}
-<section class="scale">
+<section class="scale" id="scale">
   <p class="scale-caption">Scale bar</p>
 
-  <div class="rail">
+  <div class="rail" id="rail">
 
-    {# Decorative ticks, evenly spaced by flexbox. #}
+    {# Decade ticks. Positioned by percentage so they're correct without JS. #}
     <div class="ticks" aria-hidden="true">
-      {%- for i in range(0, options.home.tickCount) -%}
-        <div{% if i % options.home.majorEvery == 0 %} data-major{% endif %} style="animation-delay:{{ 0.5 + i * 0.05 }}s"></div>
+      {%- set span = scale.high - scale.low -%}
+      {%- for i in range(0, span + 1) -%}
+        {%- set e = scale.low + i -%}
+        <i class="tick{% if i % 6 == 0 %} major{% endif %}" data-e="{{ e }}"
+           style="--x:{{ (i / span * 100) | round(3) }}%"></i>
       {%- endfor -%}
     </div>
 
-    {# Markers. --x is the position along the bar: 0% is 10⁻¹⁰ m at the far
-       left, 100% is 10²⁶ m at the far right. That's 36 decades, so to place
-       a section at 10^N metres:  x = (N + 10) / 36 * 100
-       Markers closer than about 6% apart will have their labels collide. #}
+    {# Section markers. --x is the position along the bar; the script
+       converts it to an exponent so it can be warped with everything else. #}
     <nav class="markers" aria-label="Sections">
       {% for s in sections.list | visible %}
       <a class="marker" href="/{{ s.key }}/" style="--x:{{ s.x }}" data-key="{{ s.key }}">
@@ -39,9 +42,23 @@
     </nav>
   </div>
 
+  {# Size domains. Collapsed to a thin strip until the bar is hovered. #}
+  <div class="bands" id="bands" aria-hidden="true">
+    {%- for b in scale.bands -%}
+      <span class="band" data-from="{{ b.from }}" data-to="{{ b.to }}"
+            style="--from:{{ ((b.from - scale.low) / span * 100) | round(3) }}%;
+                   --w:{{ ((b.to - b.from) / span * 100) | round(3) }}%;
+                   --weight:{{ b.weight }}"
+            {% if b.weight > 0.42 %}data-dark{% endif %}>
+        <span class="band-label">{{ b.name }}</span>
+      </span>
+    {%- endfor -%}
+  </div>
+
   {% if options.home.showRailCaptions %}
   <div class="rail-ends">
     <span>{{ site.railLeft }}</span>
+    <span class="rail-readout" id="readout"></span>
     <span>{{ site.railRight }}</span>
   </div>
   {% endif %}
@@ -57,16 +74,191 @@
   </ul>
 </section>
 
-{# Cross-highlighting between the bar and the list. Decoration only —
-   delete this and every link still works. #}
 <script>
-  const link = (key, on) => {
-    document.querySelectorAll('[data-key="' + key + '"]')
-      .forEach(el => el.classList.toggle('is-active', on));
-  };
-  document.querySelectorAll('[data-key]').forEach(el => {
-    const key = el.dataset.key;
-    ['mouseenter', 'focus'].forEach(e => el.addEventListener(e, () => link(key, true)));
-    ['mouseleave', 'blur'].forEach(e => el.addEventListener(e, () => link(key, false)));
+(function () {
+  "use strict";
+
+  // ---- settings from _data/scale.json -----------------------------------
+  var LOW = {{ scale.low }}, HIGH = {{ scale.high }};
+  var SIG = {{ scale.lens.width }};        // lens width, in decades
+  var AMP = {{ scale.lens.strength }};     // peak magnification
+  var SNAP = {{ scale.lens.snap }};        // px within which a marker grabs the lens
+  var ON = {{ "true" if scale.lens.enabled else "false" }};
+
+  var scale = document.getElementById('scale');
+  var rail = document.getElementById('rail');
+  var bands = document.getElementById('bands');
+  var readout = document.getElementById('readout');
+  if (!scale || !rail) return;
+
+  var ticks = [].slice.call(rail.querySelectorAll('.tick'));
+  var marks = [].slice.call(rail.querySelectorAll('.marker'));
+  var bandEls = bands ? [].slice.call(bands.querySelectorAll('.band')) : [];
+
+  // Someone who asked for less motion gets the plain linear bar. Every link
+  // still works; only the lens is skipped.
+  var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!ON || still) return;
+
+  // Markers carry a CSS percentage; convert once to an exponent.
+  var SPAN = HIGH - LOW;
+  marks.forEach(function (m) {
+    var pct = parseFloat(getComputedStyle(m).getPropertyValue('--x')) || 0;
+    m._e = LOW + (pct / 100) * SPAN;
   });
+  ticks.forEach(function (t) { t._e = parseFloat(t.dataset.e); });
+  bandEls.forEach(function (b) {
+    b._a = parseFloat(b.dataset.from);
+    b._b = parseFloat(b.dataset.to);
+    b._lw = b.querySelector('.band-label').scrollWidth;
+  });
+
+  scale.classList.add('is-warped');   // switches positioning to transforms
+
+  // ---- the lens ----------------------------------------------------------
+  // Magnification is a Gaussian bump centred at curF. The two mirror terms
+  // reflect the part of the bump that falls outside the domain back inside,
+  // which keeps the area under the curve constant wherever the lens sits.
+  // Without them, the bar visibly stretches near its own edges.
+  var N = 181, dE = SPAN / N, cum = new Float64Array(N + 1);
+  var curF = 0, tgtF = 0, curA = 0, tgtA = 0, W = 0, raf = 0, lock = -1;
+
+  function g(z) { return Math.exp(-z * z); }
+
+  function dens(e) {
+    var m1 = 2 * LOW - curF, m2 = 2 * HIGH - curF;
+    return 1 + curA * AMP * (g((e - curF) / SIG) + g((e - m1) / SIG) + g((e - m2) / SIG));
+  }
+
+  function build() {
+    var s = 0, i;
+    cum[0] = 0;
+    for (i = 0; i < N; i++) { s += dens(LOW + (i + 0.5) * dE) * dE; cum[i + 1] = s; }
+    var k = W / s;
+    for (i = 0; i <= N; i++) cum[i] *= k;
+  }
+
+  function map(e) {
+    var t = (e - LOW) / dE, i = Math.max(0, Math.min(N - 1, Math.floor(t)));
+    return cum[i] + (cum[i + 1] - cum[i]) * (t - i);
+  }
+
+  function unmap(x) {
+    var i = 0;
+    while (i < N && cum[i + 1] < x) i++;
+    var d = cum[i + 1] - cum[i];
+    return LOW + dE * (i + (d ? (x - cum[i]) / d : 0));
+  }
+
+  function sup(n) {
+    var m = { '-': '\u207B', '0': '\u2070', '1': '\u00B9', '2': '\u00B2', '3': '\u00B3',
+              '4': '\u2074', '5': '\u2075', '6': '\u2076', '7': '\u2077', '8': '\u2078', '9': '\u2079' };
+    return String(n).split('').map(function (c) { return m[c] || c; }).join('');
+  }
+
+  function draw() {
+    build();
+    ticks.forEach(function (t) { t.style.transform = 'translateX(' + map(t._e) + 'px)'; });
+    marks.forEach(function (m, i) {
+      m.style.transform = 'translateX(' + map(m._e) + 'px)';
+      m.classList.toggle('is-locked', lock === i);
+    });
+    bandEls.forEach(function (b) {
+      var l = map(b._a), w = map(b._b) - l;
+      b.style.transform = 'translateX(' + l + 'px)';
+      b.style.width = Math.max(0, w - 2) + 'px';
+      b.classList.toggle('fits', curA > 0.3 && w > b._lw + 14);
+    });
+  }
+
+  function frame() {
+    curF += (tgtF - curF) * 0.22;
+    curA += (tgtA - curA) * 0.16;
+    draw();
+    raf = (Math.abs(tgtF - curF) > 0.004 || Math.abs(tgtA - curA) > 0.004)
+      ? requestAnimationFrame(frame) : 0;
+  }
+  function go() { if (!raf) raf = requestAnimationFrame(frame); }
+  function size() { W = rail.clientWidth; draw(); }
+
+  function focusAt(x) {
+    // Markers are magnetic: inside SNAP pixels the lens locks onto the marker
+    // and stops following the pointer, so the link holds still to be clicked.
+    var best = -1, bb = 1e9;
+    marks.forEach(function (m, i) {
+      var d = Math.abs(map(m._e) - x);
+      if (d < bb) { bb = d; best = i; }
+    });
+    if (bb < SNAP) {
+      lock = best;
+      tgtF = marks[best]._e;
+      if (readout) readout.textContent = marks[best].querySelector('.flag').textContent;
+    } else {
+      lock = -1;
+      tgtF = unmap(x);
+      var b = bandEls.filter(function (x2) { return tgtF >= x2._a && tgtF <= x2._b; })[0];
+      if (readout && b) {
+        readout.textContent = b.querySelector('.band-label').textContent
+          + ' \u00B7 10' + sup(b._a) + '\u2013' + '10' + sup(b._b) + ' m';
+      }
+    }
+    if (readout) readout.classList.add('on');
+    go();
+  }
+
+  scale.addEventListener('mousemove', function (e) {
+    var r = rail.getBoundingClientRect();
+    focusAt(Math.max(0, Math.min(W, e.clientX - r.left)));
+  });
+  scale.addEventListener('mouseenter', function () { tgtA = 1; scale.classList.add('is-open'); go(); });
+  scale.addEventListener('mouseleave', function () {
+    tgtA = 0; lock = -1;
+    scale.classList.remove('is-open');
+    if (readout) readout.classList.remove('on');
+    go();
+  });
+
+  // Keyboard: tabbing to a marker focuses the lens on it, so the bar
+  // responds the same way it does to a pointer.
+  marks.forEach(function (m, i) {
+    m.addEventListener('focus', function () {
+      tgtA = 1; lock = i; tgtF = m._e;
+      scale.classList.add('is-open');
+      if (readout) { readout.textContent = m.querySelector('.flag').textContent; readout.classList.add('on'); }
+      go();
+    });
+    m.addEventListener('blur', function () {
+      if (!scale.matches(':hover')) { tgtA = 0; lock = -1; scale.classList.remove('is-open'); }
+      go();
+    });
+  });
+
+  // Touch: no hover, so tapping the rail moves the lens rather than
+  // requiring a hover that will never arrive.
+  scale.addEventListener('touchstart', function (e) {
+    var r = rail.getBoundingClientRect();
+    tgtA = 1; scale.classList.add('is-open');
+    focusAt(Math.max(0, Math.min(W, e.touches[0].clientX - r.left)));
+  }, { passive: true });
+
+  requestAnimationFrame(size);
+  window.addEventListener('resize', size);
+})();
+</script>
+
+{# Cross-highlighting between the bar and the section list below.
+   Decoration only — delete this and every link still works. #}
+<script>
+  (function () {
+    var link = function (key, on) {
+      var all = document.querySelectorAll('[data-key="' + key + '"]');
+      for (var i = 0; i < all.length; i++) all[i].classList.toggle('is-active', on);
+    };
+    var els = document.querySelectorAll('[data-key]');
+    for (var i = 0; i < els.length; i++) (function (el) {
+      var key = el.dataset.key;
+      ['mouseenter', 'focus'].forEach(function (e) { el.addEventListener(e, function () { link(key, true); }); });
+      ['mouseleave', 'blur'].forEach(function (e) { el.addEventListener(e, function () { link(key, false); }); });
+    })(els[i]);
+  })();
 </script>

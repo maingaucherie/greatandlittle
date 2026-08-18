@@ -307,3 +307,43 @@ collections:
               - { name: key, label: "Key (do not change on existing axes)", widget: string }
               - { name: label, label: "Label shown on reviews", widget: string }
               - { name: hint, label: "What this axis measures", widget: text, required: false }
+
+      - name: scale
+        label: Scale bands and lens
+        file: src/_data/scale.json
+        fields:
+
+          - name: lens
+            label: Fisheye lens
+            widget: object
+            hint: "The magnifier that follows your pointer along the bar."
+            fields:
+              - { name: enabled, label: "Lens on", widget: boolean, default: true,
+                  hint: "Off gives a plain linear bar. Visitors who ask for reduced motion get that automatically." }
+              - { name: width, label: "Lens width (decades)", widget: number,
+                  value_type: float, min: 0.5, max: 12, step: 0.5, default: 1.5,
+                  hint: "How far the magnification spreads. Small is a tight loupe; large is a gentle swell." }
+              - { name: strength, label: "Strength", widget: number,
+                  value_type: float, min: 0.5, max: 5, step: 0.1, default: 1.5,
+                  hint: "Peak magnification. Total width is fixed, so more here means more compression elsewhere." }
+              - { name: snap, label: "Marker grab distance (px)", widget: number,
+                  value_type: int, min: 0, max: 120, default: 44,
+                  hint: "How close the pointer must get before a section marker locks the lens so it holds still to be clicked. 0 disables." }
+
+          - { name: low, label: "Bar starts at 10^", widget: number, value_type: int, default: -10 }
+          - { name: high, label: "Bar ends at 10^", widget: number, value_type: int, default: 26 }
+
+          - name: bands
+            label: Size domains
+            widget: list
+            summary: "{{fields.name}}  ·  10^{{fields.from}} to 10^{{fields.to}}"
+            hint: "Must be contiguous and cover the whole bar — each band's start should equal the previous one's end."
+            fields:
+              - { name: name, label: Name, widget: string,
+                  hint: "Short single words work best. Long labels hide themselves when a band is too narrow." }
+              - { name: from, label: "From 10^", widget: number, value_type: float }
+              - { name: to, label: "To 10^", widget: number, value_type: float }
+              - { name: weight, label: Brightness, widget: number,
+                  value_type: float, min: 0.05, max: 1, step: 0.02,
+                  hint: "0.05 is barely visible, 1 is solid brass. Currently brightest at human scale, fading toward both ends." }
+
