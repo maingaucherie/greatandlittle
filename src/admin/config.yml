@@ -247,6 +247,7 @@ collections:
                 label: Position
                 widget: select
                 default: ""
+                required: false
                 hint: "On the bar means it has a physical scale, set below. Off-scale sections park past either end for things with no size."
                 options:
                   - { label: "On the ruled bar", value: "" }
