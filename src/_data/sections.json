@@ -1,12 +1,12 @@
 {
   "list": [
     {
-      "key": "life",
-      "name": "Life",
+      "key": "cellular_automata",
+      "name": "Cellular Automata",
       "at": null,
-      "blurb": "A cellular automaton with ambitions. Runs in the browser; download it if you want it to run properly.",
-      "intro": "A cellular automaton with ambitions.",
-      "empty": "Notes on the simulation as it develops.",
+      "blurb": "Experiments in cellular automata",
+      "intro": "Experiments in cellular automata",
+      "empty": "Experiments in cellular automata",
       "zone": "discrete",
       "hidden": false,
       "exp": "off scale"
