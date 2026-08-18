@@ -108,12 +108,53 @@ size the text is displayed at.
 
 ## Scale bar positions
 
-In `_data/sections.json`, or CMS → Settings → Sections. For 10^N metres:
+Each section has an `at` value — just the exponent. `-6` puts it at 10⁻⁶ m.
+No percentages, no arithmetic; the build converts it. CMS → Settings →
+Sections → "Sits at 10^ … metres".
 
-    x = (N + 10) / 36 × 100
+The scale figure shown in the section list ("10⁻⁶ m") is generated from the
+same number, so the label can't drift out of sync with the marker.
 
-Markers closer than ~6% apart collide on hover. The formula and the bar's
-range are the only fixed things; everything else about a section is editable.
+### Reference points
+
+| 10^ | What's there |
+| --- | --- |
+| -10 | An atom. Lattice spacing in a crystal. |
+| -9 | Width of a DNA helix. |
+| -8 | A virus. |
+| -7 | Wavelength of visible light — the floor of optical microscopy. |
+| -6 | A bacterium. Working range of a good objective. |
+| -5 | A red blood cell. |
+| -4 | Width of a human hair. |
+| -3 | A grain of sand. A millimetre. |
+| -2 | A fingernail. A microscope objective. |
+| 0 | A person. A workbench. |
+| 1 | A house. |
+| 3 | A kilometre. |
+| 4 | A small town. |
+| 7 | The Earth (1.27 × 10⁷ m). |
+| 9 | The Sun (1.39 × 10⁹ m). |
+| 11 | One astronomical unit. |
+| 16 | One light year (9.46 × 10¹⁵ m). |
+| 21 | The Milky Way, end to end. |
+| 23 | Galaxy clusters. |
+| 26 | The observable universe. |
+
+Markers closer than about **2 decades** apart will have their labels overlap
+on the bar. The build warns you when this happens rather than leaving you to
+notice it.
+
+### The build check
+
+Every build validates the scale bar and prints warnings to the terminal
+(and to the Cloudflare build log). It catches:
+
+- a section with no `at` value, or one outside the bar's range
+- two markers close enough that their labels will collide
+- bands that leave a gap, overlap each other, or don't reach either end
+
+Warnings never fail the build — the site still deploys. They're there so you
+find out from a message rather than from squinting at the page.
 
 ## Typography — now in the CMS
 

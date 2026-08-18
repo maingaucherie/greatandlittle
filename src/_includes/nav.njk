@@ -23,7 +23,7 @@
       {%- set off = s.zone or "" -%}
       <a class="minimark{% if off %} off {{ off }}{% endif %}{% if options.nav.markCurrent and s.key == current %} is-current{% endif %}"
          href="/{{ s.key }}/"
-         style="--x:{% if off == "discrete" %}0%{% elif off == "unbound" %}100%{% else %}{{ s.x }}{% endif %}"
+         style="--x:{% if off == "discrete" %}0%{% elif off == "unbound" %}100%{% else %}{{ s.at | atToPercent(scale.low, scale.high) }}{% endif %}"
          {% if options.nav.markCurrent and s.key == current %}aria-current="page"{% endif %}>
         <span class="minidot"></span>
         <span class="miniflag">{{ s.name }}</span>

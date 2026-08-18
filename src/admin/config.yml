@@ -35,6 +35,7 @@ publish_mode: simple
 
 
 
+
 collections:
 
   # ==========================================================================
@@ -220,10 +221,23 @@ collections:
               - { name: key, label: "Key (also the URL and folder name)", widget: string,
                   hint: "Lowercase, no spaces. Changing this changes the section's URL." }
               - { name: name, label: Display name, widget: string }
-              - { name: exp, label: "Scale figure", widget: string,
-                  hint: "e.g. 10⁻⁸ m" }
-              - { name: x, label: "Position on the bar", widget: string,
-                  hint: "A percentage from the left, e.g. 28%. For 10^N metres: (N + 10) / 36 × 100" }
+              - name: at
+                label: "Sits at 10^ … metres"
+                widget: number
+                value_type: float
+                min: -10
+                max: 26
+                step: 1
+                required: false
+                hint: >-
+                  Just the exponent — -6 means 10⁻⁶ m. Reference points:
+                  -10 atom · -9 DNA helix · -8 virus · -7 wavelength of light ·
+                  -6 bacterium · -5 red blood cell · -4 human hair · -3 grain of sand ·
+                  -2 fingernail · 0 a person · 1 a house · 3 a kilometre · 4 a small town ·
+                  7 the Earth · 9 the Sun · 11 one AU · 16 one light year ·
+                  21 the Milky Way · 23 galaxy clusters · 26 the observable universe.
+                  Leave empty for off-scale sections. Two markers closer than about
+                  2 apart will have their labels overlap.
               - { name: blurb, label: "Blurb (homepage list)", widget: text }
               - { name: intro, label: "Intro (section page)", widget: text }
               - { name: empty, label: "Empty-state text", widget: text,

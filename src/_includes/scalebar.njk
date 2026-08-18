@@ -56,8 +56,9 @@
       </div>
       <nav class="markers" aria-label="Sections">
         {% for s in onBar %}
-        <a class="marker" href="/{{ s.key }}/" style="--x:{{ s.x }}" data-key="{{ s.key }}"
-           data-note="{{ s.intro }}">
+        <a class="marker" href="/{{ s.key }}/"
+           style="--x:{{ s.at | atToPercent(scale.low, scale.high) }}"
+           data-key="{{ s.key }}" data-at="{{ s.at }}" data-note="{{ s.intro }}">
           <span class="flag">{{ s.name }}</span><span class="dot"></span><span class="stem"></span>
         </a>
         {% endfor %}
@@ -117,7 +118,7 @@
   <ul class="sections">
     {% for s in sections.list | visible %}
     <li><a href="/{{ s.key }}/" data-key="{{ s.key }}">
-      <span class="exp">{{ s.exp }}</span>
+      <span class="exp">{% if s.zone %}off scale{% else %}{{ s.at | expLabel }}{% endif %}</span>
       <span class="name">{{ s.name }}</span>
       <span class="blurb">{{ s.blurb }}</span>
     </a></li>
@@ -162,10 +163,7 @@
   if (!ON || still) return;
 
   var SPAN = HIGH - LOW;
-  marks.forEach(function (m) {
-    var pct = parseFloat(getComputedStyle(m).getPropertyValue('--x')) || 0;
-    m._e = LOW + (pct / 100) * SPAN;
-  });
+  marks.forEach(function (m) { m._e = parseFloat(m.dataset.at); });
   ticks.forEach(function (t) { t._e = parseFloat(t.dataset.e); });
   bandEls.forEach(function (b) {
     b._a = parseFloat(b.dataset.from);

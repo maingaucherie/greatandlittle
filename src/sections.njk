@@ -22,7 +22,7 @@ eleventyComputed:
 ---
 <div>
   <a class="backlink" href="/"><span aria-hidden="true">&#8592;</span> Great &amp; Little</a>
-  <p class="page-scale">{{ section.exp }}{% if section.hidden %} · unlisted{% endif %}</p>
+  <p class="page-scale">{% if section.zone %}off scale{% else %}{{ section.at | expLabel }}{% endif %}{% if section.hidden %} · unlisted{% endif %}</p>
   <h1 class="page-title">{{ section.name }}</h1>
   <p class="lede">{{ section.intro }}</p>
 

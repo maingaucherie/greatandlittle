@@ -3,41 +3,37 @@
     {
       "key": "optics",
       "name": "Optics",
-      "exp": "10⁻⁸ m",
-      "x": "5.6%",
       "blurb": "Repairs, teardowns, alignment, and the occasional argument with a stage controller.",
       "intro": "Repairs, teardowns, alignment, and the occasional argument with a stage controller.",
       "empty": "Bench notes from working on Olympus, Nikon, Leica and Zeiss platforms — what broke, what it turned out to be, and what I would check first next time.",
       "hidden": true,
-      "zone": ""
+      "zone": "",
+      "at": -8
     },
     {
       "key": "onscreen",
       "name": "On Screen",
-      "exp": "10⁻⁵ m",
-      "x": "16%",
       "blurb": "Rating lab equipment in film and television. Right instrument? Used correctly? Could they possibly be seeing that?",
       "intro": "Rating lab equipment in film and television.",
       "empty": "Every entry gets scored on the same three axes: is it the right instrument for the setting, is anyone using it correctly, and could they plausibly be seeing what the script says they are seeing.",
       "hidden": false,
-      "zone": ""
+      "zone": "",
+      "at": -4
     },
     {
       "key": "bench",
       "name": "The Bench",
-      "exp": "10⁰ m",
-      "x": "28%",
       "blurb": "Things made and things brought back — restorations, prints, builds, and works in progress.",
       "intro": "Things made and things brought back.",
       "empty": "Restorations, prints, builds and half-finished projects. Lamps, frames, brackets, and whatever the printer is currently occupied with.",
       "hidden": false,
-      "zone": ""
+      "zone": "",
+      "at": 0
     },
     {
       "key": "life",
       "name": "Life",
       "exp": "off scale",
-      "x": "55%",
       "blurb": "A cellular automaton with ambitions. Runs in the browser; download it if you want it to run properly.",
       "intro": "A cellular automaton with ambitions.",
       "empty": "Notes on the simulation as it develops.",
@@ -47,19 +43,17 @@
     {
       "key": "sky",
       "name": "Overhead",
-      "exp": "10²¹ m",
-      "x": "84%",
       "blurb": "Telescopes, observing notes, and the long end of the same problem: getting light where you need it.",
       "intro": "Telescopes, observing notes, and the long end of the same problem.",
       "empty": "The other direction. Optics pointed up instead of down, and notes from whatever the sky over Rhode Island permits on a given night.",
       "hidden": true,
-      "zone": ""
+      "zone": "",
+      "at": 20
     },
     {
       "key": "void",
       "name": "The Void",
       "exp": "off scale",
-      "x": "97%",
       "blurb": "Ideas, reading, philosophy. The things measurement doesn't settle.",
       "intro": "The things measurement doesn't settle.",
       "empty": "Reading, listening, thinking out loud. No particular subject and no particular schedule.",

@@ -76,6 +76,30 @@ export default function (eleventyConfig) {
   // 2026-08-17 — for the <time datetime="..."> attribute
   eleventyConfig.addFilter("isoDate", (d) => new Date(d).toISOString().slice(0, 10));
 
+  // --- Scale bar positioning ---------------------------------------------
+  // Sections are placed by exponent ("at": -5 means 10⁻⁵ m). Everything
+  // below converts that to the percentage the CSS actually needs, so the
+  // arithmetic lives here instead of in your head.
+
+  // Exponent -> percentage along the bar.
+  eleventyConfig.addFilter("atToPercent", function (at, low, high) {
+    var n = Number(at);
+    if (!isFinite(n)) return "0%";
+    return (((n - low) / (high - low)) * 100).toFixed(3) + "%";
+  });
+
+  // Exponent -> a display label like "10⁻⁵ m", so the figure shown in the
+  // section list can't drift out of sync with the marker's actual position.
+  eleventyConfig.addFilter("expLabel", function (at) {
+    var n = Number(at);
+    if (!isFinite(n)) return "";
+    var map = { "-": "\u207B", "0": "\u2070", "1": "\u00B9", "2": "\u00B2",
+                "3": "\u00B3", "4": "\u2074", "5": "\u2075", "6": "\u2076",
+                "7": "\u2077", "8": "\u2078", "9": "\u2079", ".": "\u00B7" };
+    var sup = String(n).split("").map(function (c) { return map[c] || c; }).join("");
+    return "10" + sup + " m";
+  });
+
   // Sections belonging to one off-scale zone ("discrete" or "unbound"),
   // or — with no argument — the ones that sit on the ruled bar itself.
   eleventyConfig.addFilter("inZone", (list, zone) =>
@@ -123,6 +147,61 @@ export default function (eleventyConfig) {
       .filter((n) => typeof n === "number");
     if (!vals.length) return "—";
     return (vals.reduce((a, b) => a + b, 0) / vals.length).toFixed(1);
+  });
+
+  // --- Build-time sanity check on the scale bar --------------------------
+  // Runs once per build and prints warnings rather than failing. Catches the
+  // things that are annoying to spot by eye: markers off the end of the bar,
+  // markers too close together to click, and bands with gaps or overlaps.
+  eleventyConfig.on("eleventy.before", async () => {
+    const fs = await import("node:fs/promises");
+    const read = async (f) => JSON.parse(await fs.readFile(f, "utf8"));
+    let sections, scale;
+    try {
+      sections = await read("src/_data/sections.json");
+      scale = await read("src/_data/scale.json");
+    } catch { return; }
+
+    const { low, high } = scale;
+    const span = high - low;
+    const warn = (m) => console.warn("[scale] " + m);
+
+    // Markers that sit on the ruled bar.
+    const onBar = (sections.list || [])
+      .filter((s) => !s.zone && !s.hidden && typeof s.at === "number")
+      .sort((a, b) => a.at - b.at);
+
+    for (const s of sections.list || []) {
+      if (s.zone || s.hidden) continue;
+      if (typeof s.at !== "number") {
+        warn(`"${s.key}" has no "at" value — it will sit at the far left.`);
+      } else if (s.at < low || s.at > high) {
+        warn(`"${s.key}" is at 10^${s.at}, outside the bar (10^${low} to 10^${high}).`);
+      }
+    }
+
+    // Labels collide below roughly 6% of the bar's width.
+    const MIN = span * 0.06;
+    for (let i = 1; i < onBar.length; i++) {
+      const a = onBar[i - 1], b = onBar[i];
+      const gap = b.at - a.at;
+      if (gap < MIN) {
+        warn(`"${a.key}" (10^${a.at}) and "${b.key}" (10^${b.at}) are ${gap.toFixed(1)} decades apart — labels may overlap. About ${MIN.toFixed(1)} is comfortable.`);
+      }
+    }
+
+    // Bands should tile the whole bar with no gaps or overlaps.
+    const bands = (scale.bands || []).slice().sort((a, b) => a.from - b.from);
+    if (bands.length) {
+      if (bands[0].from !== low) warn(`First band starts at 10^${bands[0].from}, but the bar starts at 10^${low}.`);
+      const last = bands[bands.length - 1];
+      if (last.to !== high) warn(`Last band ends at 10^${last.to}, but the bar ends at 10^${high}.`);
+      for (let i = 1; i < bands.length; i++) {
+        const prev = bands[i - 1], cur = bands[i];
+        if (cur.from > prev.to) warn(`Gap between "${prev.name}" and "${cur.name}" (10^${prev.to} to 10^${cur.from}).`);
+        if (cur.from < prev.to) warn(`"${prev.name}" and "${cur.name}" overlap between 10^${cur.from} and 10^${prev.to}.`);
+      }
+    }
   });
 
   return {
