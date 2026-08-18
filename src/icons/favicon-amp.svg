@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Great & Little — the ampersand from the wordmark.
+       Uses a generic serif so it renders without a webfont. -->
+  <rect width="64" height="64" rx="12" fill="#160E1B"/>
+  <text x="32" y="46" font-family="Georgia, 'Times New Roman', serif"
+        font-size="42" font-style="italic" fill="#C9A24E"
+        text-anchor="middle">&amp;</text>
+</svg>

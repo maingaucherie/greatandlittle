@@ -19,6 +19,12 @@ export default function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy("src/uploads");
   eleventyConfig.addPassthroughCopy("src/admin");
 
+  // Favicons and any other root-level files (favicon.svg, favicon.ico,
+  // apple-touch-icon.png, robots.txt) copied straight to the site root.
+  eleventyConfig.addPassthroughCopy("src/favicon.svg");
+  eleventyConfig.addPassthroughCopy("src/favicon.ico");
+  eleventyConfig.addPassthroughCopy("src/apple-touch-icon.png");
+
   // --- Collections --------------------------------------------------------
   // A "collection" is just a named list of content Eleventy builds for you.
 
