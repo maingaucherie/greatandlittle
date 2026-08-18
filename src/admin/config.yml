@@ -13,11 +13,11 @@
 # --- Where content is stored ------------------------------------------------
 backend:
   name: github
-  repo: YOUR-GITHUB-USERNAME/greatandlittle   # <-- change this
+  repo: maingaucherie/greatandlittle   # <-- change this
   branch: main
   # The OAuth worker that lets "Log in with GitHub" work. See the README for
   # the ten-minute setup; without it the login button does nothing.
-  base_url: https://YOUR-AUTH-WORKER.workers.dev   # <-- change this
+  base_url: greatandlittle.maingaucherie.workers.dev   # <-- change this
 
 # Lets you run the CMS against local files during development.
 # With this on, `npx eleventy --serve` plus visiting /admin/ opens a folder
