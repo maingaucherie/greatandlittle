@@ -1,7 +1,7 @@
 {
   "typography": {
     "display": "Spectral",
-    "displayScale": 1
+    "displayScale": 0.7
   },
   "nav": {
     "show": true,
