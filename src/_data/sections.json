@@ -39,6 +39,16 @@
       "empty": "Microscopy EMPTY STATE TEXT",
       "zone": "",
       "hidden": false
+    },
+    {
+      "key": "telescopy",
+      "name": "Telescopy",
+      "at": 16,
+      "blurb": "Telescopy blurb",
+      "intro": "Telescopy intro",
+      "empty": "Telescopy EMPTY STATE TEXT",
+      "zone": "",
+      "hidden": false
     }
   ]
 }
