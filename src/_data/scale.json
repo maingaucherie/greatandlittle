@@ -34,7 +34,7 @@
       "weight": 0.58
     },
     {
-      "name": "people",
+      "name": "workshop",
       "from": -2,
       "to": 1,
       "weight": 0.86
@@ -42,20 +42,20 @@
     {
       "name": "landscapes",
       "from": 1,
-      "to": 4,
+      "to": 5,
       "weight": 0.64
     },
     {
-      "name": "worlds",
-      "from": 4,
+      "name": "the moon",
+      "from": 5,
       "to": 8,
-      "weight": 0.5
+      "weight": 0.48
     },
     {
-      "name": "stars",
+      "name": "planetary",
       "from": 8,
       "to": 12,
-      "weight": 0.4
+      "weight": 0.40
     },
     {
       "name": "systems",
@@ -70,20 +70,14 @@
       "weight": 0.26
     },
     {
-      "name": "galaxies",
+      "name": "galaxies", 
       "from": 19,
-      "to": 22,
-      "weight": 0.2
-    },
-    {
-      "name": "clusters",
-      "from": 22,
-      "to": 25,
-      "weight": 0.16
+      "to": 23,
+      "weight": 0.20
     },
     {
       "name": "cosmos",
-      "from": 25,
+      "from": 23,
       "to": 26,
       "weight": 0.12
     }
