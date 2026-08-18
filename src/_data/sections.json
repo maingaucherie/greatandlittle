@@ -29,6 +29,16 @@
       "zone": "discrete",
       "hidden": false,
       "exp": "off scale"
+    },
+    {
+      "key": "microscopy",
+      "name": "Microscopy",
+      "at": -5,
+      "blurb": "Microscopy blurb",
+      "intro": "Microscopy intro",
+      "empty": "Microscopy EMPTY STATE TEXT",
+      "zone": "",
+      "hidden": false
     }
   ]
 }
