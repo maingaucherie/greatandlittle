@@ -44,7 +44,6 @@
       "zone": ""
     },
     {
-<<<<<<< HEAD
       "key": "life",
       "name": "Life",
       "exp": "off scale",
@@ -56,8 +55,6 @@
       "zone": "discrete"
     },
     {
-=======
->>>>>>> 32a5aa7aeda2d8010bb9f080ea157352c0418479
       "key": "sky",
       "name": "Overhead",
       "exp": "10²¹ m",
@@ -76,10 +73,6 @@
       "blurb": "Ideas, reading, philosophy. The things measurement doesn't settle.",
       "intro": "The things measurement doesn't settle.",
       "empty": "Reading, listening, thinking out loud. No particular subject and no particular schedule.",
-<<<<<<< HEAD
-      "hidden": false,
-      "zone": "unbound"
-=======
       "hidden": true
     },
     {
@@ -91,7 +84,6 @@
       "intro": "Microscopy intro",
       "empty": "Microscopy IS EMPTY",
       "hidden": false
->>>>>>> 32a5aa7aeda2d8010bb9f080ea157352c0418479
     }
   ]
 }
