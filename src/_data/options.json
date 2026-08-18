@@ -1,4 +1,8 @@
 {
+  "typography": {
+    "display": "Newsreader",
+    "displayScale": 1
+  },
   "nav": {
     "show": true,
     "showOnHome": false,
@@ -18,9 +22,5 @@
   },
   "motion": {
     "enabled": true
-  },
-  "typography": {
-    "display": "Fraunces",
-    "displayScale": 1.0
   }
 }
