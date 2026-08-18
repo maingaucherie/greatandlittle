@@ -12,6 +12,16 @@
       "zone": ""
     },
     {
+      "key": "life",
+      "name": "Life",
+      "exp": "scale undefined",
+      "x": "15%",
+      "blurb": "Experiments with cellular automata",
+      "intro": "Experiments with cellular automata",
+      "empty": "Notes on the simulation as it develops.",
+      "hidden": false
+    },
+    {
       "key": "onscreen",
       "name": "On Screen",
       "exp": "10⁻⁵ m",
@@ -34,6 +44,7 @@
       "zone": ""
     },
     {
+<<<<<<< HEAD
       "key": "life",
       "name": "Life",
       "exp": "off scale",
@@ -45,6 +56,8 @@
       "zone": "discrete"
     },
     {
+=======
+>>>>>>> 32a5aa7aeda2d8010bb9f080ea157352c0418479
       "key": "sky",
       "name": "Overhead",
       "exp": "10²¹ m",
@@ -63,8 +76,22 @@
       "blurb": "Ideas, reading, philosophy. The things measurement doesn't settle.",
       "intro": "The things measurement doesn't settle.",
       "empty": "Reading, listening, thinking out loud. No particular subject and no particular schedule.",
+<<<<<<< HEAD
       "hidden": false,
       "zone": "unbound"
+=======
+      "hidden": true
+    },
+    {
+      "key": "microscopy",
+      "name": "Microscopy",
+      "exp": "10⁻⁶ m",
+      "x": "20",
+      "blurb": "Microscopy blurb",
+      "intro": "Microscopy intro",
+      "empty": "Microscopy IS EMPTY",
+      "hidden": false
+>>>>>>> 32a5aa7aeda2d8010bb9f080ea157352c0418479
     }
   ]
 }
