@@ -14,7 +14,7 @@
       "key": "life",
       "name": "Life",
       "exp": "scale undefined",
-      "x": "18%",
+      "x": "15%",
       "blurb": "Experiments with cellular automata",
       "intro": "Experiments with cellular automata",
       "empty": "Notes on the simulation as it develops.",
