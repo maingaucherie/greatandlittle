@@ -76,6 +76,12 @@ export default function (eleventyConfig) {
   // 2026-08-17 — for the <time datetime="..."> attribute
   eleventyConfig.addFilter("isoDate", (d) => new Date(d).toISOString().slice(0, 10));
 
+  // Sections belonging to one off-scale zone ("discrete" or "unbound"),
+  // or — with no argument — the ones that sit on the ruled bar itself.
+  eleventyConfig.addFilter("inZone", (list, zone) =>
+    (list || []).filter((s) => (s.zone || "") === (zone || ""))
+  );
+
   // Only the sections that aren't hidden. Used for navigation; hidden
   // sections still get their page built, they just aren't linked to.
   eleventyConfig.addFilter("visible", (list) =>

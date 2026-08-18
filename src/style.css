@@ -41,7 +41,15 @@
   /* The single accent. Used for the ampersand, markers, buttons, links.
      If you want a different accent colour, change these two and nothing else. */
   --brass:#C9A24E;
-  --brass-wash:rgba(201,162,78,0.09);  /* same colour at 9% — hover backgrounds */
+  --brass-wash:rgba(201,162,78,0.09);
+
+  /* Off-scale accent. Everything that has no size — code on the left,
+     ideas on the right — is drawn in this instead of brass. A neighbour
+     hue to the aubergine, so the end zones read as related to the bar
+     without being part of it. */
+  --violet:#B98CE0;
+  --violet-band:rgba(154,108,205,0.42);
+  --violet-rule:#6B4A8A;  /* same colour at 9% — hover backgrounds */
 
   --measure:64rem;
 
@@ -968,6 +976,21 @@ body.no-centre .wrap{justify-content:flex-start;}
 
 .minimark:focus-visible{outline:2px solid var(--brass);outline-offset:3px;border-radius:2px;}
 
+/* Off-scale sections in the header: same violet and shapes as the big bar. */
+.minimark.off .minidot{border-radius:0;border-color:var(--violet);}
+.minimark.off .miniflag{color:var(--violet);}
+.minimark.off:hover .minidot,
+.minimark.off:focus-visible .minidot{background:var(--violet);border-color:var(--violet);box-shadow:0 0 0.7rem rgba(185,140,224,0.55);}
+.minimark.off.is-current .minidot{background:var(--violet);border-color:var(--violet);box-shadow:0 0 0.6rem rgba(185,140,224,0.6);}
+.minimark.off.is-current .miniflag{color:var(--violet);}
+.minimark.off.unbound .minidot{
+  width:0;height:0;background:transparent !important;border:0;
+  border-left:0.3rem solid transparent;border-right:0.3rem solid transparent;
+  border-bottom:0.48rem solid var(--violet);box-shadow:none;
+}
+.minimark.off.unbound:hover .minidot,
+.minimark.off.unbound.is-current .minidot{filter:drop-shadow(0 0 0.35rem rgba(185,140,224,0.7));}
+
 /* options.nav.showLabels = false — dots only, no text at all. */
 .sitenav.no-labels .miniflag{display:none;}
 
@@ -1162,4 +1185,128 @@ body.no-centre .wrap{justify-content:flex-start;}
   .score-rows{width:100%;flex:1 1 auto;}
   .cover{max-width:100%;}
   .gallery-grid{grid-template-columns:1fr;gap:1.5rem;}
+}
+
+
+/* ==========================================================================
+   17. OFF-SCALE ZONES
+
+   The bar measures things made of matter. Code and ideas aren't small or
+   large — they have no extent at all, so they sit past either end rather
+   than anywhere on the rule.
+
+   Every cue here says "not measured": no tick marks, a dashed baseline
+   instead of a solid one, violet instead of brass, a break mark where the
+   axis stops, and a different pin shape (square left, triangle right —
+   circles belong to the ruled bar alone).
+
+   Which sections live here is set per section in _data/sections.json
+   ("zone": "discrete" or "unbound"). Zone names are in _data/scale.json.
+   ========================================================================== */
+
+.scale-row{display:flex;align-items:stretch;}
+.scale.has-zones .rail{flex:1 1 auto;min-width:0;}
+
+.zone{
+  flex:0 0 13%;
+  position:relative;
+}
+.zone-rail{
+  position:absolute;
+  inset:0;
+  border-bottom:1px dashed var(--violet-rule);   /* dashed = not measured */
+}
+
+/* Where the axis stops. Standard convention for a discontinuous scale —
+   without it the eye reads one continuous rule and assumes code has a size. */
+.axis-break{
+  flex:0 0 0.9rem;
+  align-self:flex-end;
+  font-family:var(--font-mono);
+  font-size:0.8rem;
+  line-height:1;
+  color:var(--ink-soft);
+  opacity:0.55;
+  transform:translateY(0.2rem);
+  text-align:center;
+}
+.axis-break-spacer{flex:0 0 0.9rem;}
+
+/* Off-scale markers. Same structure as a ruled marker, violet and a
+   different shape. Positioned by `left` and never warped — the lens only
+   applies to the measurable middle. */
+.marker.off{
+  left:50%;
+  margin-left:-1.75rem;
+}
+.is-warped .marker.off{left:50%;}   /* the lens must not move these */
+
+.marker.off .flag{color:var(--violet);}
+.marker.off .stem{background:var(--violet);}
+
+.marker.off .dot{
+  border-radius:0;                  /* square: discrete, countable */
+  border-color:var(--violet);
+  width:0.5rem;height:0.5rem;
+}
+.marker.off.triangle .dot{
+  width:0;height:0;
+  background:transparent !important;
+  border-left:0.38rem solid transparent;
+  border-right:0.38rem solid transparent;
+  border-bottom:0.6rem solid var(--violet);
+  border-top:0;
+  margin-bottom:0;
+}
+
+.marker.off:hover .dot,
+.marker.off:focus-visible .dot,
+.marker.off.is-active .dot{
+  background:var(--violet);
+  box-shadow:0 0 0.9rem rgba(185,140,224,0.5);
+}
+.marker.off.triangle:hover .dot,
+.marker.off.triangle:focus-visible .dot,
+.marker.off.triangle.is-active .dot{
+  background:transparent;
+  box-shadow:none;
+  filter:drop-shadow(0 0 0.4rem rgba(185,140,224,0.7));
+}
+.marker.off:hover .stem,
+.marker.off:focus-visible .stem,
+.marker.off.is-active .stem{height:2.6rem;}
+.marker.off:focus-visible{outline-color:var(--violet);}
+
+/* The band strip runs across all three regions so the ends line up. */
+.band-row{display:flex;align-items:stretch;}
+.scale.has-zones .bands{flex:1 1 auto;min-width:0;}
+
+.zone-band{
+  flex:0 0 13%;
+  background:var(--violet-band);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  height:0.6rem;
+  transition:height 0.25s ease;
+}
+.scale.is-open .zone-band{height:1.7rem;}
+
+.zone-label{
+  font-family:var(--font-mono);
+  font-size:0.6rem;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  white-space:nowrap;
+  color:var(--pitch);
+  opacity:0;
+  transition:opacity 0.18s ease;
+}
+.scale.is-open .zone-label{opacity:1;}
+
+@media (max-width:44rem){
+  /* Narrow screens: the end zones eat too much of the bar, and the section
+     list below covers the same links. Ruled bar only. */
+  .zone,.zone-band,.axis-break,.axis-break-spacer{display:none;}
 }

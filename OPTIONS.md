@@ -252,3 +252,38 @@ so a long name is readable when magnified and hidden otherwise. And
 brightness currently peaks at human scale and falls off toward both ends,
 which encodes the site's whole premise: you're in the middle, and the great
 and the little recede in both directions.
+
+## Off-scale zones
+
+The bar measures things made of matter. Code and ideas aren't small or large —
+they have no extent at all, so they sit *past* either end rather than anywhere
+on the rule.
+
+**Discrete** (left, past 10⁻¹⁰) is below resolution: code, simulation, formal
+systems. Things made of symbols rather than stuff.
+
+**Unbound** (right, past 10²⁶) is beyond bound: ideas, reading, philosophy.
+Things that have no largest case because they have no size at all.
+
+Assign a section to a zone in CMS → Settings → Sections → Position. Rename the
+zones, change their captions, or turn them off entirely under Settings → Scale
+bands and lens → Off-scale zones.
+
+Everything about the zones says "not measured", and it's worth not undoing
+any of it by accident:
+
+- **No tick marks.** Graduations imply measurement.
+- **Dashed baseline** rather than the ruled bar's solid one.
+- **A break mark** (⁄⁄) where the axis stops. Without it the eye reads one
+  continuous scale and quietly assumes code is about 10⁻¹¹ m.
+- **Violet, not brass.** A neighbouring hue, so the zones read as related to
+  the bar without being part of it.
+- **Different pin shapes** — square on the left, triangle on the right,
+  circles only on the ruled bar. Shape survives greyscale, small sizes and
+  colourblindness in a way colour alone doesn't, so it carries the
+  distinction on its own.
+- **The lens never touches them.** Magnification applies to the measurable
+  middle only; off-scale markers hold still.
+
+On screens under 44rem the zones are hidden — they'd eat too much of a narrow
+bar, and the section list below covers the same links.

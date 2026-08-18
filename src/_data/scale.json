@@ -1,28 +1,99 @@
 {
-  "_comment": "The size domains shown beneath the scale bar, and the settings for the fisheye lens. Bands must be contiguous and cover the whole range from the bar's low exponent to its high one.",
-
+  "_comment": "The size domains shown beneath the scale bar, the fisheye lens settings, and the two off-scale zones at either end. Bands must be contiguous and cover the whole range from low to high.",
   "low": -10,
   "high": 26,
-
   "lens": {
     "enabled": true,
     "width": 1.5,
     "strength": 1.5,
     "snap": 44
   },
-
   "bands": [
-  { "name": "atoms",        "from": -10, "to": -9,  "weight": 0.18 },
-  { "name": "molecules",    "from": -9,  "to": -7,  "weight": 0.28 },
-  { "name": "cells",        "from": -7,  "to": -4,  "weight": 0.46 },
-  { "name": "grains",       "from": -4,  "to": -2,  "weight": 0.64 },
-  { "name": "people",       "from": -2,  "to": 1,   "weight": 0.92 },
-  { "name": "landscapes",   "from": 1,   "to": 4,   "weight": 0.70 },
-  { "name": "worlds",       "from": 4,   "to": 8,   "weight": 0.52 },
-  { "name": "stars",        "from": 8,   "to": 10,  "weight": 0.42 },
-  { "name": "orbits",       "from": 10,  "to": 14,  "weight": 0.34 },
-  { "name": "interstellar", "from": 14,  "to": 20,  "weight": 0.26 },
-  { "name": "galaxies",     "from": 20,  "to": 23,  "weight": 0.20 },
-  { "name": "cosmos",       "from": 23,  "to": 26,  "weight": 0.14 }
-]
+    {
+      "name": "atoms",
+      "from": -10,
+      "to": -9,
+      "weight": 0.18
+    },
+    {
+      "name": "molecules",
+      "from": -9,
+      "to": -7,
+      "weight": 0.26
+    },
+    {
+      "name": "cells",
+      "from": -7,
+      "to": -4,
+      "weight": 0.42
+    },
+    {
+      "name": "grains",
+      "from": -4,
+      "to": -2,
+      "weight": 0.58
+    },
+    {
+      "name": "people",
+      "from": -2,
+      "to": 1,
+      "weight": 0.86
+    },
+    {
+      "name": "landscapes",
+      "from": 1,
+      "to": 4,
+      "weight": 0.64
+    },
+    {
+      "name": "worlds",
+      "from": 4,
+      "to": 8,
+      "weight": 0.48
+    },
+    {
+      "name": "stars",
+      "from": 8,
+      "to": 10,
+      "weight": 0.4
+    },
+    {
+      "name": "orbits",
+      "from": 10,
+      "to": 14,
+      "weight": 0.32
+    },
+    {
+      "name": "interstellar",
+      "from": 14,
+      "to": 20,
+      "weight": 0.25
+    },
+    {
+      "name": "galaxies",
+      "from": 20,
+      "to": 23,
+      "weight": 0.19
+    },
+    {
+      "name": "cosmos",
+      "from": 23,
+      "to": 26,
+      "weight": 0.14
+    }
+  ],
+  "zones": {
+    "show": true,
+    "width": 13,
+    "discrete": {
+      "name": "Discrete",
+      "caption": "below resolution",
+      "shape": "square"
+    },
+    "unbound": {
+      "name": "Unbound",
+      "caption": "beyond bound",
+      "shape": "triangle"
+    }
+  }
 }

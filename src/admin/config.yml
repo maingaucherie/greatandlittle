@@ -34,6 +34,7 @@ public_folder: "/uploads"
 publish_mode: simple
 
 
+
 collections:
 
   # ==========================================================================
@@ -227,6 +228,15 @@ collections:
               - { name: intro, label: "Intro (section page)", widget: text }
               - { name: empty, label: "Empty-state text", widget: text,
                   hint: "Shown when the section has no posts yet." }
+              - name: zone
+                label: Position
+                widget: select
+                default: ""
+                hint: "On the bar means it has a physical scale, set below. Off-scale sections park past either end for things with no size."
+                options:
+                  - { label: "On the ruled bar", value: "" }
+                  - { label: "Off-scale — Discrete (left)", value: "discrete" }
+                  - { label: "Off-scale — Unbound (right)", value: "unbound" }
               - { name: hidden, label: "Hide from navigation", widget: boolean,
                   default: false,
                   hint: "Removes it from the scale bar and the homepage list. The page still exists and works by direct link." }
@@ -329,6 +339,27 @@ collections:
               - { name: snap, label: "Marker grab distance (px)", widget: number,
                   value_type: int, min: 0, max: 120, default: 44,
                   hint: "How close the pointer must get before a section marker locks the lens so it holds still to be clicked. 0 disables." }
+
+          - name: zones
+            label: Off-scale zones
+            widget: object
+            hint: "The regions past either end of the bar, for sections with no physical scale."
+            fields:
+              - { name: show, label: "Show the zones", widget: boolean, default: true }
+              - { name: width, label: "Zone width (percent of the bar)", widget: number,
+                  value_type: int, min: 6, max: 25, default: 13 }
+              - name: discrete
+                label: "Left zone — below resolution"
+                widget: object
+                fields:
+                  - { name: name, label: Name, widget: string, default: Discrete }
+                  - { name: caption, label: Caption under the bar, widget: string, default: "below resolution" }
+              - name: unbound
+                label: "Right zone — beyond bound"
+                widget: object
+                fields:
+                  - { name: name, label: Name, widget: string, default: Unbound }
+                  - { name: caption, label: Caption under the bar, widget: string, default: "beyond bound" }
 
           - { name: low, label: "Bar starts at 10^", widget: number, value_type: int, default: -10 }
           - { name: high, label: "Bar ends at 10^", widget: number, value_type: int, default: 26 }

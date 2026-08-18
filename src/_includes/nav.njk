@@ -17,10 +17,13 @@
     <a class="sitenav-mark" href="/">Great <span class="amp">&amp;</span> Little</a>
 
     <nav class="minirail" aria-label="Sections">
+      {# Sections on the ruled bar keep their scale position; off-scale ones
+         are pinned to either end with their own shape, matching the big bar. #}
       {% for s in sections.list | visible %}
-      <a class="minimark{% if options.nav.markCurrent and s.key == current %} is-current{% endif %}"
+      {%- set off = s.zone or "" -%}
+      <a class="minimark{% if off %} off {{ off }}{% endif %}{% if options.nav.markCurrent and s.key == current %} is-current{% endif %}"
          href="/{{ s.key }}/"
-         style="--x:{{ s.x }}"
+         style="--x:{% if off == "discrete" %}0%{% elif off == "unbound" %}100%{% else %}{{ s.x }}{% endif %}"
          {% if options.nav.markCurrent and s.key == current %}aria-current="page"{% endif %}>
         <span class="minidot"></span>
         <span class="miniflag">{{ s.name }}</span>
