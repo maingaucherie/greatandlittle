@@ -6,20 +6,21 @@
     "sticky": true,
     "markCurrent": true
   },
-
   "home": {
     "showEyebrow": false,
     "showRailCaptions": true,
     "tickCount": 18,
     "majorEvery": 3
   },
-
   "entries": {
     "showSummaries": true,
     "showFeed": true
   },
-
   "motion": {
     "enabled": true
+  },
+  "typography": {
+    "display": "Fraunces",
+    "displayScale": 1.0
   }
 }

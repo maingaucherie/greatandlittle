@@ -10,7 +10,9 @@
     wide         true to start content at the top instead of centring it
     current      which section key to highlight in the nav
     hideNav      true to suppress the nav on this page only
-#}<!DOCTYPE html>
+#}
+{%- set face = fonts[options.typography.display] or fonts["Fraunces"] -%}
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -19,12 +21,30 @@
 <title>{% if title and title != site.title %}{{ title }} — {{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
 <meta name="description" content="{{ description or site.tagline }}">
 
-{# Fonts. Change here and it changes everywhere at once. #}
+{# Favicons. The SVG is what modern browsers use; the .ico is a fallback
+   for older ones. Both live at the site root. #}
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+{# Fonts. The display face is chosen in the CMS under Settings > Appearance;
+   its Google Fonts query comes from src/_data/fonts.json. Body and mono are
+   fixed — IBM Plex does unglamorous work well and swapping it rarely helps. #}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family={{ face.query }}&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="/style.css">
+
+{# Applies the chosen face over the fallbacks defined in style.css. #}
+<style>
+  :root{
+    --font-display:{{ face.stack | safe }};
+    --font-axes:{{ (face.axes or "'wght' 400") | safe }};
+    --display-scale:{{ options.typography.displayScale or 1 }};
+  }
+</style>
+
 {% if options.entries.showFeed %}<link rel="alternate" type="application/atom+xml" href="/feed.xml" title="{{ site.title }}">{% endif %}
 {% if not options.motion.enabled %}<style>*,*::before{animation:none !important;transition:none !important;}</style>{% endif %}
 </head>

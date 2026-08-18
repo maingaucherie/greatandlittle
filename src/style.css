@@ -43,7 +43,16 @@
   --brass:#C9A24E;
   --brass-wash:rgba(201,162,78,0.09);  /* same colour at 9% — hover backgrounds */
 
-  --measure:64rem;      /* max content width (~1024px). Raise for a wider site. */
+  --measure:64rem;
+
+  /* Typography. These are overwritten by base.njk from options.json —
+     the values here are only fallbacks if that ever fails to render.
+     Pick the display face in the CMS under Settings > Appearance. */
+  --font-display:'Fraunces', Georgia, serif;
+  --font-body:'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono:'IBM Plex Mono', ui-monospace, monospace;
+  --font-axes:'SOFT' 0, 'WONK' 1;
+  --display-scale:1;      /* max content width (~1024px). Raise for a wider site. */
 }
 
 
@@ -102,7 +111,7 @@ a{color:inherit;}   /* kill the default blue; each link styles itself */
 /* Small monospace label above a heading. Used for the domain and for
    "Scale bar". The wide letter-spacing is what makes it read as a label. */
 .eyebrow{
-  font-family:var(--mono-font,"IBM Plex Mono",ui-monospace,monospace);
+  font-family:var(--mono-font,var(--font-mono));
   font-size:0.7rem;
   letter-spacing:0.22em;
   text-transform:uppercase;
@@ -112,7 +121,7 @@ a{color:inherit;}   /* kill the default blue; each link styles itself */
 
 /* The homepage wordmark. */
 h1{
-  font-family:var(--display-font,"Fraunces",Georgia,serif);
+  font-family:var(--display-font,var(--font-display));
 
   /* Fraunces is a variable font with custom axes:
        SOFT — 0 is sharp corners, 100 is rounded
@@ -122,7 +131,7 @@ h1{
   font-variation-settings:"SOFT" var(--soft,0),"WONK" var(--wonk,1),"opsz" 96;
 
   font-weight:400;
-  font-size:clamp(2.75rem,11vw,6.5rem);
+  font-size:calc(clamp(2.75rem,11vw,6.5rem) * var(--display-scale));
   line-height:0.95;        /* under 1 so the two words sit tight together */
   letter-spacing:-0.02em;  /* large type needs tightening */
   margin:0;
@@ -157,7 +166,7 @@ h1 .amp{
    ========================================================================== */
 
 .scale-caption{
-  font-family:var(--mono-font,"IBM Plex Mono",ui-monospace,monospace);
+  font-family:var(--mono-font,var(--font-mono));
   font-size:0.68rem;
   letter-spacing:0.16em;
   text-transform:uppercase;
@@ -231,7 +240,7 @@ h1 .amp{
 
 .marker .flag{
   order:-2;
-  font-family:var(--mono-font,"IBM Plex Mono",ui-monospace,monospace);
+  font-family:var(--mono-font,var(--font-mono));
   font-size:0.63rem;
   letter-spacing:0.08em;
   text-transform:uppercase;
@@ -271,7 +280,7 @@ h1 .amp{
   display:flex;
   justify-content:space-between;   /* one caption left, one right */
   margin-top:0.7rem;
-  font-family:var(--mono-font,"IBM Plex Mono",ui-monospace,monospace);
+  font-family:var(--mono-font,var(--font-mono));
   font-size:0.66rem;
   color:var(--ink-soft);
 }
@@ -302,14 +311,14 @@ h1 .amp{
 .sections a:focus-visible{outline:none;box-shadow:inset 3px 0 0 var(--brass);}
 
 .sections .exp{
-  font-family:var(--mono-font,"IBM Plex Mono",ui-monospace,monospace);
+  font-family:var(--mono-font,var(--font-mono));
   font-size:0.72rem;
   color:var(--brass);
   letter-spacing:0.06em;
 }
 
 .sections .name{
-  font-family:var(--display-font,"Fraunces",Georgia,serif);
+  font-family:var(--display-font,var(--font-display));
   font-variation-settings:"SOFT" var(--soft,0),"WONK" var(--wonk,1),"opsz" 32;   /* lower opsz at small size */
   font-size:1.35rem;
   line-height:1.2;
@@ -325,7 +334,7 @@ h1 .amp{
    ========================================================================== */
 
 .backlink{
-  font-family:var(--mono-font,"IBM Plex Mono",ui-monospace,monospace);
+  font-family:var(--mono-font,var(--font-mono));
   font-size:0.7rem;
   letter-spacing:0.14em;
   text-transform:uppercase;
@@ -338,17 +347,17 @@ h1 .amp{
 .backlink:hover{color:var(--brass);}
 
 .page-title{
-  font-family:var(--display-font,"Fraunces",Georgia,serif);
+  font-family:var(--display-font,var(--font-display));
   font-variation-settings:"SOFT" var(--soft,0),"WONK" var(--wonk,1),"opsz" 72;
   font-weight:400;
-  font-size:clamp(2.25rem,8vw,4rem);
+  font-size:calc(clamp(2.25rem,8vw,4rem) * var(--display-scale));
   line-height:1;
   margin:0;
 }
 
 /* The scale figure above an interior page title. */
 .page-scale{
-  font-family:var(--mono-font,"IBM Plex Mono",ui-monospace,monospace);
+  font-family:var(--mono-font,var(--font-mono));
   font-size:0.7rem;
   letter-spacing:0.16em;
   text-transform:uppercase;
@@ -388,7 +397,7 @@ h1 .amp{
 }
 
 .stage .placeholder{
-  font-family:var(--mono-font,"IBM Plex Mono",ui-monospace,monospace);
+  font-family:var(--mono-font,var(--font-mono));
   font-size:0.72rem;
   letter-spacing:0.14em;
   text-transform:uppercase;
@@ -401,7 +410,7 @@ h1 .amp{
 
 .stage-note{
   margin-top:0.85rem;
-  font-family:var(--mono-font,"IBM Plex Mono",ui-monospace,monospace);
+  font-family:var(--mono-font,var(--font-mono));
   font-size:0.66rem;
   letter-spacing:0.06em;
   color:var(--ink-soft);
@@ -411,7 +420,7 @@ h1 .amp{
 
 /* Outlined button that fills in on hover. Reusable on any page. */
 .button{
-  font-family:var(--mono-font,"IBM Plex Mono",ui-monospace,monospace);
+  font-family:var(--mono-font,var(--font-mono));
   font-size:0.7rem;
   letter-spacing:0.14em;
   text-transform:uppercase;
@@ -431,7 +440,7 @@ h1 .amp{
    posts should use — h2 renders as a small brass mono label, not a big serif. */
 .prose{max-width:60ch;margin-top:3rem;}
 .prose h2{
-  font-family:var(--mono-font,"IBM Plex Mono",ui-monospace,monospace);
+  font-family:var(--mono-font,var(--font-mono));
   font-size:0.7rem;
   letter-spacing:0.18em;
   text-transform:uppercase;
@@ -456,7 +465,7 @@ footer{
   flex-wrap:wrap;                  /* stacks instead of squashing on narrow screens */
   gap:0.5rem 1.5rem;
   justify-content:space-between;
-  font-family:var(--mono-font,"IBM Plex Mono",ui-monospace,monospace);
+  font-family:var(--mono-font,var(--font-mono));
   font-size:0.68rem;
   letter-spacing:0.08em;
   text-transform:uppercase;
@@ -525,14 +534,14 @@ footer{
 
 /* Left column: a date for posts, a score for reviews. */
 .entries .entry-date{
-  font-family:var(--mono-font,"IBM Plex Mono",ui-monospace,monospace);
+  font-family:var(--mono-font,var(--font-mono));
   font-size:0.72rem;
   color:var(--brass);
   letter-spacing:0.04em;
 }
 
 .entries .entry-score{
-  font-family:var(--display-font,"Fraunces",Georgia,serif);
+  font-family:var(--display-font,var(--font-display));
   font-variation-settings:"SOFT" var(--soft,0),"WONK" var(--wonk,1),"opsz" 40;
   font-size:1.6rem;
   color:var(--brass);
@@ -540,7 +549,7 @@ footer{
 }
 
 .entries .entry-title{
-  font-family:var(--display-font,"Fraunces",Georgia,serif);
+  font-family:var(--display-font,var(--font-display));
   font-variation-settings:"SOFT" var(--soft,0),"WONK" var(--wonk,1),"opsz" 32;
   font-size:1.35rem;
   line-height:1.2;
@@ -548,7 +557,7 @@ footer{
 
 .entries .entry-meta{
   grid-column:2;
-  font-family:var(--mono-font,"IBM Plex Mono",ui-monospace,monospace);
+  font-family:var(--mono-font,var(--font-mono));
   font-size:0.66rem;
   color:var(--ink-soft);
   letter-spacing:0.04em;
@@ -577,7 +586,7 @@ footer{
 .score-total{display:flex;flex-direction:column;gap:0.35rem;}
 
 .score-figure{
-  font-family:var(--display-font,"Fraunces",Georgia,serif);
+  font-family:var(--display-font,var(--font-display));
   font-variation-settings:"SOFT" var(--soft,0),"WONK" var(--wonk,1),"opsz" 96;
   font-size:3.5rem;
   line-height:0.9;
@@ -585,7 +594,7 @@ footer{
 }
 
 .score-label{
-  font-family:var(--mono-font,"IBM Plex Mono",ui-monospace,monospace);
+  font-family:var(--mono-font,var(--font-mono));
   font-size:0.62rem;
   letter-spacing:0.18em;
   text-transform:uppercase;
@@ -601,7 +610,7 @@ footer{
   padding-bottom:0.35rem;
 }
 .score-rows dt{
-  font-family:var(--mono-font,"IBM Plex Mono",ui-monospace,monospace);
+  font-family:var(--mono-font,var(--font-mono));
   font-size:0.66rem;
   letter-spacing:0.12em;
   text-transform:uppercase;
@@ -610,7 +619,7 @@ footer{
 }
 .score-rows dd{
   margin:0;
-  font-family:var(--mono-font,"IBM Plex Mono",ui-monospace,monospace);
+  font-family:var(--mono-font,var(--font-mono));
   font-size:0.95rem;
   color:var(--ink);
 }
@@ -619,7 +628,7 @@ footer{
 /* "Identified as — Olympus BH-2, c. 1980" */
 .identified{
   margin:1.25rem 0 0;
-  font-family:var(--mono-font,"IBM Plex Mono",ui-monospace,monospace);
+  font-family:var(--mono-font,var(--font-mono));
   font-size:0.7rem;
   letter-spacing:0.06em;
   color:var(--ink);
@@ -637,14 +646,14 @@ footer{
 
 /* Headings and images inside post bodies. */
 .prose img{max-width:100%;height:auto;border:1px solid var(--rule);display:block;margin:1.5rem 0;}
-.prose h3{font-family:"IBM Plex Sans",sans-serif;font-size:1rem;color:var(--ink);margin:2rem 0 0.5rem;}
+.prose h3{font-family:var(--font-body);font-size:1rem;color:var(--ink);margin:2rem 0 0.5rem;}
 .prose a{color:var(--brass);text-decoration:underline;text-underline-offset:0.2em;}
 .prose blockquote{
   margin:1.5rem 0;padding-left:1.25rem;
   border-left:2px solid var(--brass);color:var(--ink-soft);font-style:italic;
 }
 .prose code{
-  font-family:var(--mono-font,"IBM Plex Mono",ui-monospace,monospace);
+  font-family:var(--mono-font,var(--font-mono));
   font-size:0.88em;background:rgba(0,0,0,0.3);padding:0.15em 0.4em;
 }
 
@@ -684,7 +693,7 @@ footer{
 .topbar.is-sticky{position:sticky;top:0;z-index:50;}
 
 .topbar-mark{
-  font-family:var(--display-font,"Fraunces",Georgia,serif);
+  font-family:var(--display-font,var(--font-display));
   font-variation-settings:"SOFT" var(--soft,0),"WONK" var(--wonk,1),"opsz" 32;
   font-size:1.15rem;
   text-decoration:none;
@@ -746,7 +755,7 @@ footer{
   top:1.4rem;
   left:50%;
   transform:translateX(-50%) translateY(-0.2rem);
-  font-family:var(--mono-font,"IBM Plex Mono",ui-monospace,monospace);
+  font-family:var(--mono-font,var(--font-mono));
   font-size:0.58rem;
   letter-spacing:0.1em;
   text-transform:uppercase;
@@ -767,7 +776,7 @@ footer{
    dot plus the page title make it obvious; shown on narrow ones. */
 .topbar-here{
   flex:0 0 auto;
-  font-family:var(--mono-font,"IBM Plex Mono",ui-monospace,monospace);
+  font-family:var(--mono-font,var(--font-mono));
   font-size:0.62rem;
   letter-spacing:0.14em;
   text-transform:uppercase;
@@ -822,8 +831,8 @@ body.no-centre .wrap{justify-content:flex-start;}
 
 /* Wordmark on the left, doubles as the home link. */
 .sitenav-mark{
-  font-family:"Fraunces",Georgia,serif;
-  font-variation-settings:"SOFT" 0,"WONK" 1,"opsz" 24;
+  font-family:var(--font-display);
+  font-variation-settings:var(--font-axes),"opsz" 24;
   font-size:1.05rem;
   white-space:nowrap;
   text-decoration:none;
@@ -871,7 +880,7 @@ body.no-centre .wrap{justify-content:flex-start;}
 
 .minimark .miniflag{
   order:-1;
-  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-family:var(--font-mono);
   font-size:0.58rem;
   letter-spacing:0.1em;
   text-transform:uppercase;

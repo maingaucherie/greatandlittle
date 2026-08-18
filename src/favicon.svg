@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Great & Little — the scale-bar marker.
+       A rail with one brass dot standing on it. The site's own navigation
+       reduced to its smallest possible unit. -->
+  <rect width="64" height="64" rx="12" fill="#160E1B"/>
+  <!-- the rail -->
+  <rect x="8" y="44" width="48" height="2" fill="#402A48"/>
+  <!-- minor ticks -->
+  <g fill="#402A48">
+    <rect x="14" y="38" width="1.5" height="6"/>
+    <rect x="22" y="38" width="1.5" height="6"/>
+    <rect x="40" y="38" width="1.5" height="6"/>
+    <rect x="48" y="38" width="1.5" height="6"/>
+  </g>
+  <!-- the marker: stem plus dot -->
+  <rect x="31" y="26" width="2.5" height="18" fill="#C9A24E"/>
+  <circle cx="32.25" cy="22" r="6" fill="#C9A24E"/>
+</svg>

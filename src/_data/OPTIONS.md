@@ -114,3 +114,64 @@ In `_data/sections.json`, or CMS → Settings → Sections. For 10^N metres:
 
 Markers closer than ~6% apart collide on hover. The formula and the bar's
 range are the only fixed things; everything else about a section is editable.
+
+## Typography — now in the CMS
+
+Settings → Appearance → Typography.
+
+**Display face** changes the wordmark, section names and headings. Body and
+label faces stay as IBM Plex — they do unglamorous work well and swapping them
+usually makes things worse.
+
+| Face | Character |
+| --- | --- |
+| Fraunces | Quirky, angled terminals. The original choice. |
+| Newsreader | Editorial and calm. Reads as publication rather than personality. |
+| Instrument Serif | High contrast, elegant, a little fashionable. |
+| Young Serif | Chunky and confident. Much heavier presence. |
+| Spectral | Quiet and bookish. Makes the site feel like a journal. |
+| Bodoni Moda | Classic didone. Hairlines thin out on dark — large sizes only. |
+| Playfair Display | Familiar and safe. Very widely used, which cuts both ways. |
+| IBM Plex Serif | Matches body and mono exactly. Most unified, least contrast. |
+
+**Heading size** is a multiplier, 0.7 to 1.4. Different faces read larger or
+smaller at the same point size, so a face you like but find overbearing may
+just need 0.9.
+
+Only the chosen font is downloaded — switching doesn't accumulate weight.
+
+### Adding a face that isn't listed
+
+Add an entry to `src/_data/fonts.json`:
+
+```json
+"Crimson Pro": {
+  "query": "Crimson+Pro:wght@400;500",
+  "stack": "'Crimson Pro', Georgia, serif",
+  "axes": "",
+  "note": "..."
+}
+```
+
+`query` is the part after `family=` in a Google Fonts URL. Then add the name
+to the `options:` list under `display` in `src/admin/config.yml` so it shows
+up in the dropdown.
+
+## Favicons
+
+Three designs are in `src/icons/`. `src/favicon.svg` is the live one — copy
+whichever you prefer over it.
+
+| File | Design |
+| --- | --- |
+| `favicon-marker.svg` | A rail with one brass marker standing on it. The site's navigation reduced to its smallest unit. **Currently active.** |
+| `favicon-amp.svg` | The italic ampersand from the wordmark. |
+| `favicon-scale.svg` | One small filled dot and one large open circle on a shared rail — great and little, in the least possible ink. |
+
+To swap: copy the file you want to `src/favicon.svg`, commit, push.
+
+SVG favicons work in every current browser. For older ones and for the iOS
+home screen you also want `favicon.ico` and `apple-touch-icon.png` at
+`src/`. Upload your chosen SVG to realfavicongenerator.net or favicon.io,
+download the pack, and drop those two files into `src/`. The `<link>` tags
+are already in `base.njk` waiting for them — until then they 404 harmlessly.
