@@ -44,17 +44,6 @@
       "zone": ""
     },
     {
-      "key": "life",
-      "name": "Life",
-      "exp": "off scale",
-      "x": "55%",
-      "blurb": "A cellular automaton with ambitions. Runs in the browser; download it if you want it to run properly.",
-      "intro": "A cellular automaton with ambitions.",
-      "empty": "Notes on the simulation as it develops.",
-      "hidden": false,
-      "zone": "discrete"
-    },
-    {
       "key": "sky",
       "name": "Overhead",
       "exp": "10²¹ m",
