@@ -43,7 +43,16 @@
   --brass:#C9A24E;
   --brass-wash:rgba(201,162,78,0.09);  /* same colour at 9% — hover backgrounds */
 
-  --measure:64rem;      /* max content width (~1024px). Raise for a wider site. */
+  --measure:64rem;
+
+  /* Typography. These are overwritten by base.njk from options.json —
+     the values here are only fallbacks if that ever fails to render.
+     Pick the display face in the CMS under Settings > Appearance. */
+  --font-display:'Fraunces', Georgia, serif;
+  --font-body:'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono:'IBM Plex Mono', ui-monospace, monospace;
+  --font-axes:'SOFT' 0, 'WONK' 1;
+  --display-scale:1;      /* max content width (~1024px). Raise for a wider site. */
 }
 
 
@@ -65,7 +74,7 @@ body{
   background-attachment:fixed;   /* gradient stays put while content scrolls */
 
   color:var(--ink);
-  font-family:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-family:var(--body-font,"IBM Plex Sans",-apple-system,sans-serif);
   font-size:16px;
   line-height:1.6;
 
@@ -102,7 +111,7 @@ a{color:inherit;}   /* kill the default blue; each link styles itself */
 /* Small monospace label above a heading. Used for the domain and for
    "Scale bar". The wide letter-spacing is what makes it read as a label. */
 .eyebrow{
-  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-family:var(--mono-font,var(--font-mono));
   font-size:0.7rem;
   letter-spacing:0.22em;
   text-transform:uppercase;
@@ -112,17 +121,17 @@ a{color:inherit;}   /* kill the default blue; each link styles itself */
 
 /* The homepage wordmark. */
 h1{
-  font-family:"Fraunces",Georgia,serif;
+  font-family:var(--display-font,var(--font-display));
 
   /* Fraunces is a variable font with custom axes:
        SOFT — 0 is sharp corners, 100 is rounded
        WONK — 1 turns on the odd angled terminals (the character)
        opsz — optical size; higher = more contrast between thick and thin
      Set opsz near the actual display size for the intended look. */
-  font-variation-settings:"SOFT" 0,"WONK" 1,"opsz" 96;
+  font-variation-settings:"SOFT" var(--soft,0),"WONK" var(--wonk,1),"opsz" 96;
 
   font-weight:400;
-  font-size:clamp(2.75rem,11vw,6.5rem);
+  font-size:calc(clamp(2.75rem,11vw,6.5rem) * var(--display-scale));
   line-height:0.95;        /* under 1 so the two words sit tight together */
   letter-spacing:-0.02em;  /* large type needs tightening */
   margin:0;
@@ -157,7 +166,7 @@ h1 .amp{
    ========================================================================== */
 
 .scale-caption{
-  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-family:var(--mono-font,var(--font-mono));
   font-size:0.68rem;
   letter-spacing:0.16em;
   text-transform:uppercase;
@@ -231,7 +240,7 @@ h1 .amp{
 
 .marker .flag{
   order:-2;
-  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-family:var(--mono-font,var(--font-mono));
   font-size:0.63rem;
   letter-spacing:0.08em;
   text-transform:uppercase;
@@ -271,7 +280,7 @@ h1 .amp{
   display:flex;
   justify-content:space-between;   /* one caption left, one right */
   margin-top:0.7rem;
-  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-family:var(--mono-font,var(--font-mono));
   font-size:0.66rem;
   color:var(--ink-soft);
 }
@@ -302,15 +311,15 @@ h1 .amp{
 .sections a:focus-visible{outline:none;box-shadow:inset 3px 0 0 var(--brass);}
 
 .sections .exp{
-  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-family:var(--mono-font,var(--font-mono));
   font-size:0.72rem;
   color:var(--brass);
   letter-spacing:0.06em;
 }
 
 .sections .name{
-  font-family:"Fraunces",Georgia,serif;
-  font-variation-settings:"SOFT" 0,"WONK" 1,"opsz" 32;   /* lower opsz at small size */
+  font-family:var(--display-font,var(--font-display));
+  font-variation-settings:"SOFT" var(--soft,0),"WONK" var(--wonk,1),"opsz" 32;   /* lower opsz at small size */
   font-size:1.35rem;
   line-height:1.2;
 }
@@ -325,7 +334,7 @@ h1 .amp{
    ========================================================================== */
 
 .backlink{
-  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-family:var(--mono-font,var(--font-mono));
   font-size:0.7rem;
   letter-spacing:0.14em;
   text-transform:uppercase;
@@ -338,17 +347,17 @@ h1 .amp{
 .backlink:hover{color:var(--brass);}
 
 .page-title{
-  font-family:"Fraunces",Georgia,serif;
-  font-variation-settings:"SOFT" 0,"WONK" 1,"opsz" 72;
+  font-family:var(--display-font,var(--font-display));
+  font-variation-settings:"SOFT" var(--soft,0),"WONK" var(--wonk,1),"opsz" 72;
   font-weight:400;
-  font-size:clamp(2.25rem,8vw,4rem);
+  font-size:calc(clamp(2.25rem,8vw,4rem) * var(--display-scale));
   line-height:1;
   margin:0;
 }
 
 /* The scale figure above an interior page title. */
 .page-scale{
-  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-family:var(--mono-font,var(--font-mono));
   font-size:0.7rem;
   letter-spacing:0.16em;
   text-transform:uppercase;
@@ -388,7 +397,7 @@ h1 .amp{
 }
 
 .stage .placeholder{
-  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-family:var(--mono-font,var(--font-mono));
   font-size:0.72rem;
   letter-spacing:0.14em;
   text-transform:uppercase;
@@ -401,7 +410,7 @@ h1 .amp{
 
 .stage-note{
   margin-top:0.85rem;
-  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-family:var(--mono-font,var(--font-mono));
   font-size:0.66rem;
   letter-spacing:0.06em;
   color:var(--ink-soft);
@@ -411,7 +420,7 @@ h1 .amp{
 
 /* Outlined button that fills in on hover. Reusable on any page. */
 .button{
-  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-family:var(--mono-font,var(--font-mono));
   font-size:0.7rem;
   letter-spacing:0.14em;
   text-transform:uppercase;
@@ -431,7 +440,7 @@ h1 .amp{
    posts should use — h2 renders as a small brass mono label, not a big serif. */
 .prose{max-width:60ch;margin-top:3rem;}
 .prose h2{
-  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-family:var(--mono-font,var(--font-mono));
   font-size:0.7rem;
   letter-spacing:0.18em;
   text-transform:uppercase;
@@ -456,7 +465,7 @@ footer{
   flex-wrap:wrap;                  /* stacks instead of squashing on narrow screens */
   gap:0.5rem 1.5rem;
   justify-content:space-between;
-  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-family:var(--mono-font,var(--font-mono));
   font-size:0.68rem;
   letter-spacing:0.08em;
   text-transform:uppercase;
@@ -525,30 +534,30 @@ footer{
 
 /* Left column: a date for posts, a score for reviews. */
 .entries .entry-date{
-  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-family:var(--mono-font,var(--font-mono));
   font-size:0.72rem;
   color:var(--brass);
   letter-spacing:0.04em;
 }
 
 .entries .entry-score{
-  font-family:"Fraunces",Georgia,serif;
-  font-variation-settings:"SOFT" 0,"WONK" 1,"opsz" 40;
+  font-family:var(--display-font,var(--font-display));
+  font-variation-settings:"SOFT" var(--soft,0),"WONK" var(--wonk,1),"opsz" 40;
   font-size:1.6rem;
   color:var(--brass);
   line-height:1;
 }
 
 .entries .entry-title{
-  font-family:"Fraunces",Georgia,serif;
-  font-variation-settings:"SOFT" 0,"WONK" 1,"opsz" 32;
+  font-family:var(--display-font,var(--font-display));
+  font-variation-settings:"SOFT" var(--soft,0),"WONK" var(--wonk,1),"opsz" 32;
   font-size:1.35rem;
   line-height:1.2;
 }
 
 .entries .entry-meta{
   grid-column:2;
-  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-family:var(--mono-font,var(--font-mono));
   font-size:0.66rem;
   color:var(--ink-soft);
   letter-spacing:0.04em;
@@ -577,15 +586,15 @@ footer{
 .score-total{display:flex;flex-direction:column;gap:0.35rem;}
 
 .score-figure{
-  font-family:"Fraunces",Georgia,serif;
-  font-variation-settings:"SOFT" 0,"WONK" 1,"opsz" 96;
+  font-family:var(--display-font,var(--font-display));
+  font-variation-settings:"SOFT" var(--soft,0),"WONK" var(--wonk,1),"opsz" 96;
   font-size:3.5rem;
   line-height:0.9;
   color:var(--brass);
 }
 
 .score-label{
-  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-family:var(--mono-font,var(--font-mono));
   font-size:0.62rem;
   letter-spacing:0.18em;
   text-transform:uppercase;
@@ -601,7 +610,7 @@ footer{
   padding-bottom:0.35rem;
 }
 .score-rows dt{
-  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-family:var(--mono-font,var(--font-mono));
   font-size:0.66rem;
   letter-spacing:0.12em;
   text-transform:uppercase;
@@ -610,7 +619,7 @@ footer{
 }
 .score-rows dd{
   margin:0;
-  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-family:var(--mono-font,var(--font-mono));
   font-size:0.95rem;
   color:var(--ink);
 }
@@ -619,7 +628,7 @@ footer{
 /* "Identified as — Olympus BH-2, c. 1980" */
 .identified{
   margin:1.25rem 0 0;
-  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-family:var(--mono-font,var(--font-mono));
   font-size:0.7rem;
   letter-spacing:0.06em;
   color:var(--ink);
@@ -637,14 +646,14 @@ footer{
 
 /* Headings and images inside post bodies. */
 .prose img{max-width:100%;height:auto;border:1px solid var(--rule);display:block;margin:1.5rem 0;}
-.prose h3{font-family:"IBM Plex Sans",sans-serif;font-size:1rem;color:var(--ink);margin:2rem 0 0.5rem;}
+.prose h3{font-family:var(--font-body);font-size:1rem;color:var(--ink);margin:2rem 0 0.5rem;}
 .prose a{color:var(--brass);text-decoration:underline;text-underline-offset:0.2em;}
 .prose blockquote{
   margin:1.5rem 0;padding-left:1.25rem;
   border-left:2px solid var(--brass);color:var(--ink-soft);font-style:italic;
 }
 .prose code{
-  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-family:var(--mono-font,var(--font-mono));
   font-size:0.88em;background:rgba(0,0,0,0.3);padding:0.15em 0.4em;
 }
 
@@ -652,4 +661,448 @@ footer{
   .entries a{grid-template-columns:1fr;gap:0.3rem;}
   .entries .entry-meta,.entries .entry-blurb{grid-column:1;}
   .scorecard{gap:1.5rem;padding:1.5rem;}
+}
+
+
+/* ==========================================================================
+   13. STICKY HEADER
+   The compact scale bar that appears on every page except the homepage.
+   Built in base.njk; switched with options.stickyHeader in site.json.
+
+   The current section's dot is filled and its label always shows. Other
+   labels appear on hover, same as the big bar.
+   ========================================================================== */
+
+.topbar{
+  display:flex;
+  align-items:center;
+  gap:1.5rem;
+  width:100%;
+  max-width:var(--measure);
+  margin:0 auto;
+  padding:0.85rem clamp(1.25rem,5vw,3rem);
+  border-bottom:1px solid var(--rule);
+
+  /* Slight transparency plus a blur so content scrolling under it stays
+     legible. Falls back to a solid colour where backdrop-filter is absent. */
+  background:color-mix(in srgb, var(--ground) 88%, transparent);
+  backdrop-filter:blur(10px);
+}
+
+/* options.stickyHeader controls whether this class is applied. */
+.topbar.is-sticky{position:sticky;top:0;z-index:50;}
+
+.topbar-mark{
+  font-family:var(--display-font,var(--font-display));
+  font-variation-settings:"SOFT" var(--soft,0),"WONK" var(--wonk,1),"opsz" 32;
+  font-size:1.15rem;
+  text-decoration:none;
+  color:var(--ink);
+  flex:0 0 auto;
+  transition:color 0.15s ease;
+}
+.topbar-mark:hover{color:var(--brass);}
+
+/* The miniature rail. Markers are positioned by the same --x percentage
+   the big bar uses, so the two stay in sync automatically. */
+.topbar-rail{
+  position:relative;
+  flex:1 1 auto;
+  height:1.5rem;
+  min-width:8rem;
+}
+
+/* The hairline the dots sit on. */
+.topbar-rail::before{
+  content:"";
+  position:absolute;
+  left:0;right:0;top:50%;
+  height:1px;
+  background:var(--rule);
+}
+
+.topbar-marker{
+  position:absolute;
+  top:50%;
+  left:var(--x);
+  transform:translate(-50%,-50%);
+  width:1.5rem;height:1.5rem;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
+}
+
+.topbar-dot{
+  width:0.4rem;height:0.4rem;
+  border-radius:50%;
+  background:var(--raised);
+  transition:background 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.topbar-marker:hover .topbar-dot,
+.topbar-marker:focus-visible .topbar-dot{background:var(--brass);transform:scale(1.3);}
+
+/* The section you're currently on. */
+.topbar-marker.is-current .topbar-dot{
+  background:var(--brass);
+  transform:scale(1.5);
+  box-shadow:0 0 0.6rem rgba(201,162,78,0.6);
+}
+
+.topbar-flag{
+  position:absolute;
+  top:1.4rem;
+  left:50%;
+  transform:translateX(-50%) translateY(-0.2rem);
+  font-family:var(--mono-font,var(--font-mono));
+  font-size:0.58rem;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  white-space:nowrap;
+  color:var(--brass);
+  background:var(--ground);
+  padding:0.15rem 0.4rem;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity 0.15s ease, transform 0.15s ease;
+}
+.topbar-marker:hover .topbar-flag,
+.topbar-marker:focus-visible .topbar-flag{opacity:1;transform:translateX(-50%);}
+
+.topbar-marker:focus-visible{outline:2px solid var(--brass);outline-offset:2px;border-radius:50%;}
+
+/* Names the current section. Hidden on wide screens where the highlighted
+   dot plus the page title make it obvious; shown on narrow ones. */
+.topbar-here{
+  flex:0 0 auto;
+  font-family:var(--mono-font,var(--font-mono));
+  font-size:0.62rem;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+  display:none;
+}
+
+/* options.centreShortPages = false adds this class to <body>. */
+body.no-centre .wrap{justify-content:flex-start;}
+
+@media (max-width:44rem){
+  .topbar{gap:0.85rem;padding-left:1rem;padding-right:1rem;}
+  .topbar-flag{display:none;}
+  .topbar-here{display:inline;}
+  .topbar-rail{min-width:5rem;}
+}
+
+/* The header is decoration on top of working links, so if someone has
+   reduced motion on, drop the blur too — it can cause discomfort. */
+@media (prefers-reduced-motion:reduce){
+  .topbar{backdrop-filter:none;background:var(--ground);}
+}
+
+
+/* ==========================================================================
+   13. PERSISTENT NAV (the compact scale bar header)
+   Appears on every page except the homepage. Behaviour toggles live in
+   src/_data/options.json under "nav" — this section is just the look.
+   ========================================================================== */
+
+.sitenav{
+  border-bottom:1px solid var(--rule);
+  background:rgba(12,8,14,0.82);
+  backdrop-filter:blur(12px);       /* content blurs as it scrolls beneath */
+  -webkit-backdrop-filter:blur(12px);
+  z-index:10;
+}
+
+/* options.nav.sticky adds this — the bar follows you down the page. */
+.sitenav.is-sticky{position:sticky;top:0;}
+
+.sitenav-inner{
+  width:100%;
+  max-width:var(--measure);
+  margin:0 auto;
+  padding:0 clamp(1.25rem,5vw,3rem);
+  display:flex;
+  align-items:center;
+  gap:clamp(1rem,4vw,3rem);
+  height:3.75rem;
+}
+
+/* Wordmark on the left, doubles as the home link. */
+.sitenav-mark{
+  font-family:var(--font-display);
+  font-variation-settings:var(--font-axes),"opsz" 24;
+  font-size:1.05rem;
+  white-space:nowrap;
+  text-decoration:none;
+  color:var(--ink);
+  flex:0 0 auto;
+  transition:color 0.15s ease;
+}
+.sitenav-mark:hover{color:var(--brass);}
+.sitenav-mark .amp{color:var(--brass);font-style:italic;}
+
+/* The miniature rail. Same --x percentages as the big bar, so a marker
+   sits at the same relative position in both. */
+.minirail{
+  position:relative;
+  flex:1 1 auto;
+  height:100%;
+  min-width:8rem;
+  border-bottom:1px solid var(--rule);
+  margin-bottom:-1px;               /* sits on the header's own border */
+}
+
+.minimark{
+  position:absolute;
+  left:var(--x);
+  bottom:0;
+  transform:translateX(-50%);
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-end;
+  padding-bottom:0.55rem;
+  text-decoration:none;
+  gap:0.3rem;
+}
+
+.minimark .minidot{
+  width:0.4rem;height:0.4rem;
+  border-radius:50%;
+  background:transparent;
+  border:1.5px solid var(--raised);
+  transition:background 0.18s ease, border-color 0.18s ease,
+             transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.minimark .miniflag{
+  order:-1;
+  font-family:var(--font-mono);
+  font-size:0.58rem;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  white-space:nowrap;
+  color:var(--brass);
+  opacity:0;
+  transform:translateY(0.2rem);
+  transition:opacity 0.18s ease, transform 0.18s ease;
+  pointer-events:none;
+}
+
+.minimark:hover .minidot,
+.minimark:focus-visible .minidot{
+  background:var(--brass);
+  border-color:var(--brass);
+  transform:scale(1.2);
+}
+.minimark:hover .miniflag,
+.minimark:focus-visible .miniflag{opacity:1;transform:none;}
+
+/* The section you're currently reading: filled, glowing, label always shown. */
+.minimark.is-current .minidot{
+  background:var(--brass);
+  border-color:var(--brass);
+  box-shadow:0 0 0.6rem rgba(201,162,78,0.6);
+}
+.minimark.is-current .miniflag{opacity:1;transform:none;}
+
+.minimark:focus-visible{outline:2px solid var(--brass);outline-offset:3px;border-radius:2px;}
+
+/* options.nav.showLabels = false — dots only, no text at all. */
+.sitenav.no-labels .miniflag{display:none;}
+
+/* Interior pages already have the nav, so the old back link is redundant.
+   Kept in the markup but hidden; set display:inline-flex to bring it back. */
+.sitenav ~ .wrap .backlink{display:none;}
+
+@media (max-width:44rem){
+  .sitenav-inner{height:3.25rem;gap:1rem;}
+  .sitenav-mark{font-size:0.9rem;}
+  /* Labels would collide at this width — current section only. */
+  .minimark:not(.is-current) .miniflag{display:none;}
+  .minimark.is-current .miniflag{font-size:0.54rem;}
+}
+
+@media (max-width:26rem){
+  /* Very narrow: drop labels entirely, dots still navigate. */
+  .miniflag{display:none !important;}
+}
+
+
+/* ==========================================================================
+   14. SCORE BARS
+   Ten segments per axis; the first N light up. Reads at a glance from
+   across the room, which a bare number doesn't.
+   ========================================================================== */
+
+.score-rows{display:grid;gap:0.9rem;margin:0;flex:1 1 22rem;}
+
+.score-row{
+  display:block;
+  border-bottom:none;
+  padding-bottom:0;
+}
+
+.score-row dt{
+  font-family:var(--font-mono);
+  font-size:0.62rem;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+  margin-bottom:0.35rem;
+}
+
+.score-row dd{
+  margin:0;
+  display:flex;
+  align-items:center;
+  gap:0.85rem;
+}
+
+/* The bar itself. */
+.score-bar{display:flex;gap:3px;flex:1 1 auto;min-width:6rem;}
+
+.score-bar .seg{
+  flex:1 1 0;
+  height:0.7rem;
+  background:rgba(255,255,255,0.05);
+  border:1px solid var(--rule);
+  transition:background 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Filled segments. The glow is subtle — it should read as "lit", not neon. */
+.score-bar .seg.is-on{
+  background:var(--brass);
+  border-color:var(--brass);
+  box-shadow:0 0 0.4rem rgba(201,162,78,0.35);
+}
+
+.score-num{
+  font-family:var(--font-mono);
+  font-size:0.9rem;
+  color:var(--ink);
+  flex:0 0 auto;
+  min-width:3.2rem;
+  text-align:right;
+}
+.score-num span{font-size:0.62rem;color:var(--ink-soft);}
+
+
+/* ==========================================================================
+   15. COVER ART AND GALLERY
+   ========================================================================== */
+
+/* The framed cover image at the top of a review. The inset shadow gives it
+   a slight "mounted behind glass" quality rather than a flat pasted image. */
+.cover{
+  margin:0 0 2.5rem;
+  padding:0.75rem;
+  border:1px solid var(--rule);
+  background:rgba(0,0,0,0.3);
+  max-width:22rem;
+}
+.cover img{
+  display:block;
+  width:100%;
+  height:auto;
+  box-shadow:0 0.5rem 1.5rem rgba(0,0,0,0.5);
+}
+.cover figcaption{
+  margin-top:0.7rem;
+  font-family:var(--font-mono);
+  font-size:0.62rem;
+  letter-spacing:0.08em;
+  color:var(--ink-soft);
+  text-align:center;
+}
+
+.gallery{margin-top:3.5rem;}
+
+.gallery-heading{
+  font-family:var(--font-mono);
+  font-size:0.68rem;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  color:var(--brass);
+  font-weight:500;
+  margin:0 0 1.25rem;
+  padding-bottom:0.6rem;
+  border-bottom:1px solid var(--rule);
+}
+
+.gallery-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(16rem,1fr));
+  gap:1.75rem;
+}
+
+.gallery-grid figure{margin:0;}
+.gallery-grid img{
+  display:block;
+  width:100%;
+  height:auto;
+  border:1px solid var(--rule);
+}
+.gallery-grid figcaption{
+  margin-top:0.6rem;
+  font-size:0.85rem;
+  line-height:1.5;
+  color:var(--ink-soft);
+}
+
+
+/* ==========================================================================
+   16. SERIES AND TOPICS
+   ========================================================================== */
+
+/* Heading above a group of posts that share a "series" value. */
+.series-heading{
+  font-family:var(--font-display);
+  font-variation-settings:var(--font-axes),"opsz" 32;
+  font-weight:400;
+  font-size:1.15rem;
+  color:var(--ink);
+  margin:2.5rem 0 0;
+  padding-bottom:0.5rem;
+}
+.series-heading::before{
+  content:"";
+  display:block;
+  width:2rem;
+  height:2px;
+  background:var(--brass);
+  margin-bottom:0.75rem;
+}
+.series-heading + .entries{margin-top:0;}
+
+/* Topic chips at the foot of a post. */
+.topiclist{
+  display:flex;
+  flex-wrap:wrap;
+  gap:0.5rem;
+  margin:3rem 0 0;
+  padding-top:1.5rem;
+  border-top:1px solid var(--rule);
+}
+.topiclist a{
+  font-family:var(--font-mono);
+  font-size:0.62rem;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  text-decoration:none;
+  color:var(--ink-soft);
+  border:1px solid var(--rule);
+  padding:0.35rem 0.7rem;
+  transition:color 0.15s ease, border-color 0.15s ease;
+}
+.topiclist a:hover,.topiclist a:focus-visible{color:var(--brass);border-color:var(--brass);}
+
+@media (max-width:44rem){
+  .scorecard{flex-direction:column;align-items:flex-start;}
+  .score-rows{width:100%;flex:1 1 auto;}
+  .cover{max-width:100%;}
+  .gallery-grid{grid-template-columns:1fr;gap:1.5rem;}
 }

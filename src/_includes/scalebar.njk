@@ -31,7 +31,7 @@
        a section at 10^N metres:  x = (N + 10) / 36 * 100
        Markers closer than about 6% apart will have their labels collide. #}
     <nav class="markers" aria-label="Sections">
-      {% for s in sections.list %}
+      {% for s in sections.list | visible %}
       <a class="marker" href="/{{ s.key }}/" style="--x:{{ s.x }}" data-key="{{ s.key }}">
         <span class="flag">{{ s.name }}</span><span class="dot"></span><span class="stem"></span>
       </a>
@@ -47,7 +47,7 @@
   {% endif %}
 
   <ul class="sections">
-    {% for s in sections.list %}
+    {% for s in sections.list | visible %}
     <li><a href="/{{ s.key }}/" data-key="{{ s.key }}">
       <span class="exp">{{ s.exp }}</span>
       <span class="name">{{ s.name }}</span>

@@ -5,13 +5,27 @@ eleventyComputed:
   current: "onscreen"
 ---
 {#
-  review.njk — layout for one On Screen review.
+  review.njk — layout for one review in the media section.
 
-  Same as a post, but with the scorecard above the body. Scores come from
-  the front matter and are set in the CMS with sliders.
+  Order on the page:
+    cover art (if given)  →  scorecard  →  identification  →  body  →  gallery
+
+  Front matter it reads:
+    title, date, year, instrument, summary
+    scores: { instrument, usage, plausibility }
+    cover, coverCaption
+    gallery: [{ image, caption }, ...]
+    topics: [ ... ]
 #}
 <article>
-  <a class="backlink" href="/onscreen/"><span aria-hidden="true">&#8592;</span> On Screen</a>
+
+  {# --- Cover art -------------------------------------------------------- #}
+  {% if cover %}
+  <figure class="cover">
+    <img src="{{ cover }}" alt="{{ coverAlt or title }}" loading="lazy">
+    {% if coverCaption %}<figcaption>{{ coverCaption }}</figcaption>{% endif %}
+  </figure>
+  {% endif %}
 
   <p class="page-scale">
     <time datetime="{{ date | isoDate }}">{{ date | readableDate }}</time>
@@ -20,26 +34,33 @@ eleventyComputed:
   <h1 class="page-title">{{ title }}</h1>
   {% if summary %}<p class="lede">{{ summary }}</p>{% endif %}
 
-  {# --- Scorecard. Every review is judged on the same three axes so the
-         numbers stay comparable across entries. --- #}
+  {# --- Scorecard --------------------------------------------------------
+       Three fixed axes so numbers stay comparable across every entry.
+       Each row draws ten segments; the first N are filled.
+       Labels come from _data/rubric.json so you can reword them in one place.
+  #}
   <div class="scorecard">
     <div class="score-total">
       <span class="score-figure">{{ scores | meanScore }}</span>
       <span class="score-label">Overall</span>
     </div>
+
     <dl class="score-rows">
-      <div>
-        <dt>Right instrument</dt>
-        <dd>{{ scores.instrument if scores.instrument is defined else "—" }}<span>/10</span></dd>
+      {% for axis in rubric.axes %}
+      {% set val = scores[axis.key] %}
+      <div class="score-row">
+        <dt>{{ axis.label }}</dt>
+        <dd>
+          <span class="score-bar" role="img"
+                aria-label="{{ val if val is defined else 0 }} out of 10">
+            {%- for i in range(1, 11) -%}
+            <span class="seg{% if val is defined and i <= val %} is-on{% endif %}"></span>
+            {%- endfor -%}
+          </span>
+          <span class="score-num">{{ val if val is defined else "—" }}<span>/10</span></span>
+        </dd>
       </div>
-      <div>
-        <dt>Used correctly</dt>
-        <dd>{{ scores.usage if scores.usage is defined else "—" }}<span>/10</span></dd>
-      </div>
-      <div>
-        <dt>Could they see that</dt>
-        <dd>{{ scores.plausibility if scores.plausibility is defined else "—" }}<span>/10</span></dd>
-      </div>
+      {% endfor %}
     </dl>
   </div>
 
@@ -50,4 +71,29 @@ eleventyComputed:
   <div class="prose">
     {{ content | safe }}
   </div>
+
+  {# --- Gallery ----------------------------------------------------------
+       Each image carries its own line of commentary. Two columns on wide
+       screens, one on narrow.
+  #}
+  {% if gallery and gallery.length %}
+  <section class="gallery">
+    <h2 class="gallery-heading">Stills</h2>
+    <div class="gallery-grid">
+      {% for shot in gallery %}
+      <figure>
+        <img src="{{ shot.image }}" alt="{{ shot.alt or shot.caption or '' }}" loading="lazy">
+        {% if shot.caption %}<figcaption>{{ shot.caption }}</figcaption>{% endif %}
+      </figure>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  {% if topics and topics.length %}
+  <p class="topiclist">
+    {% for t in topics %}<a href="/topics/{{ t | slug }}/">{{ t }}</a>{% endfor %}
+  </p>
+  {% endif %}
+
 </article>

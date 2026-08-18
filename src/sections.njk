@@ -22,7 +22,7 @@ eleventyComputed:
 ---
 <div>
   <a class="backlink" href="/"><span aria-hidden="true">&#8592;</span> Great &amp; Little</a>
-  <p class="page-scale">{{ section.exp }}</p>
+  <p class="page-scale">{{ section.exp }}{% if section.hidden %} · unlisted{% endif %}</p>
   <h1 class="page-title">{{ section.name }}</h1>
   <p class="lede">{{ section.intro }}</p>
 
@@ -68,17 +68,22 @@ eleventyComputed:
     {# --- Every other section lists ordinary posts --- #}
     {% set entries = collections.posts | inSection(section.key) %}
     {% if entries.length %}
-    <ul class="entries">
-      {% for entry in entries %}
-      <li><a href="{{ entry.url }}">
-        <span class="entry-date">
-          <time datetime="{{ entry.data.date | isoDate }}">{{ entry.data.date | readableDate }}</time>
-        </span>
-        <span class="entry-title">{{ entry.data.title }}</span>
-        {% if options.entries.showSummaries and entry.data.summary %}<span class="entry-blurb">{{ entry.data.summary }}</span>{% endif %}
-      </a></li>
+      {# Posts with a "series" value are grouped under a heading; loose
+         posts fall through into a final ungrouped list. #}
+      {% for group in entries | bySeries %}
+        {% if group.name %}<h2 class="series-heading">{{ group.name }}</h2>{% endif %}
+        <ul class="entries">
+          {% for entry in group.posts %}
+          <li><a href="{{ entry.url }}">
+            <span class="entry-date">
+              <time datetime="{{ entry.data.date | isoDate }}">{{ entry.data.date | readableDate }}</time>
+            </span>
+            <span class="entry-title">{{ entry.data.title }}</span>
+            {% if options.entries.showSummaries and entry.data.summary %}<span class="entry-blurb">{{ entry.data.summary }}</span>{% endif %}
+          </a></li>
+          {% endfor %}
+        </ul>
       {% endfor %}
-    </ul>
     {% else %}
     <div class="empty"><p>{{ section.empty }}</p><p>Nothing published here yet.</p></div>
     {% endif %}

@@ -19,7 +19,17 @@ eleventyComputed:
   <h1 class="page-title">{{ title }}</h1>
   {% if summary %}<p class="lede">{{ summary }}</p>{% endif %}
 
+  {% if series %}
+  <p class="identified"><span>Part of</span> {{ series }}</p>
+  {% endif %}
+
   <div class="prose">
     {{ content | safe }}
   </div>
+
+  {% if topics and topics.length %}
+  <p class="topiclist">
+    {% for t in topics %}<a href="/topics/{{ t | slug }}/">{{ t }}</a>{% endfor %}
+  </p>
+  {% endif %}
 </article>

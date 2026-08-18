@@ -1,0 +1,35 @@
+---
+# ============================================================================
+# One page per topic tag: /topics/lamp-restoration/, etc.
+# Generated from the "topics" collection in eleventy.config.js, which gathers
+# every distinct value used across posts and reviews.
+# ============================================================================
+pagination:
+  data: collections.topics
+  size: 1
+  alias: topic
+permalink: "/topics/{{ topic.slug }}/"
+layout: base.njk
+wide: true
+eleventyComputed:
+  title: "{{ topic.name }}"
+  description: "Everything tagged {{ topic.name }}."
+---
+<div>
+  <p class="page-scale">Topic</p>
+  <h1 class="page-title">{{ topic.name }}</h1>
+  <p class="lede">{{ topic.count }} {% if topic.count == 1 %}entry{% else %}entries{% endif %}.</p>
+
+  <ul class="entries">
+    {% for entry in topic.entries %}
+    <li><a href="{{ entry.url }}">
+      <span class="entry-date">
+        <time datetime="{{ entry.data.date | isoDate }}">{{ entry.data.date | readableDate }}</time>
+      </span>
+      <span class="entry-title">{{ entry.data.title }}</span>
+      {% if options.entries.showSummaries and entry.data.summary %}
+      <span class="entry-blurb">{{ entry.data.summary }}</span>{% endif %}
+    </a></li>
+    {% endfor %}
+  </ul>
+</div>

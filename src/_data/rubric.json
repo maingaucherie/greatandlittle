@@ -1,0 +1,21 @@
+{
+  "_comment": "The scoring axes for media reviews. Reword the labels here and every review updates. Changing a 'key' would orphan existing scores, so only do that deliberately.",
+
+  "axes": [
+    {
+      "key": "instrument",
+      "label": "Right instrument",
+      "hint": "Is this the correct tool for the setting, the era, and the budget the lab would plausibly have?"
+    },
+    {
+      "key": "usage",
+      "label": "Used correctly",
+      "hint": "Is anyone operating it the way a person actually would? Condenser, objectives, focus, eyepieces."
+    },
+    {
+      "key": "plausibility",
+      "label": "Could they see that",
+      "hint": "Does the image on screen match what this instrument could physically resolve?"
+    }
+  ]
+}

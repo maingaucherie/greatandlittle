@@ -13,11 +13,11 @@
 # --- Where content is stored ------------------------------------------------
 backend:
   name: github
-  repo: YOUR-GITHUB-USERNAME/greatandlittle   # <-- change this
+  repo: maingaucherie/greatandlittle   # <-- change this
   branch: main
   # The OAuth worker that lets "Log in with GitHub" work. See the README for
   # the ten-minute setup; without it the login button does nothing.
-  base_url: https://YOUR-AUTH-WORKER.workers.dev   # <-- change this
+  base_url: greatandlittle.maingaucherie.workers.dev   # <-- change this
 
 # Lets you run the CMS against local files during development.
 # With this on, `npx eleventy --serve` plus visiting /admin/ opens a folder
@@ -32,6 +32,7 @@ public_folder: "/uploads"
 # Change to "editorial_workflow" if you'd rather posts sit as drafts in a
 # pull request until you approve them.
 publish_mode: simple
+
 
 collections:
 
@@ -71,6 +72,14 @@ collections:
       - { name: summary, label: Summary, widget: text, required: false,
           hint: "One or two lines. Shown under the title and in section lists." }
 
+      # Posts sharing a series value are grouped together under a heading
+      # on the section page. Leave empty for one-off posts.
+      - { name: series, label: Series, widget: string, required: false,
+          hint: "e.g. Lamp restoration. Posts with the same series are grouped together." }
+
+      - { name: topics, label: Topics, widget: list, required: false,
+          hint: "Free-form tags. Each gets its own page at /topics/name/." }
+
       - { name: body, label: Body, widget: markdown }
 
   # ==========================================================================
@@ -100,6 +109,10 @@ collections:
 
       - { name: summary, label: Summary, widget: text, required: false }
 
+      - { name: cover, label: Cover art, widget: image, required: false,
+          hint: "Poster or key art. Shown framed at the top of the review." }
+      - { name: coverCaption, label: Cover caption, widget: string, required: false }
+
       # The three scoring axes. Keeping them identical on every entry is what
       # makes a ranking page possible later.
       - name: scores
@@ -114,6 +127,22 @@ collections:
               widget: number, value_type: int, min: 0, max: 10, default: 5 }
 
       - { name: body, label: Body, widget: markdown }
+
+      # Stills from the production, each with its own line of commentary.
+      - name: gallery
+        label: Stills
+        widget: list
+        required: false
+        label_singular: Still
+        summary: "{{fields.caption}}"
+        fields:
+          - { name: image, label: Image, widget: image }
+          - { name: caption, label: Commentary, widget: text,
+              hint: "One or two sentences on what this frame shows." }
+          - { name: alt, label: Alt text, widget: string, required: false,
+              hint: "Description for screen readers. Defaults to the commentary." }
+
+      - { name: topics, label: Topics, widget: list, required: false }
 
   # ==========================================================================
   # SETTINGS — single files rather than a folder of many entries
@@ -135,6 +164,49 @@ collections:
           - { name: railLeft, label: Scale bar — left caption, widget: string }
           - { name: railRight, label: Scale bar — right caption, widget: string }
 
+          # --- Display switches. See OPTIONS.md for what each one does. ---
+          - name: options
+            label: Options
+            widget: object
+            collapsed: true
+            fields:
+              - { name: showEyebrow, label: "Show domain above the wordmark", widget: boolean, default: false }
+              - { name: showTagline, label: "Show tagline", widget: boolean, default: true }
+              - { name: showRailEnds, label: "Show scale bar end captions", widget: boolean, default: true }
+              - { name: showSectionList, label: "Show section list under the bar", widget: boolean, default: true,
+                  hint: "Keep this on — it is the navigation on phones." }
+              - { name: showTickMarks, label: "Show tick marks", widget: boolean, default: true }
+              - { name: stickyHeader, label: "Sticky header on every page", widget: boolean, default: true }
+              - { name: headerOnHome, label: "Header on the homepage too", widget: boolean, default: false }
+              - { name: headerWordmark, label: "Header wordmark", widget: string, default: "G&L" }
+              - { name: animateOnLoad, label: "Animate on load", widget: boolean, default: true }
+              - { name: centreShortPages, label: "Vertically centre short pages", widget: boolean, default: true }
+              - { name: footerLeft, label: "Footer left text", widget: select, default: status,
+                  options: [{ label: "Status line", value: status }, { label: "Domain", value: domain }] }
+              - { name: showFeedLink, label: "Advertise the Atom feed", widget: boolean, default: true }
+
+          # --- Colours and fonts. Colour pickers write hex values. ---
+          - name: theme
+            label: Theme
+            widget: object
+            collapsed: true
+            fields:
+              - { name: pitch, label: "Background — darkest", widget: color }
+              - { name: ground, label: "Background — mid", widget: color }
+              - { name: aubergine, label: "Background — lightest (top glow)", widget: color }
+              - { name: raised, label: "Raised (ticks, inactive dots)", widget: color }
+              - { name: ink, label: "Text — primary", widget: color }
+              - { name: inkSoft, label: "Text — muted", widget: color }
+              - { name: rule, label: "Hairlines and borders", widget: color }
+              - { name: brass, label: "Accent", widget: color }
+              - { name: measure, label: "Max content width", widget: string, default: "64rem" }
+              - { name: displayFont, label: "Display font", widget: string,
+                  hint: "Also update the Google Fonts link in base.njk if you change this." }
+              - { name: bodyFont, label: "Body font", widget: string }
+              - { name: monoFont, label: "Mono font", widget: string }
+              - { name: wonk, label: "Fraunces WONK (0 or 1)", widget: number, value_type: int, min: 0, max: 1 }
+              - { name: soft, label: "Fraunces SOFT (0-100)", widget: number, value_type: int, min: 0, max: 100 }
+
       - name: sections
         label: Sections and scale bar
         file: src/_data/sections.json
@@ -155,3 +227,83 @@ collections:
               - { name: intro, label: "Intro (section page)", widget: text }
               - { name: empty, label: "Empty-state text", widget: text,
                   hint: "Shown when the section has no posts yet." }
+              - { name: hidden, label: "Hide from navigation", widget: boolean,
+                  default: false,
+                  hint: "Removes it from the scale bar and the homepage list. The page still exists and works by direct link." }
+
+      - name: appearance
+        label: Appearance
+        file: src/_data/options.json
+        fields:
+
+          - name: typography
+            label: Typography
+            widget: object
+            fields:
+              - name: display
+                label: Display face
+                widget: select
+                hint: "The serif used for the wordmark, section names and headings. Body and label faces stay as IBM Plex."
+                default: Fraunces
+                options:
+                  - Fraunces
+                  - Newsreader
+                  - Instrument Serif
+                  - Young Serif
+                  - Spectral
+                  - Bodoni Moda
+                  - Playfair Display
+                  - IBM Plex Serif
+              - name: displayScale
+                label: Heading size
+                widget: number
+                value_type: float
+                min: 0.7
+                max: 1.4
+                step: 0.05
+                default: 1
+                hint: "Multiplier for the big headings. 1 is the design default; different faces read larger or smaller at the same size."
+
+          - name: nav
+            label: Header scale bar
+            widget: object
+            fields:
+              - { name: show, label: "Show the header", widget: boolean, default: true }
+              - { name: showOnHome, label: "Also show it on the homepage", widget: boolean, default: false }
+              - { name: showLabels, label: "Show section names", widget: boolean, default: true }
+              - { name: sticky, label: "Stick to the top when scrolling", widget: boolean, default: true }
+              - { name: markCurrent, label: "Highlight the current section", widget: boolean, default: true }
+
+          - name: home
+            label: Homepage
+            widget: object
+            fields:
+              - { name: showEyebrow, label: "Show the domain above the title", widget: boolean, default: false }
+              - { name: showRailCaptions, label: "Show the captions under the scale bar", widget: boolean, default: true }
+              - { name: tickCount, label: "Number of tick marks", widget: number, value_type: int, min: 6, max: 72, default: 18 }
+              - { name: majorEvery, label: "Every Nth tick is taller", widget: number, value_type: int, min: 2, max: 12, default: 3 }
+
+          - name: entries
+            label: Post lists
+            widget: object
+            fields:
+              - { name: showSummaries, label: "Show summaries under titles", widget: boolean, default: true }
+              - { name: showFeed, label: "Advertise the RSS feed", widget: boolean, default: true }
+
+          - name: motion
+            label: Motion
+            widget: object
+            fields:
+              - { name: enabled, label: "Animations", widget: boolean, default: true }
+
+      - name: rubric
+        label: Review rubric
+        file: src/_data/rubric.json
+        fields:
+          - name: axes
+            label: Scoring axes
+            widget: list
+            fields:
+              - { name: key, label: "Key (do not change on existing axes)", widget: string }
+              - { name: label, label: "Label shown on reviews", widget: string }
+              - { name: hint, label: "What this axis measures", widget: text, required: false }

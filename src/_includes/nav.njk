@@ -17,7 +17,7 @@
     <a class="sitenav-mark" href="/">Great <span class="amp">&amp;</span> Little</a>
 
     <nav class="minirail" aria-label="Sections">
-      {% for s in sections.list %}
+      {% for s in sections.list | visible %}
       <a class="minimark{% if options.nav.markCurrent and s.key == current %} is-current{% endif %}"
          href="/{{ s.key }}/"
          style="--x:{{ s.x }}"

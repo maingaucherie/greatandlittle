@@ -39,6 +39,29 @@ export default function (eleventyConfig) {
     api.getFilteredByGlob("src/reviews/*.md").reverse()
   );
 
+  // Every distinct topic across posts and reviews, with its entries.
+  // Drives the /topics/<name>/ pages.
+  eleventyConfig.addCollection("topics", (api) => {
+    const all = api.getFilteredByGlob(["src/posts/*.md", "src/reviews/*.md"]);
+    const map = new Map();
+    for (const item of all) {
+      for (const t of item.data.topics || []) {
+        const key = String(t).trim();
+        if (!key) continue;
+        if (!map.has(key)) map.set(key, []);
+        map.get(key).push(item);
+      }
+    }
+    return [...map.entries()]
+      .sort((a, b) => a[0].localeCompare(b[0]))
+      .map(([name, entries]) => ({
+        name,
+        slug: name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""),
+        entries: entries.reverse(),
+        count: entries.length,
+      }));
+  });
+
   // --- Filters ------------------------------------------------------------
   // Filters are small functions you can use inside templates with a pipe:
   //   {{ post.date | readableDate }}
@@ -52,6 +75,27 @@ export default function (eleventyConfig) {
 
   // 2026-08-17 — for the <time datetime="..."> attribute
   eleventyConfig.addFilter("isoDate", (d) => new Date(d).toISOString().slice(0, 10));
+
+  // Only the sections that aren't hidden. Used for navigation; hidden
+  // sections still get their page built, they just aren't linked to.
+  eleventyConfig.addFilter("visible", (list) =>
+    (list || []).filter((s) => !s.hidden)
+  );
+
+  // Group a list of posts by their "series" value. Returns
+  // [{ name, posts }, ...] with unseried posts collected under "".
+  eleventyConfig.addFilter("bySeries", (posts) => {
+    const groups = new Map();
+    for (const p of posts || []) {
+      const key = p.data.series || "";
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(p);
+    }
+    // Named series first, alphabetical; loose posts last.
+    return [...groups.entries()]
+      .sort((a, b) => (a[0] === "" ? 1 : b[0] === "" ? -1 : a[0].localeCompare(b[0])))
+      .map(([name, posts]) => ({ name, posts }));
+  });
 
   // Return only the posts belonging to one section, e.g. posts | inSection("optics")
   eleventyConfig.addFilter("inSection", (posts, key) =>

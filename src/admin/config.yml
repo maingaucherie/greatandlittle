@@ -33,6 +33,7 @@ public_folder: "/uploads"
 # pull request until you approve them.
 publish_mode: simple
 
+
 collections:
 
   # ==========================================================================
@@ -71,6 +72,14 @@ collections:
       - { name: summary, label: Summary, widget: text, required: false,
           hint: "One or two lines. Shown under the title and in section lists." }
 
+      # Posts sharing a series value are grouped together under a heading
+      # on the section page. Leave empty for one-off posts.
+      - { name: series, label: Series, widget: string, required: false,
+          hint: "e.g. Lamp restoration. Posts with the same series are grouped together." }
+
+      - { name: topics, label: Topics, widget: list, required: false,
+          hint: "Free-form tags. Each gets its own page at /topics/name/." }
+
       - { name: body, label: Body, widget: markdown }
 
   # ==========================================================================
@@ -100,6 +109,10 @@ collections:
 
       - { name: summary, label: Summary, widget: text, required: false }
 
+      - { name: cover, label: Cover art, widget: image, required: false,
+          hint: "Poster or key art. Shown framed at the top of the review." }
+      - { name: coverCaption, label: Cover caption, widget: string, required: false }
+
       # The three scoring axes. Keeping them identical on every entry is what
       # makes a ranking page possible later.
       - name: scores
@@ -114,6 +127,22 @@ collections:
               widget: number, value_type: int, min: 0, max: 10, default: 5 }
 
       - { name: body, label: Body, widget: markdown }
+
+      # Stills from the production, each with its own line of commentary.
+      - name: gallery
+        label: Stills
+        widget: list
+        required: false
+        label_singular: Still
+        summary: "{{fields.caption}}"
+        fields:
+          - { name: image, label: Image, widget: image }
+          - { name: caption, label: Commentary, widget: text,
+              hint: "One or two sentences on what this frame shows." }
+          - { name: alt, label: Alt text, widget: string, required: false,
+              hint: "Description for screen readers. Defaults to the commentary." }
+
+      - { name: topics, label: Topics, widget: list, required: false }
 
   # ==========================================================================
   # SETTINGS — single files rather than a folder of many entries
@@ -198,6 +227,9 @@ collections:
               - { name: intro, label: "Intro (section page)", widget: text }
               - { name: empty, label: "Empty-state text", widget: text,
                   hint: "Shown when the section has no posts yet." }
+              - { name: hidden, label: "Hide from navigation", widget: boolean,
+                  default: false,
+                  hint: "Removes it from the scale bar and the homepage list. The page still exists and works by direct link." }
 
       - name: appearance
         label: Appearance
@@ -263,3 +295,15 @@ collections:
             widget: object
             fields:
               - { name: enabled, label: "Animations", widget: boolean, default: true }
+
+      - name: rubric
+        label: Review rubric
+        file: src/_data/rubric.json
+        fields:
+          - name: axes
+            label: Scoring axes
+            widget: list
+            fields:
+              - { name: key, label: "Key (do not change on existing axes)", widget: string }
+              - { name: label, label: "Label shown on reviews", widget: string }
+              - { name: hint, label: "What this axis measures", widget: text, required: false }
