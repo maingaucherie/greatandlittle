@@ -35,7 +35,8 @@
        converts it to an exponent so it can be warped with everything else. #}
     <nav class="markers" aria-label="Sections">
       {% for s in sections.list | visible %}
-      <a class="marker" href="/{{ s.key }}/" style="--x:{{ s.x }}" data-key="{{ s.key }}">
+      <a class="marker" href="/{{ s.key }}/" style="--x:{{ s.x }}" data-key="{{ s.key }}"
+         data-note="{{ s.intro }}">
         <span class="flag">{{ s.name }}</span><span class="dot"></span><span class="stem"></span>
       </a>
       {% endfor %}
@@ -192,7 +193,10 @@
     if (bb < SNAP) {
       lock = best;
       tgtF = marks[best]._e;
-      if (readout) readout.textContent = marks[best].querySelector('.flag').textContent;
+      if (readout) {
+        readout.textContent = marks[best].dataset.note
+          || marks[best].querySelector('.flag').textContent;
+      }
     } else {
       lock = -1;
       tgtF = unmap(x);
@@ -224,7 +228,10 @@
     m.addEventListener('focus', function () {
       tgtA = 1; lock = i; tgtF = m._e;
       scale.classList.add('is-open');
-      if (readout) { readout.textContent = m.querySelector('.flag').textContent; readout.classList.add('on'); }
+      if (readout) {
+        readout.textContent = m.dataset.note || m.querySelector('.flag').textContent;
+        readout.classList.add('on');
+      }
       go();
     });
     m.addEventListener('blur', function () {
