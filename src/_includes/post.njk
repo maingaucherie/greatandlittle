@@ -1,11 +1,11 @@
-{#
-  post.njk — layout for a single ordinary post.
-  Used by everything in src/posts/. The markdown body becomes {{ content }}.
-#}
 ---
 layout: base.njk
 wide: true
 ---
+{#
+  post.njk — layout for a single ordinary post.
+  Used by everything in src/posts/. The markdown body becomes {{ content }}.
+#}
 <article>
   <a class="backlink" href="/{{ section }}/">
     <span aria-hidden="true">&#8592;</span> {{ section | sectionName }}
