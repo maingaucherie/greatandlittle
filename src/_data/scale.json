@@ -12,15 +12,17 @@
   },
 
   "bands": [
-    { "name": "atoms",      "from": -10, "to": -9,  "weight": 0.18 },
-    { "name": "molecules",  "from": -9,  "to": -7,  "weight": 0.28 },
-    { "name": "cells",      "from": -7,  "to": -4,  "weight": 0.46 },
-    { "name": "grains",     "from": -4,  "to": -2,  "weight": 0.64 },
-    { "name": "people",     "from": -2,  "to": 1,   "weight": 0.92 },
-    { "name": "landscapes", "from": 1,   "to": 4,   "weight": 0.64 },
-    { "name": "planets",    "from": 4,   "to": 8,   "weight": 0.46 },
-    { "name": "stars",      "from": 8,   "to": 12,  "weight": 0.34 },
-    { "name": "galaxies",   "from": 12,  "to": 20,  "weight": 0.24 },
-    { "name": "cosmos",     "from": 20,  "to": 26,  "weight": 0.16 }
-  ]
+  { "name": "atoms",        "from": -10, "to": -9,  "weight": 0.18 },
+  { "name": "molecules",    "from": -9,  "to": -7,  "weight": 0.28 },
+  { "name": "cells",        "from": -7,  "to": -4,  "weight": 0.46 },
+  { "name": "grains",       "from": -4,  "to": -2,  "weight": 0.64 },
+  { "name": "people",       "from": -2,  "to": 1,   "weight": 0.92 },
+  { "name": "landscapes",   "from": 1,   "to": 4,   "weight": 0.70 },
+  { "name": "worlds",       "from": 4,   "to": 8,   "weight": 0.52 },
+  { "name": "stars",        "from": 8,   "to": 10,  "weight": 0.42 },
+  { "name": "orbits",       "from": 10,  "to": 14,  "weight": 0.34 },
+  { "name": "interstellar", "from": 14,  "to": 20,  "weight": 0.26 },
+  { "name": "galaxies",     "from": 20,  "to": 23,  "weight": 0.20 },
+  { "name": "cosmos",       "from": 23,  "to": 26,  "weight": 0.14 }
+]
 }
