@@ -3,6 +3,7 @@
     {
       "key": "life",
       "name": "Life",
+      "at": null,
       "blurb": "A cellular automaton with ambitions. Runs in the browser; download it if you want it to run properly.",
       "intro": "A cellular automaton with ambitions.",
       "empty": "Notes on the simulation as it develops.",
@@ -23,7 +24,7 @@
     {
       "key": "bench",
       "name": "The Bench",
-      "at": 0,
+      "at": -0.9,
       "blurb": "Things made and things brought back — restorations, prints, builds, and works in progress.",
       "intro": "Things made and things brought back.",
       "empty": "Restorations, prints, builds and half-finished projects. Lamps, frames, brackets, and whatever the printer is currently occupied with.",
