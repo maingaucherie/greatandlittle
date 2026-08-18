@@ -56,4 +56,11 @@
     "axes": "",
     "note": "Matches the body and mono faces exactly. Most unified, least contrast."
   }
+  
+    "Josefin Slab": {
+    "query": "Josefin+Slab:ital,wght@0,400;0,500;1,400",
+    "stack": "'Josefin Slab', Georgia, serif",
+    "axes": "",
+    "note": "Geometric slab. Tall x-height, art-deco feel, very different register from the others."
+  },
 }
