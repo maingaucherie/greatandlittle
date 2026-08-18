@@ -49,37 +49,43 @@
       "name": "worlds",
       "from": 4,
       "to": 8,
-      "weight": 0.48
+      "weight": 0.5
     },
     {
       "name": "stars",
       "from": 8,
-      "to": 10,
+      "to": 12,
       "weight": 0.4
     },
     {
-      "name": "orbits",
-      "from": 10,
-      "to": 14,
+      "name": "systems",
+      "from": 12,
+      "to": 16,
       "weight": 0.32
     },
     {
-      "name": "interstellar",
-      "from": 14,
-      "to": 20,
-      "weight": 0.25
+      "name": "nebulae",
+      "from": 16,
+      "to": 19,
+      "weight": 0.26
     },
     {
       "name": "galaxies",
-      "from": 20,
-      "to": 23,
-      "weight": 0.19
+      "from": 19,
+      "to": 22,
+      "weight": 0.2
+    },
+    {
+      "name": "clusters",
+      "from": 22,
+      "to": 25,
+      "weight": 0.16
     },
     {
       "name": "cosmos",
-      "from": 23,
+      "from": 25,
       "to": 26,
-      "weight": 0.14
+      "weight": 0.12
     }
   ],
   "zones": {
