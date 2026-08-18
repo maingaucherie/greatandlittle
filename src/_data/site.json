@@ -6,5 +6,35 @@
   "status": "Under construction — first post soon",
   "place": "Woonsocket, RI",
   "railLeft": "10⁻¹⁰ m — the lattice",
-  "railRight": "10²⁶ m — the observable edge"
+  "railRight": "10²⁶ m — the observable edge",
+  "options": {
+    "showEyebrow": false,
+    "showTagline": true,
+    "showRailEnds": true,
+    "showSectionList": true,
+    "showTickMarks": false,
+    "stickyHeader": true,
+    "headerOnHome": false,
+    "headerWordmark": "G&L",
+    "animateOnLoad": true,
+    "centreShortPages": true,
+    "footerLeft": "status",
+    "showFeedLink": true
+  },
+  "theme": {
+    "pitch": "#0C080E",
+    "ground": "#160E1B",
+    "aubergine": "#2A1730",
+    "raised": "#3A2142",
+    "ink": "#EFE7F1",
+    "inkSoft": "#A594AC",
+    "rule": "#402A48",
+    "brass": "#D9B871",
+    "measure": "64rem",
+    "displayFont": "Fraunces",
+    "bodyFont": "IBM Plex Sans",
+    "monoFont": "IBM Plex Mono",
+    "wonk": 1,
+    "soft": 0
+  }
 }

@@ -16,6 +16,7 @@ permalink: "/{{ section.key }}/"
 layout: base.njk
 wide: true
 eleventyComputed:
+  current: "{{ section.key }}"
   title: "{{ section.name }}"
   description: "{{ section.intro }}"
 ---
@@ -55,7 +56,7 @@ eleventyComputed:
           <time datetime="{{ entry.data.date | isoDate }}">{{ entry.data.date | readableDate }}</time>
           {% if entry.data.instrument %} · {{ entry.data.instrument }}{% endif %}
         </span>
-        {% if entry.data.summary %}<span class="entry-blurb">{{ entry.data.summary }}</span>{% endif %}
+        {% if options.entries.showSummaries and entry.data.summary %}<span class="entry-blurb">{{ entry.data.summary }}</span>{% endif %}
       </a></li>
       {% endfor %}
     </ul>
@@ -74,7 +75,7 @@ eleventyComputed:
           <time datetime="{{ entry.data.date | isoDate }}">{{ entry.data.date | readableDate }}</time>
         </span>
         <span class="entry-title">{{ entry.data.title }}</span>
-        {% if entry.data.summary %}<span class="entry-blurb">{{ entry.data.summary }}</span>{% endif %}
+        {% if options.entries.showSummaries and entry.data.summary %}<span class="entry-blurb">{{ entry.data.summary }}</span>{% endif %}
       </a></li>
       {% endfor %}
     </ul>

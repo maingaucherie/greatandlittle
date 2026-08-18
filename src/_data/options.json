@@ -1,0 +1,25 @@
+{
+  "nav": {
+    "show": true,
+    "showOnHome": false,
+    "showLabels": true,
+    "sticky": true,
+    "markCurrent": true
+  },
+
+  "home": {
+    "showEyebrow": false,
+    "showRailCaptions": true,
+    "tickCount": 18,
+    "majorEvery": 3
+  },
+
+  "entries": {
+    "showSummaries": true,
+    "showFeed": true
+  },
+
+  "motion": {
+    "enabled": true
+  }
+}

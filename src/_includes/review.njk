@@ -1,10 +1,14 @@
 ---
 layout: base.njk
 wide: true
+eleventyComputed:
+  current: "onscreen"
 ---
 {#
   review.njk — layout for one On Screen review.
-  Same as a post, but with the scorecard above the body.
+
+  Same as a post, but with the scorecard above the body. Scores come from
+  the front matter and are set in the CMS with sliders.
 #}
 <article>
   <a class="backlink" href="/onscreen/"><span aria-hidden="true">&#8592;</span> On Screen</a>

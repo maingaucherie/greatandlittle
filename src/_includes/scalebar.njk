@@ -1,8 +1,13 @@
 {#
-  scalebar.njk — the navigation.
+  scalebar.njk — the full-size navigation on the homepage.
 
-  Everything here is generated from src/_data/sections.json. To move a marker,
-  rename a section, or add a new one, edit that file — never this one.
+  Everything here is generated from src/_data/sections.json. To move a
+  marker, rename a section, or add one, edit that file — never this one.
+
+  Toggles live in src/_data/options.json under "home":
+    tickCount           how many tick marks along the bar
+    majorEvery          every Nth tick is drawn taller
+    showRailCaptions    the "10⁻¹⁰ m — the lattice" captions under the bar
 
   Two halves showing the same sections:
     .rail      the visual bar (needs hover; labels hidden on phones)
@@ -14,9 +19,11 @@
 
   <div class="rail">
 
-    {# Decorative ticks. Flexbox spaces them evenly; data-major = taller. #}
+    {# Decorative ticks, evenly spaced by flexbox. #}
     <div class="ticks" aria-hidden="true">
-      {% for i in range(0, 18) %}<div{% if i % 3 == 0 %} data-major{% endif %} style="--d:{{ 0.5 + i * 0.05 }}s"></div>{% endfor %}
+      {%- for i in range(0, options.home.tickCount) -%}
+        <div{% if i % options.home.majorEvery == 0 %} data-major{% endif %} style="animation-delay:{{ 0.5 + i * 0.05 }}s"></div>
+      {%- endfor -%}
     </div>
 
     {# Markers. --x is the position along the bar: 0% is 10⁻¹⁰ m at the far
@@ -32,10 +39,12 @@
     </nav>
   </div>
 
+  {% if options.home.showRailCaptions %}
   <div class="rail-ends">
     <span>{{ site.railLeft }}</span>
     <span>{{ site.railRight }}</span>
   </div>
+  {% endif %}
 
   <ul class="sections">
     {% for s in sections.list %}
@@ -48,10 +57,8 @@
   </ul>
 </section>
 
-{#
-  Cross-highlighting between the bar and the list. Decoration only —
-  delete this and every link still works.
-#}
+{# Cross-highlighting between the bar and the list. Decoration only —
+   delete this and every link still works. #}
 <script>
   const link = (key, on) => {
     document.querySelectorAll('[data-key="' + key + '"]')

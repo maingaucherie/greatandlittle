@@ -1,12 +1,15 @@
 ---
 layout: base.njk
+isHome: true
 ---
 {#
-  The homepage. Masthead plus the scale bar.
-  The section list is generated from _data/sections.json.
+  The homepage. Masthead plus the full-size scale bar.
+
+  The small domain line above the title is off by default now; turn it back
+  on with options.home.showEyebrow in src/_data/options.json.
 #}
 <header class="masthead">
-  <p class="eyebrow">{{ site.domain }}</p>
+  {% if options.home.showEyebrow %}<p class="eyebrow">{{ site.domain }}</p>{% endif %}
   <h1>Great <span class="amp">&amp;</span> Little</h1>
   <p class="lede">{{ site.tagline }}</p>
 </header>

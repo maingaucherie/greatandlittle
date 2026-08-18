@@ -1,0 +1,33 @@
+{#
+  nav.njk — the compact scale bar used as a header on every page.
+
+  Same six markers as the big bar on the homepage, squeezed into a strip.
+  The section you're currently in is drawn in full brass with its label
+  always visible; the others are dim until hovered.
+
+  Turn it off, or change how it behaves, in src/_data/options.json under
+  "nav". Positions and names still come from _data/sections.json — this
+  file never needs editing to add or move a section.
+#}
+{% if options.nav.show %}
+<header class="sitenav{% if options.nav.sticky %} is-sticky{% endif %}{% if not options.nav.showLabels %} no-labels{% endif %}">
+  <div class="sitenav-inner">
+
+    {# Wordmark, doubles as the home link #}
+    <a class="sitenav-mark" href="/">Great <span class="amp">&amp;</span> Little</a>
+
+    <nav class="minirail" aria-label="Sections">
+      {% for s in sections.list %}
+      <a class="minimark{% if options.nav.markCurrent and s.key == current %} is-current{% endif %}"
+         href="/{{ s.key }}/"
+         style="--x:{{ s.x }}"
+         {% if options.nav.markCurrent and s.key == current %}aria-current="page"{% endif %}>
+        <span class="minidot"></span>
+        <span class="miniflag">{{ s.name }}</span>
+      </a>
+      {% endfor %}
+    </nav>
+
+  </div>
+</header>
+{% endif %}
