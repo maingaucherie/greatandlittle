@@ -1,31 +1,12 @@
 {
   "list": [
     {
-      "key": "onscreen",
-      "name": "On Screen",
-      "at": -4,
-      "blurb": "Rating lab equipment in film and television. Right instrument? Used correctly? Could they possibly be seeing that?",
-      "intro": "Rating lab equipment in film and television.",
-      "empty": "Every entry gets scored on the same three axes: is it the right instrument for the setting, is anyone using it correctly, and could they plausibly be seeing what the script says they are seeing.",
-      "zone": "",
-      "hidden": false
-    },
-    {
-      "key": "bench",
-      "name": "The Bench",
-      "at": 0,
-      "blurb": "Things made and things brought back — restorations, prints, builds, and works in progress.",
-      "intro": "Things made and things brought back.",
-      "empty": "Restorations, prints, builds and half-finished projects. Lamps, frames, brackets, and whatever the printer is currently occupied with.",
-      "zone": "",
-      "hidden": false
-    },
-    {
-      "key": "life",
-      "name": "Life",
-      "blurb": "A cellular automaton with ambitions. Runs in the browser; download it if you want it to run properly.",
-      "intro": "A cellular automaton with ambitions.",
-      "empty": "Notes on the simulation as it develops.",
+      "key": "cellular_automata",
+      "name": "Cellular Automata",
+      "at": null,
+      "blurb": "Experiments in cellular automata",
+      "intro": "Experiments in cellular automata",
+      "empty": "Experiments in cellular automata",
       "zone": "discrete",
       "hidden": false,
       "exp": "off scale"
@@ -37,6 +18,26 @@
       "blurb": "Microscopy blurb",
       "intro": "Microscopy intro",
       "empty": "Microscopy EMPTY STATE TEXT",
+      "zone": "",
+      "hidden": false
+    },
+    {
+      "key": "bench",
+      "name": "The Bench",
+      "at": -0.9,
+      "blurb": "Things made and things brought back — restorations, prints, builds, and works in progress.",
+      "intro": "Things made and things brought back.",
+      "empty": "Restorations, prints, builds and half-finished projects. Lamps, frames, brackets, and whatever the printer is currently occupied with.",
+      "zone": "",
+      "hidden": false
+    },
+    {
+      "key": "stage",
+      "name": "Stage Distractions",
+      "at": 1,
+      "blurb": "Rating lab equipment in film and television. Right instrument? Used correctly? Could they possibly be seeing that?",
+      "intro": "Rating lab equipment in film and television.",
+      "empty": "Every entry gets scored on the same three axes: is it the right instrument for the setting, is anyone using it correctly, and could they plausibly be seeing what the script says they are seeing.",
       "zone": "",
       "hidden": false
     },
