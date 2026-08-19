@@ -39,7 +39,8 @@
       "intro": "Rating lab equipment in film and television.",
       "empty": "Every entry gets scored on the same three axes: is it the right instrument for the setting, is anyone using it correctly, and could they plausibly be seeing what the script says they are seeing.",
       "zone": "",
-      "hidden": false
+      "hidden": false,
+      "reviews": true
     },
     {
       "key": "telescopy",

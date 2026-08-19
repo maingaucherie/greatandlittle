@@ -1,44 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>Great and Little</title>
-  <subtitle>Microscopes on screen, projects on the bench, and whatever else turns up worth writing down.</subtitle>
+  <subtitle>THE BOUNDLESS UNIVERSE - AS FAR TO THE INNERMOST AS TO THE OUTERMOST</subtitle>
   <link href="https://greatandlittle.space/feed.xml" rel="self"/>
   <link href="https://greatandlittle.space/"/>
   <id>https://greatandlittle.space/</id>
-  <updated>2026-08-17T00:00:00.000Z</updated>
-  <entry>
-    <title>teast</title>
-    <link href="https://greatandlittle.space/posts/2026-08-18-teast/"/>
-    <id>https://greatandlittle.space/posts/2026-08-18-teast/</id>
-    <updated>2026-08-17T00:00:00.000Z</updated>
-    <summary>a</summary>
-  </entry>
-  <entry>
-    <title>First light</title>
-    <link href="https://greatandlittle.space/posts/2026-08-17-first-light/"/>
-    <id>https://greatandlittle.space/posts/2026-08-17-first-light/</id>
-    <updated>2026-08-17T00:00:00.000Z</updated>
-    <summary>A site, a scale bar, and a plan.</summary>
-  </entry>
-  <entry>
-    <title>test</title>
-    <link href="https://greatandlittle.space/reviews/2026-08-18-test/"/>
-    <id>https://greatandlittle.space/reviews/2026-08-18-test/</id>
-    <updated>2026-08-17T00:00:00.000Z</updated>
-    <summary>dgdsgdsgdagadsg</summary>
-  </entry>
-  <entry>
-    <title>teatast</title>
-    <link href="https://greatandlittle.space/reviews/2026-08-18-teatast/"/>
-    <id>https://greatandlittle.space/reviews/2026-08-18-teatast/</id>
-    <updated>2026-08-17T00:00:00.000Z</updated>
-    <summary>astsatasast</summary>
-  </entry>
-  <entry>
-    <title>Example review</title>
-    <link href="https://greatandlittle.space/reviews/2026-08-17-example-review/"/>
-    <id>https://greatandlittle.space/reviews/2026-08-17-example-review/</id>
-    <updated>2026-08-17T00:00:00.000Z</updated>
-    <summary>A placeholder showing what a scored entry looks like. Delete this once the first real review is up.</summary>
-  </entry>
+  <updated></updated>
 </feed>

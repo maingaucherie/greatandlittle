@@ -43,7 +43,7 @@ eleventyComputed:
   </div>
   {% endif %}
 
-  {% if section.key == "onscreen" %}
+  {% if section.reviews %}
     {# --- On Screen lists reviews, which carry scores --- #}
     {% set entries = collections.reviews %}
     {% if entries.length %}

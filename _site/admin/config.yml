@@ -34,6 +34,9 @@ public_folder: "/uploads"
 publish_mode: simple
 
 
+
+
+
 collections:
 
   # ==========================================================================
@@ -219,14 +222,37 @@ collections:
               - { name: key, label: "Key (also the URL and folder name)", widget: string,
                   hint: "Lowercase, no spaces. Changing this changes the section's URL." }
               - { name: name, label: Display name, widget: string }
-              - { name: exp, label: "Scale figure", widget: string,
-                  hint: "e.g. 10⁻⁸ m" }
-              - { name: x, label: "Position on the bar", widget: string,
-                  hint: "A percentage from the left, e.g. 28%. For 10^N metres: (N + 10) / 36 × 100" }
+              - name: at
+                label: "Sits at 10^ … metres"
+                widget: number
+                value_type: float
+                min: -10
+                max: 26
+                step: 1
+                required: false
+                hint: >-
+                  Just the exponent — -6 means 10⁻⁶ m. Reference points:
+                  -10 atom · -9 DNA helix · -8 virus · -7 wavelength of light ·
+                  -6 bacterium · -5 red blood cell · -4 human hair · -3 grain of sand ·
+                  -2 fingernail · 0 a person · 1 a house · 3 a kilometre · 4 a small town ·
+                  7 the Earth · 9 the Sun · 11 one AU · 16 one light year ·
+                  21 the Milky Way · 23 galaxy clusters · 26 the observable universe.
+                  Leave empty for off-scale sections. Two markers closer than about
+                  2 apart will have their labels overlap.
               - { name: blurb, label: "Blurb (homepage list)", widget: text }
               - { name: intro, label: "Intro (section page)", widget: text }
               - { name: empty, label: "Empty-state text", widget: text,
                   hint: "Shown when the section has no posts yet." }
+              - name: zone
+                label: Position
+                widget: select
+                default: ""
+                required: false
+                hint: "On the bar means it has a physical scale, set below. Off-scale sections park past either end for things with no size."
+                options:
+                  - { label: "On the ruled bar", value: "" }
+                  - { label: "Off-scale — Discrete (left)", value: "discrete" }
+                  - { label: "Off-scale — Unbound (right)", value: "unbound" }
               - { name: hidden, label: "Hide from navigation", widget: boolean,
                   default: false,
                   hint: "Removes it from the scale bar and the homepage list. The page still exists and works by direct link." }
@@ -254,6 +280,7 @@ collections:
                   - Bodoni Moda
                   - Playfair Display
                   - IBM Plex Serif
+                  - Josefin Slab
               - name: displayScale
                 label: Heading size
                 widget: number
@@ -307,3 +334,68 @@ collections:
               - { name: key, label: "Key (do not change on existing axes)", widget: string }
               - { name: label, label: "Label shown on reviews", widget: string }
               - { name: hint, label: "What this axis measures", widget: text, required: false }
+
+      - name: scale
+        label: Scale bands and lens
+        file: src/_data/scale.json
+        fields:
+
+          - name: lens
+            label: Fisheye lens
+            widget: object
+            hint: "The magnifier that follows your pointer along the bar."
+            fields:
+              - { name: enabled, label: "Lens on", widget: boolean, default: true,
+                  hint: "Off gives a plain linear bar. Visitors who ask for reduced motion get that automatically." }
+              - { name: width, label: "Lens width (decades)", widget: number,
+                  value_type: float, min: 0.5, max: 12, step: 0.5, default: 1.5,
+                  hint: "How far the magnification spreads. Small is a tight loupe; large is a gentle swell." }
+              - { name: strength, label: "Strength", widget: number,
+                  value_type: float, min: 0.5, max: 5, step: 0.1, default: 1.5,
+                  hint: "Peak magnification. Total width is fixed, so more here means more compression elsewhere." }
+              - { name: snap, label: "Marker grab distance (px)", widget: number,
+                  value_type: int, min: 0, max: 120, default: 44,
+                  hint: "How close the pointer must get before a section marker locks the lens so it holds still to be clicked. 0 disables." }
+
+          - name: zones
+            label: Off-scale zones
+            widget: object
+            hint: "The regions past either end of the bar, for sections with no physical scale."
+            fields:
+              - { name: show, label: "Show the zones", widget: boolean, default: true }
+              - { name: width, label: "Zone width (percent of the bar)", widget: number,
+                  value_type: int, min: 6, max: 25, default: 13 }
+              - name: discrete
+                label: "Left zone — below resolution"
+                widget: object
+                fields:
+                  - { name: name, label: Name, widget: string, default: Discrete }
+                  - { name: caption, label: Caption under the bar, widget: string, default: "below resolution" }
+              - name: unbound
+                label: "Right zone — beyond bound"
+                widget: object
+                fields:
+                  - { name: name, label: Name, widget: string, default: Unbound }
+                  - { name: caption, label: Caption under the bar, widget: string, default: "beyond bound" }
+
+          - { name: low, label: "Bar starts at 10^", widget: number, value_type: int,
+              min: -30, max: 0, default: -10 }
+          - { name: high, label: "Bar ends at 10^", widget: number, value_type: int,
+              min: 0, max: 40, default: 26 }
+
+          - name: bands
+            label: Size domains
+            widget: list
+            summary: "{{fields.name}}  ·  10^{{fields.from}} to 10^{{fields.to}}"
+            hint: "Must be contiguous and cover the whole bar — each band's start should equal the previous one's end."
+            fields:
+              - { name: name, label: Name, widget: string,
+                  hint: "Short single words work best. Long labels hide themselves when a band is too narrow." }
+              - { name: from, label: "From 10^", widget: number, value_type: float,
+                  min: -10, max: 26 }
+              - { name: to, label: "To 10^", widget: number, value_type: float,
+                  min: -10, max: 26 }
+              - { name: weight, label: Brightness, widget: number,
+                  value_type: float, min: 0.05, max: 1, step: 0.02,
+                  hint: "0.05 is barely visible, 1 is solid brass. Currently brightest at human scale, fading toward both ends." }
+
