@@ -10,6 +10,8 @@
       "zone": "discrete",
       "hidden": false,
       "exp": "off scale"
+	  "reviews": false,
+      "simulation": true
     },
     {
       "key": "microscopy",
@@ -20,6 +22,8 @@
       "empty": "Microscopy EMPTY STATE TEXT",
       "zone": "",
       "hidden": false
+	  "reviews": false,
+      "simulation": false
     },
     {
       "key": "bench",
@@ -30,17 +34,20 @@
       "empty": "Restorations, prints, builds and half-finished projects. Lamps, frames, brackets, and whatever the printer is currently occupied with.",
       "zone": "",
       "hidden": false
+	  "reviews": false,
+      "simulation": false
     },
     {
       "key": "stage",
       "name": "Stage Distractions",
-      "at": 1,
       "blurb": "Rating lab equipment in film and television. Right instrument? Used correctly? Could they possibly be seeing that?",
       "intro": "Rating lab equipment in film and television.",
       "empty": "Every entry gets scored on the same three axes: is it the right instrument for the setting, is anyone using it correctly, and could they plausibly be seeing what the script says they are seeing.",
-      "zone": "",
       "hidden": false,
-      "reviews": true
+      "zone": "",
+      "at": 1,
+      "reviews": true,
+      "simulation": false
     },
     {
       "key": "telescopy",
@@ -51,6 +58,8 @@
       "empty": "Telescopy EMPTY STATE TEXT",
       "zone": "",
       "hidden": false
+	  "reviews": false,
+      "simulation": false
     }
   ]
 }

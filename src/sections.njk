@@ -1,6 +1,6 @@
 ---
 # ============================================================================
-# Generates one page per section: /optics/, /onscreen/, /bench/, etc.
+# Generates one page per section, at /<key>/ — see _data/sections.json.
 #
 # Eleventy "pagination" here means: take the sections list, make one page
 # for each item. size:1 = one section per page. The permalink turns the
@@ -26,7 +26,7 @@ eleventyComputed:
   <h1 class="page-title">{{ section.name }}</h1>
   <p class="lede">{{ section.intro }}</p>
 
-  {% if section.key == "life" %}
+  {% if section.simulation %}
   {# --- The Life section gets the simulation stage above its post list --- #}
   <div class="stage">
     {# Replace this placeholder with an <iframe src="..."> when the embed

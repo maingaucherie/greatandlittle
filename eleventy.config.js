@@ -76,6 +76,14 @@ export default function (eleventyConfig) {
   // 2026-08-17 — for the <time datetime="..."> attribute
   eleventyConfig.addFilter("isoDate", (d) => new Date(d).toISOString().slice(0, 10));
 
+  // The key of whichever section is flagged as holding reviews. Everything
+  // that used to hardcode "onscreen" asks for this instead, so renaming the
+  // section is a single edit in _data/sections.json.
+  eleventyConfig.addFilter("reviewSection", function (list) {
+    var match = (list || []).filter(function (s) { return s.reviews; })[0];
+    return match ? match.key : "";
+  });
+
   // --- Scale bar positioning ---------------------------------------------
   // Sections are placed by exponent ("at": -5 means 10⁻⁵ m). Everything
   // below converts that to the percentage the CSS actually needs, so the

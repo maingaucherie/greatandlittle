@@ -2,7 +2,10 @@
 layout: base.njk
 wide: true
 eleventyComputed:
-  current: "onscreen"
+  # Which section reviews belong to comes from the "reviews" flag in
+  # _data/sections.json, so renaming that section needs no change here.
+  section: "{{ sections.list | reviewSection }}"
+  current: "{{ sections.list | reviewSection }}"
 ---
 {#
   review.njk — layout for one review in the media section.

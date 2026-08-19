@@ -1,13 +1,26 @@
 {
-  "_comment": "The size domains shown beneath the scale bar, the fisheye lens settings, and the two off-scale zones at either end. Bands must be contiguous and cover the whole range from low to high.",
-  "low": -10,
-  "high": 26,
   "lens": {
     "enabled": true,
     "width": 1.5,
     "strength": 1.5,
     "snap": 44
   },
+  "zones": {
+    "show": true,
+    "width": 13,
+    "discrete": {
+      "name": "Discrete",
+      "caption": "below resolution",
+      "shape": "square"
+    },
+    "unbound": {
+      "name": "Unbound",
+      "caption": "beyond bounds",
+      "shape": "triangle"
+    }
+  },
+  "low": -10,
+  "high": 26,
   "bands": [
     {
       "name": "atoms",
@@ -55,7 +68,7 @@
       "name": "planetary",
       "from": 8,
       "to": 12,
-      "weight": 0.40
+      "weight": 0.4
     },
     {
       "name": "systems",
@@ -70,10 +83,10 @@
       "weight": 0.26
     },
     {
-      "name": "galaxies", 
+      "name": "galaxies",
       "from": 19,
       "to": 23,
-      "weight": 0.20
+      "weight": 0.2
     },
     {
       "name": "cosmos",
@@ -82,18 +95,5 @@
       "weight": 0.12
     }
   ],
-  "zones": {
-    "show": true,
-    "width": 13,
-    "discrete": {
-      "name": "Discrete",
-      "caption": "below resolution",
-      "shape": "square"
-    },
-    "unbound": {
-      "name": "Unbound",
-      "caption": "beyond bound",
-      "shape": "triangle"
-    }
-  }
+  "_comment": "The size domains shown beneath the scale bar, the fisheye lens settings, and the two off-scale zones at either end. Bands must be contiguous and cover the whole range from low to high."
 }

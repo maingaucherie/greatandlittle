@@ -1,5 +1,5 @@
 {
   "layout": "review.njk",
   "tags": "reviews",
-  "section": "onscreen"
+  "eleventyComputed": {}
 }
