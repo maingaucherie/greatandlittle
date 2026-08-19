@@ -378,8 +378,10 @@ collections:
                   - { name: name, label: Name, widget: string, default: Unbound }
                   - { name: caption, label: Caption under the bar, widget: string, default: "beyond bound" }
 
-          - { name: low, label: "Bar starts at 10^", widget: number, value_type: int, default: -10 }
-          - { name: high, label: "Bar ends at 10^", widget: number, value_type: int, default: 26 }
+          - { name: low, label: "Bar starts at 10^", widget: number, value_type: int,
+              min: -30, max: 0, default: -10 }
+          - { name: high, label: "Bar ends at 10^", widget: number, value_type: int,
+              min: 0, max: 40, default: 26 }
 
           - name: bands
             label: Size domains
@@ -389,8 +391,10 @@ collections:
             fields:
               - { name: name, label: Name, widget: string,
                   hint: "Short single words work best. Long labels hide themselves when a band is too narrow." }
-              - { name: from, label: "From 10^", widget: number, value_type: float }
-              - { name: to, label: "To 10^", widget: number, value_type: float }
+              - { name: from, label: "From 10^", widget: number, value_type: float,
+                  min: -10, max: 26 }
+              - { name: to, label: "To 10^", widget: number, value_type: float,
+                  min: -10, max: 26 }
               - { name: weight, label: Brightness, widget: number,
                   value_type: float, min: 0.05, max: 1, step: 0.02,
                   hint: "0.05 is barely visible, 1 is solid brass. Currently brightest at human scale, fading toward both ends." }
