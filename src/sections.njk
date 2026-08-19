@@ -56,6 +56,23 @@ eleventyComputed:
           <time datetime="{{ entry.data.date | isoDate }}">{{ entry.data.date | readableDate }}</time>
           {% if entry.data.instrument %} · {{ entry.data.instrument }}{% endif %}
         </span>
+
+        {# Three miniature score bars, one per axis, in rubric order. The
+           shape of a row is recognisable at a glance — a flat 8/8/8 reads
+           very differently from a 9/3/1 — so the archive can be scanned by
+           the character of the verdict rather than by title. #}
+        <span class="entry-bars" role="img"
+              aria-label="{% for axis in rubric.axes %}{{ axis.label }} {{ entry.data.scores[axis.key] | default(0) }} out of 10. {% endfor %}">
+          {%- for axis in rubric.axes -%}
+          {%- set val = entry.data.scores[axis.key] -%}
+          <span class="minibar" title="{{ axis.label }}">
+            {%- for i in range(1, 11) -%}
+            <i class="seg{% if val is defined and i <= val %} is-on{% endif %}"></i>
+            {%- endfor -%}
+          </span>
+          {%- endfor -%}
+        </span>
+
         {% if options.entries.showSummaries and entry.data.summary %}<span class="entry-blurb">{{ entry.data.summary }}</span>{% endif %}
       </a></li>
       {% endfor %}

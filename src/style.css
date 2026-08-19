@@ -630,6 +630,40 @@ footer{
 
 .entries .entry-blurb{grid-column:2;font-size:0.9rem;color:var(--ink-soft);max-width:52ch;}
 
+/* Three miniature score bars under a review's title — one per rubric axis,
+   in the same order as the full scorecard. Small enough to read as a mark
+   rather than a chart, distinct enough that a row's shape is recognisable
+   when scanning the archive. */
+.entries .entry-bars{
+  grid-column:2;
+  display:flex;
+  gap:0.65rem;
+  margin-top:0.15rem;
+}
+
+.minibar{display:flex;gap:2px;}
+
+.minibar .seg{
+  width:0.3rem;
+  height:0.42rem;
+  background:rgba(255,255,255,0.06);
+  border:1px solid var(--rule);
+  transition:background 0.15s ease, border-color 0.15s ease;
+}
+.minibar .seg.is-on{
+  background:var(--brass);
+  border-color:var(--brass);
+  opacity:0.75;
+}
+/* Brighten on hover so the row you're pointing at reads clearly. */
+.entries a:hover .minibar .seg.is-on,
+.entries a:focus-visible .minibar .seg.is-on{opacity:1;}
+
+@media (max-width:44rem){
+  .entries .entry-bars{grid-column:1;flex-wrap:wrap;gap:0.5rem;}
+  .minibar .seg{width:0.26rem;}
+}
+
 
 /* ==========================================================================
    12. SCORECARD
@@ -1075,14 +1109,15 @@ body.no-centre .wrap{justify-content:flex-start;}
    15. COVER ART AND GALLERY
    ========================================================================== */
 
-/* The framed cover image at the top of a review. The inset shadow gives it
-   a slight "mounted behind glass" quality rather than a flat pasted image. */
+/* The cover image, below the title and running the full content width.
+   No fixed aspect ratio — a wide banner crop and a tall poster both sit
+   correctly, since the image keeps its own proportions. */
 .cover{
-  margin:0 0 2.5rem;
+  margin:2.5rem 0 0;
   padding:0.75rem;
   border:1px solid var(--rule);
   background:rgba(0,0,0,0.3);
-  max-width:22rem;
+  width:100%;
 }
 .cover img{
   display:block;

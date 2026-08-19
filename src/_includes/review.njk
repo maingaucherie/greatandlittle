@@ -22,20 +22,22 @@ eleventyComputed:
 #}
 <article>
 
-  {# --- Cover art -------------------------------------------------------- #}
-  {% if cover %}
-  <figure class="cover">
-    <img src="{{ cover }}" alt="{{ coverAlt or title }}" loading="lazy">
-    {% if coverCaption %}<figcaption>{{ coverCaption }}</figcaption>{% endif %}
-  </figure>
-  {% endif %}
-
   <p class="page-scale">
     <time datetime="{{ date | isoDate }}">{{ date | readableDate }}</time>
     {% if year %} · {{ year }}{% endif %}
   </p>
   <h1 class="page-title">{{ title }}</h1>
   {% if summary %}<p class="lede">{{ summary }}</p>{% endif %}
+
+  {# --- Cover -------------------------------------------------------------
+       Full content width, whatever aspect ratio the image happens to be —
+       a wide banner crop and a tall poster both work without cropping. #}
+  {% if cover %}
+  <figure class="cover">
+    <img src="{{ cover }}" alt="{{ coverAlt or title }}" loading="lazy">
+    {% if coverCaption %}<figcaption>{{ coverCaption }}</figcaption>{% endif %}
+  </figure>
+  {% endif %}
 
   {# --- Scorecard --------------------------------------------------------
        Three fixed axes so numbers stay comparable across every entry.
