@@ -98,10 +98,6 @@ eleventyComputed:
   </section>
   {% endif %}
 
-  {% if topics and topics.length %}
-  <p class="topiclist">
-    {% for t in topics %}<a href="/topics/{{ t | topicSlug }}/">{{ t }}</a>{% endfor %}
-  </p>
-  {% endif %}
+  {% include "topiclist.njk" %}
 
 </article>

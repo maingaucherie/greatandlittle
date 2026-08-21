@@ -49,18 +49,18 @@
      without being part of it. */
   --violet:#B98CE0;
   --violet-band:rgba(154,108,205,0.42);
-  --violet-rule:#6B4A8A;  /* same colour at 9% — hover backgrounds */
+  --violet-rule:#6B4A8A;  /* borders and rules in the off-scale zones */
 
-  --measure:64rem;
+  --measure:64rem;        /* max content width (~1024px). Raise for a wider site. */
 
-  /* Typography. These are overwritten by base.njk from options.json —
-     the values here are only fallbacks if that ever fails to render.
-     Pick the display face in the CMS under Settings > Appearance. */
+  /* Everything above and below is a fallback: base.njk writes the real
+     values in from site.json and options.json. Edit them there, or in the
+     CMS, and these only get used if that ever fails to render. */
   --font-display:'Fraunces', Georgia, serif;
   --font-body:'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-mono:'IBM Plex Mono', ui-monospace, monospace;
   --font-axes:'SOFT' 0, 'WONK' 1;
-  --display-scale:1;      /* max content width (~1024px). Raise for a wider site. */
+  --display-scale:1;      /* heading size multiplier, set in the CMS */
 }
 
 

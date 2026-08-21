@@ -22,14 +22,7 @@ eleventyComputed:
 
   <ul class="entries">
     {% for entry in topic.entries %}
-    <li><a href="{{ entry.url }}">
-      <span class="entry-date">
-        <time datetime="{{ entry.data.date | isoDate }}">{{ entry.data.date | readableDate }}</time>
-      </span>
-      <span class="entry-title">{{ entry.data.title }}</span>
-      {% if options.entries.showSummaries and entry.data.summary %}
-      <span class="entry-blurb">{{ entry.data.summary }}</span>{% endif %}
-    </a></li>
+    {% include "entry.njk" %}
     {% endfor %}
   </ul>
 </div>

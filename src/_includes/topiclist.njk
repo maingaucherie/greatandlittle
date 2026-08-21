@@ -1,0 +1,10 @@
+{#
+  topiclist.njk — the row of tags at the foot of a post or a review.
+  Expects `topics` from the page's front matter. Prints nothing if there
+  aren't any, so it's safe to include unconditionally.
+#}
+{% if topics and topics.length %}
+<p class="topiclist">
+  {% for t in topics %}<a href="/topics/{{ t | topicSlug }}/">{{ t }}</a>{% endfor %}
+</p>
+{% endif %}

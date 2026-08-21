@@ -1,0 +1,17 @@
+{#
+  entry.njk — one row in a list of posts.
+
+  Section pages and topic pages both show the same thing, so the markup lives
+  here rather than in each of them. Expects `entry`, one item from a
+  collection, which is what the surrounding {% for %} is already called.
+
+  Reviews get a different row — they carry scores — and that one stays in
+  sections.njk, since the On Screen page is the only place it appears.
+#}
+<li><a href="{{ entry.url }}">
+  <span class="entry-date">
+    <time datetime="{{ entry.data.date | isoDate }}">{{ entry.data.date | readableDate }}</time>
+  </span>
+  <span class="entry-title">{{ entry.data.title }}</span>
+  {% if options.entries.showSummaries and entry.data.summary %}<span class="entry-blurb">{{ entry.data.summary }}</span>{% endif %}
+</a></li>

@@ -12,10 +12,7 @@ eleventyExcludeFromCollections: true
   {%- for s in sections.list | visible %}
   <url><loc>{{ site.url }}/{{ s.key }}/</loc></url>
   {%- endfor %}
-  {%- for entry in collections.posts %}
-  <url><loc>{{ site.url }}{{ entry.url }}</loc><lastmod>{{ entry.date | isoDate }}</lastmod></url>
-  {%- endfor %}
-  {%- for entry in collections.reviews %}
+  {%- for entry in collections.everything %}
   <url><loc>{{ site.url }}{{ entry.url }}</loc><lastmod>{{ entry.date | isoDate }}</lastmod></url>
   {%- endfor %}
   {%- for t in collections.topics %}

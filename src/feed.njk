@@ -12,8 +12,7 @@ eleventyExcludeFromCollections: true
   <link href="{{ site.url }}/"/>
   <id>{{ site.url }}/</id>
   <author><name>{{ site.title }}</name></author>
-  {%- set all = collections.posts.concat(collections.reviews) %}
-  {%- set latest = all | sort(true, false, "date") %}
+  {%- set latest = collections.everything %}
   <updated>{% if latest.length %}{{ latest[0].date.toISOString() }}{% endif %}</updated>
   {%- for entry in latest %}
   <entry>
