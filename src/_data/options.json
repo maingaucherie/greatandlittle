@@ -12,9 +12,7 @@
   },
   "home": {
     "showEyebrow": false,
-    "showRailCaptions": true,
-    "tickCount": 18,
-    "majorEvery": 3
+    "showRailCaptions": true
   },
   "entries": {
     "showSummaries": true,

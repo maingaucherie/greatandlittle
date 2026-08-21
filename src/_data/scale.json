@@ -7,7 +7,6 @@
   },
   "zones": {
     "show": true,
-    "width": 13,
     "discrete": {
       "name": "Discrete",
       "caption": "below resolution",

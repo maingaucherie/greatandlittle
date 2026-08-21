@@ -22,8 +22,10 @@ Edit the file directly, or through the CMS once you add it there.
 | --- | --- | --- |
 | `showEyebrow` | `false` | The small `greatandlittle.space` line above the title. |
 | `showRailCaptions` | `true` | The "10⁻¹⁰ m — the lattice" captions under the big bar. |
-| `tickCount` | `18` | Number of tick marks. Try 36 for one per decade, or 9 for sparse. |
-| `majorEvery` | `3` | Every Nth tick is drawn taller. |
+
+The bar draws one tick per decade, with every sixth one taller. That isn't a
+setting: on a logarithmic rule the ticks *are* the decades, and any other
+number would be decoration that lies about the spacing.
 
 ### entries — post lists
 
@@ -46,65 +48,51 @@ Any single page can override things:
 ---
 hideNav: true      # no header on this page only
 wide: true         # start at the top instead of vertically centring
-current: optics    # which section to highlight in the nav
+current: bench     # which section to highlight in the nav
 title: Something   # browser tab text
 description: ...   # meta description
 ---
 ```
 
-## src/style.css — appearance
+## Colours
 
-Top of the file, under `:root`. Change once, applies everywhere.
+CMS → Settings → Site details → Theme, or the `theme` block in
+`src/_data/site.json`. `base.njk` writes these into every page as CSS
+variables. The values at the top of `src/style.css` are the fallbacks: clear a
+field and the CSS value takes over, so a blank is never a broken page.
 
-| Token | Now | Notes |
+| Setting | Now | Notes |
 | --- | --- | --- |
-| `--pitch` | `#0C080E` | Bottom of the page gradient. |
-| `--ground` | `#160E1B` | Middle of the gradient. |
-| `--aubergine` | `#2A1730` | Top — the glow behind the masthead. |
-| `--brass` | `#C9A24E` | The accent. Change `--brass-wash` to match (same colour at 9%). |
-| `--ink` / `--ink-soft` | | Text, full strength and muted. |
-| `--rule` | `#402A48` | Hairlines and borders. |
-| `--measure` | `64rem` | Content width. Try `72rem` for wider. |
+| Background — darkest | `#0C080E` | Bottom of the page gradient. |
+| Background — mid | `#160E1B` | Middle of the gradient. |
+| Background — lightest | `#2A1730` | Top — the glow behind the masthead. |
+| Raised | `#3A2142` | Major tick marks, inactive dots. |
+| Text — primary | `#EFE7F1` | Headings and body. |
+| Text — muted | `#A594AC` | Captions and anything secondary. |
+| Hairlines | `#402A48` | Borders and dividers. |
+| Accent | `#C9A24E` | The ampersand, markers, buttons, links. Hover washes derive from it. |
+| Off-scale accent | `#B98CE0` | The two zones past either end of the bar. |
+| Max content width | `64rem` | Try `72rem` for wider. |
 
 ### Palette variants worth trying
 
-Paste over the existing values.
+Type these into the matching Theme fields, darkest background first.
 
 **Colder, more instrument-like**
-```css
---pitch:#08090C; --ground:#101318; --aubergine:#1B2028;
---rule:#2C333D; --brass:#7FA8C9; --brass-wash:rgba(127,168,201,0.09);
-```
+`#08090C` · `#101318` · `#1B2028` · hairlines `#2C333D` · accent `#7FA8C9`
 
 **Deeper purple, warmer accent**
-```css
---pitch:#0A050D; --ground:#180C22; --aubergine:#331848;
---rule:#4A2C63; --brass:#D98C5F; --brass-wash:rgba(217,140,95,0.09);
-```
+`#0A050D` · `#180C22` · `#331848` · hairlines `#4A2C63` · accent `#D98C5F`
 
 **Near-monochrome, accent only where it matters**
-```css
---pitch:#0B0B0D; --ground:#141416; --aubergine:#1F1F23;
---rule:#33333A; --brass:#C9A24E; --brass-wash:rgba(201,162,78,0.09);
-```
+`#0B0B0D` · `#141416` · `#1F1F23` · hairlines `#33333A` · accent `#C9A24E`
 
 ### Typography
 
-Two places must agree: the Google Fonts `<link>` in `src/_includes/base.njk`,
-and the `font-family` rules in `style.css`. Display faces that hold up on a
-dark background and aren't Fraunces: **Newsreader**, **Instrument Serif**,
-**Young Serif**, **Bodoni Moda** (only at large sizes — its hairlines vanish
-when small).
-
-Fraunces has variable axes you can tune without changing the font:
-
-```css
-font-variation-settings:"SOFT" 0,"WONK" 1,"opsz" 96;
-```
-
-`SOFT` 0–100 rounds the corners. `WONK` 0 or 1 toggles the odd angled
-terminals — that's most of the character. `opsz` should roughly match the
-size the text is displayed at.
+Pick the display face in the CMS — see "Typography" further down. Each face in
+`_data/fonts.json` carries its own Google Fonts query and variable-axis
+settings, and `base.njk` requests only the one in use, so switching never
+accumulates weight.
 
 ## Scale bar positions
 
@@ -171,9 +159,10 @@ usually makes things worse.
 | Instrument Serif | High contrast, elegant, a little fashionable. |
 | Young Serif | Chunky and confident. Much heavier presence. |
 | Spectral | Quiet and bookish. Makes the site feel like a journal. |
-| Bodoni Moda | Classic didone. Hairlines thin out on dark — large sizes only. |
+| Bodoni Moda | Classic didone. Hairlines thin out on dark — large sizes only. **Currently active.** |
 | Playfair Display | Familiar and safe. Very widely used, which cuts both ways. |
 | IBM Plex Serif | Matches body and mono exactly. Most unified, least contrast. |
+| Josefin Slab | Geometric slab. Tall x-height, art-deco feel, a very different register. |
 
 **Heading size** is a multiplier, 0.7 to 1.4. Different faces read larger or
 smaller at the same point size, so a face you like but find overbearing may
@@ -227,8 +216,8 @@ but its page still builds at its usual URL and every post in it stays live.
 Direct links keep working; only the navigation forgets about it. The section
 page shows "· unlisted" next to its scale figure so you can tell.
 
-Currently hidden: Optics, Overhead, The Void. Unhide any of them the moment
-you have something to put there.
+Nothing is hidden at the moment. It's there for a section you've started but
+aren't ready to show — the page works by direct link while you fill it.
 
 ## Series and topics
 

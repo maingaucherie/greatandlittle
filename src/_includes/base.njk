@@ -37,12 +37,28 @@
 
 <link rel="stylesheet" href="/style.css">
 
-{# Applies the chosen face over the fallbacks defined in style.css. #}
+{# Applies the chosen face and the theme colours over the fallbacks defined
+   in style.css. Anything left blank in site.json falls back to the CSS, so a
+   missing value is never a broken page. Colours: CMS > Settings > Site
+   details > Theme. Face: CMS > Settings > Appearance. #}
 <style>
   :root{
     --font-display:{{ face.stack | safe }};
     --font-axes:{{ (face.axes or "'wght' 400") | safe }};
     --display-scale:{{ options.typography.displayScale or 1 }};
+    {% if site.theme.pitch %}--pitch:{{ site.theme.pitch }};{% endif %}
+    {% if site.theme.ground %}--ground:{{ site.theme.ground }};{% endif %}
+    {% if site.theme.aubergine %}--aubergine:{{ site.theme.aubergine }};{% endif %}
+    {% if site.theme.raised %}--raised:{{ site.theme.raised }};{% endif %}
+    {% if site.theme.ink %}--ink:{{ site.theme.ink }};{% endif %}
+    {% if site.theme.inkSoft %}--ink-soft:{{ site.theme.inkSoft }};{% endif %}
+    {% if site.theme.rule %}--rule:{{ site.theme.rule }};{% endif %}
+    {% if site.theme.violet %}--violet:{{ site.theme.violet }};{% endif %}
+    {% if site.theme.measure %}--measure:{{ site.theme.measure }};{% endif %}
+    {# The hover wash is the accent at 9%, derived rather than typed, so the
+       two can never drift apart the way they used to. #}
+    {% if site.theme.brass %}--brass:{{ site.theme.brass }};
+    --brass-wash:color-mix(in srgb, {{ site.theme.brass }} 9%, transparent);{% endif %}
   }
 </style>
 

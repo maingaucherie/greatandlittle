@@ -27,20 +27,23 @@ eleventyComputed:
   <p class="lede">{{ section.intro }}</p>
 
   {% if section.simulation %}
-  {# --- The Life section gets the simulation stage above its post list --- #}
-  <div class="stage">
-    {# Replace this placeholder with an <iframe src="..."> when the embed
-       is ready. The CSS already sizes an iframe to fill this box. #}
-    <p class="placeholder">
-      Simulation goes here<br>&mdash;<br>replace this block with the embed
-    </p>
-  </div>
-  <p class="stage-note">Browser version runs on Pyodide. Expect a few seconds to load and fewer generations per second than the real thing.</p>
+  {# --- Sections flagged "simulation" get an embed above their post list.
+         Everything here is optional and only renders once the matching URL
+         exists in _data/sections.json, so a section that isn't ready yet
+         shows nothing rather than a placeholder or a dead button. --- #}
+    {% if section.embedUrl %}
+    <div class="stage">
+      <iframe src="{{ section.embedUrl }}" title="{{ section.name }}" loading="lazy"></iframe>
+    </div>
+    <p class="stage-note">Runs in the browser. Expect a few seconds to load and fewer generations per second than a local copy.</p>
+    {% endif %}
 
-  <div class="actions">
-    <a class="button" href="#">Download the Python version</a>
-    <a class="button quiet" href="#">Source</a>
-  </div>
+    {% if section.downloadUrl or section.sourceUrl %}
+    <div class="actions">
+      {% if section.downloadUrl %}<a class="button" href="{{ section.downloadUrl }}">Download</a>{% endif %}
+      {% if section.sourceUrl %}<a class="button quiet" href="{{ section.sourceUrl }}">Source</a>{% endif %}
+    </div>
+    {% endif %}
   {% endif %}
 
   {% if section.reviews %}
@@ -78,7 +81,7 @@ eleventyComputed:
       {% endfor %}
     </ul>
     {% else %}
-    <div class="empty"><p>{{ section.empty }}</p><p>Nothing published here yet.</p></div>
+    <div class="empty"><p>Nothing published here yet.</p><p>{{ section.empty }}</p></div>
     {% endif %}
 
   {% else %}
@@ -102,7 +105,7 @@ eleventyComputed:
         </ul>
       {% endfor %}
     {% else %}
-    <div class="empty"><p>{{ section.empty }}</p><p>Nothing published here yet.</p></div>
+    <div class="empty"><p>Nothing published here yet.</p><p>{{ section.empty }}</p></div>
     {% endif %}
   {% endif %}
 </div>

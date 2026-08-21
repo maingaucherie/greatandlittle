@@ -164,28 +164,9 @@ collections:
           - { name: railLeft, label: Scale bar — left caption, widget: string }
           - { name: railRight, label: Scale bar — right caption, widget: string }
 
-          # --- Display switches. See OPTIONS.md for what each one does. ---
-          - name: options
-            label: Options
-            widget: object
-            collapsed: true
-            fields:
-              - { name: showEyebrow, label: "Show domain above the wordmark", widget: boolean, default: false }
-              - { name: showTagline, label: "Show tagline", widget: boolean, default: true }
-              - { name: showRailEnds, label: "Show scale bar end captions", widget: boolean, default: true }
-              - { name: showSectionList, label: "Show section list under the bar", widget: boolean, default: true,
-                  hint: "Keep this on — it is the navigation on phones." }
-              - { name: showTickMarks, label: "Show tick marks", widget: boolean, default: true }
-              - { name: stickyHeader, label: "Sticky header on every page", widget: boolean, default: true }
-              - { name: headerOnHome, label: "Header on the homepage too", widget: boolean, default: false }
-              - { name: headerWordmark, label: "Header wordmark", widget: string, default: "G&L" }
-              - { name: animateOnLoad, label: "Animate on load", widget: boolean, default: true }
-              - { name: centreShortPages, label: "Vertically centre short pages", widget: boolean, default: true }
-              - { name: footerLeft, label: "Footer left text", widget: select, default: status,
-                  options: [{ label: "Status line", value: status }, { label: "Domain", value: domain }] }
-              - { name: showFeedLink, label: "Advertise the Atom feed", widget: boolean, default: true }
-
-          # --- Colours and fonts. Colour pickers write hex values. ---
+          # --- Colours. The pickers write hex values, which base.njk turns
+          #     into CSS variables. Clearing a field falls back to the value
+          #     at the top of style.css. Fonts live under Appearance, not here.
           - name: theme
             label: Theme
             widget: object
@@ -198,14 +179,11 @@ collections:
               - { name: ink, label: "Text — primary", widget: color }
               - { name: inkSoft, label: "Text — muted", widget: color }
               - { name: rule, label: "Hairlines and borders", widget: color }
-              - { name: brass, label: "Accent", widget: color }
+              - { name: brass, label: "Accent", widget: color,
+                  hint: "Used for the ampersand, markers, buttons and links. Hover washes are derived from it automatically." }
+              - { name: violet, label: "Off-scale accent", widget: color,
+                  hint: "The two zones past either end of the bar, for things with no size." }
               - { name: measure, label: "Max content width", widget: string, default: "64rem" }
-              - { name: displayFont, label: "Display font", widget: string,
-                  hint: "Also update the Google Fonts link in base.njk if you change this." }
-              - { name: bodyFont, label: "Body font", widget: string }
-              - { name: monoFont, label: "Mono font", widget: string }
-              - { name: wonk, label: "Fraunces WONK (0 or 1)", widget: number, value_type: int, min: 0, max: 1 }
-              - { name: soft, label: "Fraunces SOFT (0-100)", widget: number, value_type: int, min: 0, max: 100 }
 
       - name: sections
         label: Sections and scale bar
@@ -254,7 +232,11 @@ collections:
                   hint: "Exactly one section should have this on. It lists reviews with their scores instead of ordinary posts, and every review files itself here automatically." }
               - { name: simulation, label: "Show the simulation embed", widget: boolean,
                   default: false,
-                  hint: "Puts the Life stage and its buttons above this section's post list." }
+                  hint: "Puts an embed and its buttons above this section's post list. Fill in the three URLs below to make them appear; leave them blank and nothing is shown." }
+              - { name: embedUrl, label: "Embed URL", widget: string, required: false,
+                  hint: "The page to load in the frame. Blank means no frame." }
+              - { name: downloadUrl, label: "Download URL", widget: string, required: false }
+              - { name: sourceUrl, label: "Source URL", widget: string, required: false }
               - { name: hidden, label: "Hide from navigation", widget: boolean,
                   default: false,
                   hint: "Removes it from the scale bar and the homepage list. The page still exists and works by direct link." }
@@ -309,8 +291,6 @@ collections:
             fields:
               - { name: showEyebrow, label: "Show the domain above the title", widget: boolean, default: false }
               - { name: showRailCaptions, label: "Show the captions under the scale bar", widget: boolean, default: true }
-              - { name: tickCount, label: "Number of tick marks", widget: number, value_type: int, min: 6, max: 72, default: 18 }
-              - { name: majorEvery, label: "Every Nth tick is taller", widget: number, value_type: int, min: 2, max: 12, default: 3 }
 
           - name: entries
             label: Post lists
@@ -365,8 +345,6 @@ collections:
             hint: "The regions past either end of the bar, for sections with no physical scale."
             fields:
               - { name: show, label: "Show the zones", widget: boolean, default: true }
-              - { name: width, label: "Zone width (percent of the bar)", widget: number,
-                  value_type: int, min: 6, max: 25, default: 13 }
               - name: discrete
                 label: "Left zone — below resolution"
                 widget: object

@@ -1,5 +1,5 @@
 {
-  "title": "Great and Little",
+  "title": "Great & Little",
   "domain": "greatandlittle.space",
   "url": "https://greatandlittle.space",
   "tagline": "THE BOUNDLESS UNIVERSE - AS FAR TO THE INNERMOST AS TO THE OUTERMOST",
@@ -7,20 +7,9 @@
   "place": "Sol-3, Orion-Cygnus, Milky Way",
   "railLeft": "10⁻¹⁰ m - the lattice",
   "railRight": "10²⁶ m - the observable edge",
-  "options": {
-    "showEyebrow": false,
-    "showTagline": true,
-    "showRailEnds": true,
-    "showSectionList": true,
-    "showTickMarks": false,
-    "stickyHeader": true,
-    "headerOnHome": false,
-    "headerWordmark": "G&L",
-    "animateOnLoad": true,
-    "centreShortPages": true,
-    "footerLeft": "status",
-    "showFeedLink": true
-  },
+
+  "_comment": "theme sets the site's colours. base.njk writes these into the page as CSS variables, overriding the fallbacks at the top of style.css. Behaviour switches (nav, motion, summaries) live in options.json, not here.",
+
   "theme": {
     "pitch": "#0C080E",
     "ground": "#160E1B",
@@ -29,12 +18,8 @@
     "ink": "#EFE7F1",
     "inkSoft": "#A594AC",
     "rule": "#402A48",
-    "brass": "#D9B871",
-    "measure": "64rem",
-    "displayFont": "Fraunces",
-    "bodyFont": "IBM Plex Sans",
-    "monoFont": "IBM Plex Mono",
-    "wonk": 1,
-    "soft": 0
+    "brass": "#C9A24E",
+    "violet": "#B98CE0",
+    "measure": "64rem"
   }
 }

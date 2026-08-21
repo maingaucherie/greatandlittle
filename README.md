@@ -7,12 +7,16 @@ in your daily loop.
 ```
 src/
   index.njk            homepage
-  sections.njk         generates /optics/, /bench/, ... one per section
+  sections.njk         generates /bench/, /microscopy/, ... one per section
   feed.njk             the Atom feed
   style.css            all styling, heavily commented
   _data/
-    site.json          title, tagline, footer text, scale-bar captions
+    site.json          title, tagline, footer text, colours
     sections.json      the sections and where they sit on the bar
+    options.json       display switches (nav, motion, summaries)
+    scale.json         the bar's range, size bands and lens
+    rubric.json        the three review scoring axes
+    fonts.json         the display faces offered in the CMS
   _includes/
     base.njk           the page shell (head, fonts, footer)
     scalebar.njk       the navigation, generated from sections.json
@@ -22,6 +26,9 @@ src/
   reviews/             markdown, one file per review
   admin/               the CMS
   uploads/             images added through the CMS
+  404.njk              the not-found page
+  robots.njk           robots.txt
+  sitemap.njk          sitemap.xml
 _site/                 generated output — never edit, never commit
 ```
 
@@ -68,8 +75,8 @@ go. Roughly ten minutes:
 2. Deploy <https://github.com/sveltia/sveltia-cms-auth> as its own Worker.
    Set `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` as secrets on it.
 3. Go back and set the real callback URL on the OAuth app.
-4. In `src/admin/config.yml`, fill in `repo:` and `base_url:` — both are
-   marked with `<-- change this`.
+4. In `src/admin/config.yml`, check `repo:` and `base_url:` — both are
+   marked with `<-- change this`. `base_url` needs the full `https://…`.
 
 Then visit `greatandlittle.space/admin/`.
 
@@ -90,7 +97,7 @@ Good for trying things out.
 ---
 title: Fixing a Z2 that wouldn't light
 date: 2026-08-20
-section: optics       # must match a key in _data/sections.json
+section: bench        # must match a key in _data/sections.json
 summary: One line, shown under the title and in the section list.
 ---
 ```
@@ -111,44 +118,40 @@ scores:
 ---
 ```
 
-The overall figure is the mean of the three, computed at build time. Don't
-write it by hand.
+The overall figure is the mean of the axes in `_data/rubric.json`, computed
+at build time. Don't write it by hand.
 
 ## Common changes
 
-**Colours.** Top of `src/style.css`, under `:root`. Every colour is defined
-once there. The accent is `--brass`; change `--brass-wash` with it (same
-colour at 9%, used for hover backgrounds).
+**Colours.** CMS → Settings → Site details → Theme, or the `theme` block in
+`_data/site.json`. The values at the top of `src/style.css` are the fallbacks
+used when a field is blank. The accent is `brass`; the hover wash is derived
+from it, so there's nothing to keep in sync by hand.
 
-**Move a marker on the scale bar.** Edit its `x` in `_data/sections.json`, or
-use the CMS under Settings → Sections. The bar spans 10⁻¹⁰ to 10²⁶ m — 36
-decades — so for something at 10^N metres:
-
-    x = (N + 10) / 36 × 100
-
-Markers closer than about 6% apart will have their labels collide on hover.
+**Move a marker on the scale bar.** Edit its `at` in `_data/sections.json`, or
+use the CMS under Settings → Sections. `at` is just the exponent — `-6` means
+10⁻⁶ m — and the build does the arithmetic. Markers closer than about two
+decades apart will have their labels collide; the build warns you when that
+happens.
 
 **Add a section.** Add an entry to `_data/sections.json` (or through the CMS).
-The marker, the homepage row, and the section page at `/yourkey/` all appear
-on the next build. Then add its key to the `section` dropdown options in
-`src/admin/config.yml` so you can file posts under it.
+The marker, the homepage row, the section page at `/yourkey/` and the Section
+dropdown when writing a post all follow automatically — the dropdown reads
+`sections.json` directly, so there's no second list to keep up to date.
 
 **Footer text, tagline, scale-bar captions.** `_data/site.json`, or CMS →
 Settings → Site details.
 
-## The Life embed
+## The simulation embed
 
-`src/sections.njk` has the stage markup inside `{% if section.key == "life" %}`.
-Replace the placeholder paragraph with an iframe and the CSS sizes it:
+Any section with **Show the simulation embed** ticked can carry a frame and two
+buttons above its post list. All three are driven by URLs on the section
+itself — CMS → Settings → Sections, or `embedUrl` / `downloadUrl` /
+`sourceUrl` in `_data/sections.json`.
 
-```html
-<div class="stage">
-  <iframe src="/life/sim/" title="Game of Life"></iframe>
-</div>
-```
-
-The two buttons under it are `href="#"` until you have a download and a repo
-link.
+Leave one blank and it isn't rendered. That's deliberate: an unfinished
+section shows nothing rather than a placeholder box or a button that goes
+nowhere. Fill `embedUrl` in and the CSS sizes the frame for you.
 
 ## Things worth not breaking
 
@@ -158,6 +161,9 @@ link.
   for people who get motion sick. Keep it last so it wins.
 - **`_site/` is generated.** It's gitignored. Editing files in there does
   nothing — the next build overwrites them.
+- **Every setting has one home.** Colours in `site.json`, display switches in
+  `options.json`, the bar in `scale.json`. When a setting exists in two places
+  they drift apart, and the one you edit is never the one being read.
 - **Sveltia is pinned** to a specific version in `src/admin/index.html`
   rather than floating on `@latest`, so an upstream release can't change the
   editor without warning. It's in beta and moves fast; bump it on purpose.

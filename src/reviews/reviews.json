@@ -1,5 +1,4 @@
 {
   "layout": "review.njk",
-  "tags": "reviews",
-  "eleventyComputed": {}
+  "tags": "reviews"
 }

@@ -12,3 +12,6 @@ compatibility_date = "2026-08-17"
 
 [assets]
 directory = "./_site"
+# Serve /404.html for any URL that doesn't exist, instead of a bare
+# Cloudflare error page.
+not_found_handling = "404-page"

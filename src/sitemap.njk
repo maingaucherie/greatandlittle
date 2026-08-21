@@ -1,0 +1,24 @@
+---
+# Lists every public page for search engines. Built from the same data the
+# site itself uses, so it can't fall out of date. Hidden sections are left
+# out deliberately — they still work by direct link, they just aren't
+# advertised, which is the whole point of hiding them.
+permalink: /sitemap.xml
+eleventyExcludeFromCollections: true
+---
+<?xml version="1.0" encoding="utf-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>{{ site.url }}/</loc></url>
+  {%- for s in sections.list | visible %}
+  <url><loc>{{ site.url }}/{{ s.key }}/</loc></url>
+  {%- endfor %}
+  {%- for entry in collections.posts %}
+  <url><loc>{{ site.url }}{{ entry.url }}</loc><lastmod>{{ entry.date | isoDate }}</lastmod></url>
+  {%- endfor %}
+  {%- for entry in collections.reviews %}
+  <url><loc>{{ site.url }}{{ entry.url }}</loc><lastmod>{{ entry.date | isoDate }}</lastmod></url>
+  {%- endfor %}
+  {%- for t in collections.topics %}
+  <url><loc>{{ site.url }}/topics/{{ t.slug }}/</loc></url>
+  {%- endfor %}
+</urlset>

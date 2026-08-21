@@ -1,0 +1,24 @@
+---
+# The page Cloudflare serves for any URL that doesn't exist. Enabled by
+# not_found_handling in wrangler.toml — without that line this file builds
+# but never gets shown.
+permalink: /404.html
+eleventyExcludeFromCollections: true
+title: Not found
+wide: true
+---
+<div>
+  <a class="backlink" href="/"><span aria-hidden="true">&#8592;</span> {{ site.title }}</a>
+  <p class="page-scale">404</p>
+  <h1 class="page-title">Nothing at this address</h1>
+  <p class="lede">The page you asked for isn't here. It may have moved, or it may never have existed.</p>
+
+  <ul class="entries">
+    {% for s in sections.list | visible %}
+    <li><a href="/{{ s.key }}/">
+      <span class="entry-title">{{ s.name }}</span>
+      <span class="entry-blurb">{{ s.intro }}</span>
+    </a></li>
+    {% endfor %}
+  </ul>
+</div>

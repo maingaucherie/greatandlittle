@@ -1,51 +1,55 @@
 {
+  "_comment": "Every section of the site: its URL key, where it sits on the scale bar, and its copy. Add an entry and its marker, homepage row, page at /key/ and CMS dropdown option all appear on the next build. Edit through CMS > Settings > Sections and Scale bar.",
+
   "list": [
     {
       "key": "cellular_automata",
       "name": "Cellular Automata",
       "at": null,
-      "blurb": "Experiments in cellular automata",
-      "intro": "Experiments in cellular automata",
-      "empty": "Experiments in cellular automata",
       "zone": "discrete",
+      "blurb": "Experiments in Cellular Automata.",
+      "intro": "Experiments in Cellular Automata.",
+      "empty": "Grids, rules, and the patterns they produce without being asked. Nothing here has a width in metres, which is why it sits off the end of the bar rather than anywhere on it.",
       "hidden": false,
-      "exp": "off scale",
-	    "reviews": false,
-      "simulation": true
+      "reviews": false,
+      "simulation": true,
+      "embedUrl": "",
+      "downloadUrl": "",
+      "sourceUrl": ""
     },
     {
       "key": "microscopy",
       "name": "Microscopy",
       "at": -5,
-      "blurb": "Microscopy blurb",
-      "intro": "Microscopy intro",
-      "empty": "Microscopy EMPTY STATE TEXT",
       "zone": "",
+      "blurb": "Slides, objectives, and whatever turns up on them.",
+      "intro": "Slides, objectives, and whatever turns up on them.",
+      "empty": "Sample preparation, illumination, and the long argument between magnification and resolution. Anything that ends at an eyepiece.",
       "hidden": false,
-	    "reviews": false,
+      "reviews": false,
       "simulation": false
     },
     {
       "key": "bench",
       "name": "The Bench",
       "at": -0.9,
-      "blurb": "Things made and things brought back — restorations, prints, builds, and works in progress.",
-      "intro": "Things made and things brought back.",
-      "empty": "Restorations, prints, builds and half-finished projects. Lamps, frames, brackets, and whatever the printer is currently occupied with.",
       "zone": "",
+      "blurb": "Restorations, prints, builds and half-finished projects.",
+      "intro": "Things made and things brought back.",
+      "empty": "Restorations, prints, builds and half-finished projects.",
       "hidden": false,
-	    "reviews": false,
+      "reviews": false,
       "simulation": false
     },
     {
       "key": "stage",
       "name": "Stage Distractions",
+      "at": 2,
+      "zone": "",
       "blurb": "Rating lab equipment in film and television. Right instrument? Used correctly? Could they possibly be seeing that?",
       "intro": "Rating lab equipment in film and television.",
       "empty": "Every entry gets scored on the same three axes: is it the right instrument for the setting, is anyone using it correctly, and could they plausibly be seeing what the script says they are seeing.",
       "hidden": false,
-      "zone": "",
-      "at": 1,
       "reviews": true,
       "simulation": false
     },
@@ -53,12 +57,12 @@
       "key": "telescopy",
       "name": "Telescopy",
       "at": 16,
-      "blurb": "Telescopy blurb",
-      "intro": "Telescopy intro",
-      "empty": "Telescopy EMPTY STATE TEXT",
       "zone": "",
+      "blurb": "The same instrument, pointed the other way.",
+      "intro": "The same instrument, pointed the other way.",
+      "empty": "Mounts, seeing, collimation, and the nights that turned out to be worth staying up for.",
       "hidden": false,
-	    "reviews": false,
+      "reviews": false,
       "simulation": false
     }
   ]
