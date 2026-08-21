@@ -154,7 +154,12 @@ h1 .amp{
 /* Intro paragraph under a heading. */
 .lede{
   margin:1.75rem 0 0;
-  max-width:38ch;    /* ch = width of a "0". Caps line length for readability. */
+
+  /* ch = the width of a "0", so this caps the line length rather than the
+     pixel width. 60ch here against 70ch in .prose looks like the intro is
+     narrower, but it isn't: the lede is set larger, so the two come out at
+     roughly the same physical width and their right edges line up. */
+  max-width:60ch;
   font-size:clamp(1rem,2.4vw,1.15rem);
   color:var(--ink-soft);
 }
@@ -503,7 +508,10 @@ h1 .amp{
 
 /* Wrap body copy in <div class="prose"> on any page. This is what blog
    posts should use — h2 renders as a small brass mono label, not a big serif. */
-.prose{max-width:60ch;margin-top:3rem;}
+/* 70ch is the top of the comfortable range for reading. Going wider makes
+   the eye lose its place returning to the start of the next line; going
+   much narrower leaves the text stranded in the middle of the page. */
+.prose{max-width:70ch;margin-top:3rem;}
 .prose h2{
   font-family:var(--mono-font,var(--font-mono));
   font-size:0.7rem;
