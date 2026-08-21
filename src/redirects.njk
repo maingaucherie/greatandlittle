@@ -1,0 +1,21 @@
+---
+# Cloudflare reads this file and forwards old addresses to new ones.
+#
+# Reviews used to live at /reviews/2026-08-19-some-film/ and posts at
+# /posts/2026-08-20-some-post/. They now sit under their own section, at
+# /stage/some-film/ and /bench/some-post/, which reads better and means a
+# link says where it belongs.
+#
+# Anything already shared or bookmarked under an old address still works:
+# these lines are generated from the entries themselves, so the list stays
+# right as you publish more. New writing never had an old address — these
+# are only a courtesy to links already out in the world.
+permalink: /_redirects
+eleventyExcludeFromCollections: true
+---
+{% for entry in collections.posts -%}
+/posts/{{ entry.page.inputPath | sourceSlug }}/ {{ entry.url }} 301
+{% endfor -%}
+{% for entry in collections.reviews -%}
+/reviews/{{ entry.page.inputPath | sourceSlug }}/ {{ entry.url }} 301
+{% endfor -%}

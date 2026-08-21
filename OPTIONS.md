@@ -6,15 +6,29 @@ Everything here is a value you can change without touching a template.
 
 Edit the file directly, or through the CMS once you add it there.
 
-### nav — the compact scale bar header
+### nav — the page header
+
+The header isn't a small copy of the homepage scale bar. That bar makes sense
+because of its ticks, bands, captions and lens; shrink it to a strip and all
+of that goes, leaving unlabelled dots close enough to collide. So it says
+where you are instead of showing the whole map:
+
+    Great & Little        ← Microscopy   THE BENCH 10⁻⁰·⁹ m   Telescopy →
+
+The wordmark goes home. The middle names the section and, more to the point,
+gives its size — the site's premise, on every page rather than only the front
+one. On a post it also links back up to its section. Either side are the next
+sections down and up the scale, so the site can be walked in order rather than
+only jumped around. There's no wrapping at the ends: the smallest section has
+nothing below it and leaves the link out.
 
 | Option | Default | What it does |
 | --- | --- | --- |
 | `show` | `true` | The header on every page. `false` removes it site-wide. |
 | `showOnHome` | `false` | Also show it on the homepage, above the full-size bar. Slightly redundant, but try it. |
-| `showLabels` | `true` | Section names under the dots. `false` = dots only, very minimal. |
 | `sticky` | `true` | Header follows you as you scroll. `false` = scrolls away. |
-| `markCurrent` | `true` | The section you're in is filled brass with its label always visible. |
+| `showNeighbours` | `true` | The two links either side. `false` leaves only the section you're in. |
+| `showMarker` | `true` | The single dot on the hairline below, at this section's place on the scale. |
 
 ### home — the front page
 
@@ -40,6 +54,21 @@ number would be decoration that lies about the spacing.
 | --- | --- | --- |
 | `enabled` | `true` | All animation. `false` kills it globally. (Visitors who set "reduce motion" in their OS already get this automatically.) |
 
+## Addresses
+
+Every post and review lives under its section:
+
+    /bench/fixing-the-z2/
+    /stage/sonic-the-hedgehog-2020/
+    /topics/olympus/
+
+The date at the front of a filename orders the folder and is dropped from the
+address. Two entries in the same section can't share a name — the build stops
+and tells you, rather than quietly overwriting one with the other.
+
+`src/redirects.njk` keeps the addresses these pages used to have working. It
+generates itself from the entries, so it stays correct as you publish more.
+
 ## Per-page front matter
 
 Any single page can override things:
@@ -51,6 +80,7 @@ wide: true         # start at the top instead of vertically centring
 current: bench     # which section to highlight in the nav
 title: Something   # browser tab text
 description: ...   # meta description
+draft: true        # build it locally, leave it off the live site
 ---
 ```
 
@@ -186,6 +216,23 @@ Add an entry to `src/_data/fonts.json`:
 `query` is the part after `family=` in a Google Fonts URL. Then add the name
 to the `options:` list under `display` in `src/admin/config.yml` so it shows
 up in the dropdown.
+
+## Pictures
+
+There is nothing to configure and nothing to remember. Write a plain image tag
+or drop one in through the CMS, and the build makes resized copies in AVIF,
+WebP and JPEG at 400, 800, 1200, 1600 and 2048 pixels wide, then hands the
+browser the list to choose from.
+
+The two numbers worth knowing about, both in `eleventy.config.js`:
+
+| Setting | Now | What it does |
+| --- | --- | --- |
+| `widths` | 400–2048 | The sizes made for each picture. 2048 covers a high-density screen at full width; there's no point going past it while the text column is 64rem. |
+| `sizes` | `100vw` under 64rem, else 64rem | What the browser is told about display size *before* the stylesheet loads, so it can choose properly. The stills in a review override this — they sit in narrower columns. |
+
+Raising `widths` makes builds slower and the deploy larger without making
+anything look better. Lowering it makes pictures soft on good screens.
 
 ## Favicons
 

@@ -901,9 +901,14 @@ body.no-centre .wrap{justify-content:flex-start;}
 
 
 /* ==========================================================================
-   13. PERSISTENT NAV (the compact scale bar header)
-   Appears on every page except the homepage. Behaviour toggles live in
-   src/_data/options.json under "nav" — this section is just the look.
+   13. PERSISTENT NAV (the header on every page but the homepage)
+
+   Not a miniature of the scale bar — a statement of where you are on it.
+   The wordmark goes home; the middle names the current section and its size;
+   either side are the next sections up and down the scale. A hairline below
+   carries one dot at the current position.
+
+   Switches live in src/_data/options.json under "nav".
    ========================================================================== */
 
 .sitenav{
@@ -942,107 +947,118 @@ body.no-centre .wrap{justify-content:flex-start;}
 .sitenav-mark:hover{color:var(--brass);}
 .sitenav-mark .amp{color:var(--brass);font-style:italic;}
 
-/* The miniature rail. Same --x percentages as the big bar, so a marker
-   sits at the same relative position in both. */
-.minirail{
-  position:relative;
-  flex:1 1 auto;
-  height:100%;
-  min-width:8rem;
-  border-bottom:1px solid var(--rule);
-  margin-bottom:-1px;               /* sits on the header's own border */
-}
-
-.minimark{
-  position:absolute;
-  left:var(--x);
-  bottom:0;
-  transform:translateX(-50%);
-  height:100%;
+/* Smaller, here, larger — kept together on the right so they read as one
+   ordered run rather than three separate controls. */
+.sitenav-where{
+  margin-left:auto;
+  min-width:0;
   display:flex;
-  flex-direction:column;
   align-items:center;
-  justify-content:flex-end;
-  padding-bottom:0.55rem;
-  text-decoration:none;
-  gap:0.3rem;
+  gap:clamp(0.7rem,2.5vw,1.6rem);
 }
 
-.minimark .minidot{
-  width:0.4rem;height:0.4rem;
-  border-radius:50%;
-  background:transparent;
-  border:1.5px solid var(--raised);
-  transition:background 0.18s ease, border-color 0.18s ease,
-             transform 0.18s ease, box-shadow 0.18s ease;
-}
-
-.minimark .miniflag{
-  order:-1;
+/* The two neighbours. */
+.sitenav-step{
+  flex:0 1 auto;
+  min-width:0;
+  display:inline-flex;
+  align-items:center;
+  gap:0.4rem;
   font-family:var(--font-mono);
-  font-size:0.58rem;
-  letter-spacing:0.1em;
+  font-size:0.6rem;
+  letter-spacing:0.12em;
   text-transform:uppercase;
   white-space:nowrap;
+  text-decoration:none;
+  color:var(--ink-soft);
+  transition:color 0.15s ease;
+}
+.sitenav-step:hover{color:var(--brass);}
+.sitenav-step:focus-visible{outline:2px solid var(--brass);outline-offset:3px;border-radius:2px;}
+.sitenav-step-name{overflow:hidden;text-overflow:ellipsis;}
+
+/* Where you are. Brighter than its neighbours, and carrying the one piece of
+   information the old row of dots never managed to say: how big this is. */
+.sitenav-here{
+  flex:0 1 auto;
+  min-width:0;
+  display:inline-flex;
+  align-items:baseline;
+  gap:0.5rem;
+  white-space:nowrap;
+}
+.sitenav-here-name{
+  font-family:var(--font-mono);
+  font-size:0.68rem;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:var(--ink);
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+a.sitenav-here-name{text-decoration:none;transition:color 0.15s ease;}
+a.sitenav-here-name:hover{color:var(--brass);}
+a.sitenav-here-name:focus-visible{outline:2px solid var(--brass);outline-offset:3px;border-radius:2px;}
+
+.sitenav-here-scale{
+  font-family:var(--font-mono);
+  font-size:0.6rem;
+  letter-spacing:0.06em;
   color:var(--brass);
-  opacity:0;
-  transform:translateY(0.2rem);
-  transition:opacity 0.18s ease, transform 0.18s ease;
-  pointer-events:none;
+}
+.sitenav-here.off .sitenav-here-scale{
+  color:var(--violet);
+  letter-spacing:0.12em;
+  text-transform:uppercase;
 }
 
-.minimark:hover .minidot,
-.minimark:focus-visible .minidot{
+/* The hairline and its single marker. The rule has no height of its own —
+   it hangs on the header's existing bottom border. */
+.sitenav-rule{
+  max-width:var(--measure);
+  margin:0 auto;
+  padding:0 clamp(1.25rem,5vw,3rem);
+  height:0;
+}
+.sitenav-track{display:block;position:relative;height:0;}
+
+.sitenav-pin{
+  position:absolute;
+  left:var(--x);
+  top:0;
+  width:0.42rem;
+  height:0.42rem;
+  border-radius:50%;
   background:var(--brass);
-  border-color:var(--brass);
-  transform:scale(1.2);
+  transform:translate(-50%,-50%);
+  box-shadow:0 0 0.5rem rgba(201,162,78,0.55);
 }
-.minimark:hover .miniflag,
-.minimark:focus-visible .miniflag{opacity:1;transform:none;}
-
-/* The section you're currently reading: filled, glowing, label always shown. */
-.minimark.is-current .minidot{
-  background:var(--brass);
-  border-color:var(--brass);
-  box-shadow:0 0 0.6rem rgba(201,162,78,0.6);
+/* Off-scale sections keep the square/violet language of the big bar. */
+.sitenav-pin.off{
+  border-radius:0;
+  background:var(--violet);
+  box-shadow:0 0 0.5rem rgba(185,140,224,0.55);
 }
-.minimark.is-current .miniflag{opacity:1;transform:none;}
 
-.minimark:focus-visible{outline:2px solid var(--brass);outline-offset:3px;border-radius:2px;}
-
-/* Off-scale sections in the header: same violet and shapes as the big bar. */
-.minimark.off .minidot{border-radius:0;border-color:var(--violet);}
-.minimark.off .miniflag{color:var(--violet);}
-.minimark.off:hover .minidot,
-.minimark.off:focus-visible .minidot{background:var(--violet);border-color:var(--violet);box-shadow:0 0 0.7rem rgba(185,140,224,0.55);}
-.minimark.off.is-current .minidot{background:var(--violet);border-color:var(--violet);box-shadow:0 0 0.6rem rgba(185,140,224,0.6);}
-.minimark.off.is-current .miniflag{color:var(--violet);}
-.minimark.off.unbound .minidot{
-  width:0;height:0;background:transparent !important;border:0;
-  border-left:0.3rem solid transparent;border-right:0.3rem solid transparent;
-  border-bottom:0.48rem solid var(--violet);box-shadow:none;
-}
-.minimark.off.unbound:hover .minidot,
-.minimark.off.unbound.is-current .minidot{filter:drop-shadow(0 0 0.35rem rgba(185,140,224,0.7));}
-
-/* options.nav.showLabels = false — dots only, no text at all. */
-.sitenav.no-labels .miniflag{display:none;}
-
-/* Interior pages already have the nav, so the old back link is redundant.
-   Kept in the markup but hidden; set display:inline-flex to bring it back. */
+/* Posts and reviews name their section in the header now, and it links
+   there, so the back link above the title would say the same thing twice. */
 .sitenav ~ .wrap .backlink{display:none;}
+
+@media (max-width:52rem){
+  /* Neighbour names go first; the arrows still lead somewhere. */
+  .sitenav-step-name{display:none;}
+  .sitenav-step{font-size:0.75rem;}
+}
 
 @media (max-width:44rem){
   .sitenav-inner{height:3.25rem;gap:1rem;}
   .sitenav-mark{font-size:0.9rem;}
-  /* Labels would collide at this width — current section only. */
-  .minimark:not(.is-current) .miniflag{display:none;}
-  .minimark.is-current .miniflag{font-size:0.54rem;}
+  .sitenav-here-name{font-size:0.62rem;letter-spacing:0.1em;}
 }
 
 @media (max-width:26rem){
-  /* Very narrow: drop labels entirely, dots still navigate. */
-  .miniflag{display:none !important;}
+  /* Only room for one thing: where you are. */
+  .sitenav-step{display:none;}
 }
 
 

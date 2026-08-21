@@ -1,0 +1,225 @@
+---
+# ============================================================================
+# TEMPORARY — a side-by-side of the three ways of handling text width.
+# Visit /width-test/ and use the buttons at the top to switch between them.
+#
+# Nothing else on the site links here, it's left out of the sitemap and the
+# feed, and none of the CSS below touches style.css — it all lives on this
+# page. Delete this file once you've picked one.
+# ============================================================================
+permalink: /width-test/
+eleventyExcludeFromCollections: true
+title: Width test
+hideNav: true
+wide: true
+---
+{%- set review = collections.reviews[0] -%}
+
+<style>
+  /* This page manages its own width, so the usual container gets out of
+     the way. Everything in here is scoped to /width-test/ only. */
+  .wrap{max-width:none;padding:0;}
+
+  /* --- the control strip ------------------------------------------------ */
+  .wt-bar{
+    position:sticky; top:0; z-index:60;
+    background:var(--ground);
+    border-bottom:1px solid var(--rule);
+    padding:0.9rem clamp(1.25rem,5vw,3rem);
+    display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center;
+  }
+  .wt-bar button{
+    font-family:var(--font-mono); font-size:0.7rem; letter-spacing:0.12em;
+    text-transform:uppercase; cursor:pointer;
+    background:none; color:var(--ink-soft);
+    border:1px solid var(--rule); border-radius:2px;
+    padding:0.5rem 0.85rem;
+  }
+  .wt-bar button:hover{color:var(--ink); border-color:var(--brass);}
+  .wt-bar button.on{background:var(--brass); border-color:var(--brass); color:var(--pitch);}
+  .wt-readout{
+    font-family:var(--font-mono); font-size:0.7rem; color:var(--ink-soft);
+    margin-left:auto;
+  }
+  .wt-caption{
+    font-family:var(--font-mono); font-size:0.7rem; letter-spacing:0.1em;
+    text-transform:uppercase; color:var(--brass);
+    padding:2.5rem clamp(1.25rem,5vw,3rem) 0;
+  }
+  .wt-desc{
+    color:var(--ink-soft); font-size:0.9rem; max-width:60ch;
+    padding:0.5rem clamp(1.25rem,5vw,3rem) 0; margin:0;
+  }
+  .wt-rule{border:0; border-top:1px dashed var(--rule); margin:4.5rem 0 0;}
+
+  /* A dotted outline showing where the page column actually ends, so it's
+     obvious how much room the text is or isn't using. */
+  .wt-page{
+    margin:0 auto;
+    padding:2.5rem clamp(1.25rem,5vw,3rem);
+    outline:1px dotted var(--violet-rule);
+    outline-offset:-1px;
+  }
+
+  /* ====================================================================== */
+  /* OPTION A — reading column of 46rem; pictures and the bar break out.    */
+  /* ====================================================================== */
+  .opt-a .wt-page{max-width:46rem;}
+  .opt-a .lede{max-width:none;}
+  .opt-a .prose{max-width:none;}
+  .opt-a .wt-wide{
+    width:64rem; max-width:calc(100vw - 3rem);
+    margin-left:50%; transform:translateX(-50%);
+  }
+
+  /* ====================================================================== */
+  /* OPTION B — keep the 64rem column, let the text run wider.              */
+  /* ====================================================================== */
+  .opt-b .wt-page{max-width:64rem;}
+  .opt-b .lede{max-width:60ch;}
+  .opt-b .prose{max-width:70ch;}
+
+  /* ====================================================================== */
+  /* OPTION C — keep 64rem, put the scorecard in the spare width.           */
+  /* ====================================================================== */
+  .opt-c .wt-page{max-width:64rem;}
+  .opt-c .lede{max-width:46ch;}
+  .opt-c .prose{max-width:60ch;}
+  .opt-c .wt-split{
+    display:grid; grid-template-columns:minmax(0,1fr) 17rem; gap:3.5rem;
+    align-items:start;
+  }
+  .opt-c .wt-aside{position:sticky; top:5rem;}
+  .opt-c .wt-aside .scorecard{margin-top:0;}
+  @media (max-width:60rem){
+    .opt-c .wt-split{grid-template-columns:1fr;}
+    .opt-c .wt-aside{position:static;}
+  }
+</style>
+
+<div class="wt-bar">
+  <button data-opt="a" class="on">A &middot; narrow column</button>
+  <button data-opt="b">B &middot; wider text</button>
+  <button data-opt="c">C &middot; side column</button>
+  <span class="wt-readout" id="wt-readout"></span>
+</div>
+
+<div id="wt-stage" class="opt-a">
+
+  <p class="wt-caption">1 &middot; the homepage masthead</p>
+  <p class="wt-desc" id="wt-desc"></p>
+
+  <div class="wt-page">
+    <header class="masthead">
+      <h1>Great <span class="amp">&amp;</span> Little</h1>
+      <p class="lede">{{ site.tagline }}</p>
+    </header>
+
+    <div class="wt-wide">
+      <p class="wt-desc" style="padding-left:0">The scale bar, at full width in every option &mdash; it's the thing that needs the room.</p>
+      <div class="rail" style="margin-top:1.5rem"><div class="ticks">
+        {%- for i in range(0, 37) -%}
+        <i class="tick{% if i % 6 == 0 %} major{% endif %}" style="--x:{{ (i / 36 * 100) | round(3) }}%"></i>
+        {%- endfor -%}
+      </div></div>
+    </div>
+  </div>
+
+  <hr class="wt-rule">
+
+  <p class="wt-caption">2 &middot; a review</p>
+
+  <div class="wt-page">
+    <div class="wt-split">
+      <div>
+        <p class="page-scale">
+          <time datetime="{{ review.data.date | isoDate }}">{{ review.data.date | readableDate }}</time>
+          {% if review.data.year %} &middot; {{ review.data.year }}{% endif %}
+        </p>
+        <h1 class="page-title">{{ review.data.title }}</h1>
+        <p class="lede">{{ review.data.summary }}</p>
+
+        {% if review.data.cover %}
+        <figure class="cover wt-wide">
+          <img src="{{ review.data.cover }}" alt="{{ review.data.title }}">
+          {% if review.data.coverCaption %}<figcaption>{{ review.data.coverCaption }}</figcaption>{% endif %}
+        </figure>
+        {% endif %}
+
+        <div class="prose">
+          {{ review.templateContent | safe }}
+        </div>
+      </div>
+
+      {# In A and B this simply follows the text. In C it moves into the
+         column of spare width on the right. #}
+      <div class="wt-aside">
+        <div class="scorecard">
+          <div class="score-total">
+            <span class="score-figure">{{ review.data.scores | meanScore }}</span>
+            <span class="score-label">Overall</span>
+          </div>
+          <dl class="score-rows">
+            {% for axis in rubric.axes %}
+            {% set val = review.data.scores[axis.key] %}
+            <div class="score-row">
+              <dt>{{ axis.label }}</dt>
+              <dd>
+                <span class="score-bar" role="img" aria-label="{{ val }} out of 10">
+                  {%- for i in range(1, 11) -%}
+                  <span class="seg{% if val is defined and i <= val %} is-on{% endif %}"></span>
+                  {%- endfor -%}
+                </span>
+                <span class="score-num">{{ val }}<span>/10</span></span>
+              </dd>
+            </div>
+            {% endfor %}
+          </dl>
+        </div>
+        {% if review.data.instrument %}
+        <p class="identified"><span>Identified as</span> {{ review.data.instrument }}</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  const stage = document.getElementById('wt-stage');
+  const readout = document.getElementById('wt-readout');
+  const desc = document.getElementById('wt-desc');
+  const buttons = [...document.querySelectorAll('.wt-bar button')];
+
+  const notes = {
+    a: 'Reading column of 46rem. The text nearly fills it; the scale bar and the cover deliberately break out past it. Everything is either reading width or full width.',
+    b: 'The 64rem column stays. The intro is widened to match the body, and the body to 70ch. Quick to do, but the text still stops short of the pictures beside it.',
+    c: 'The 64rem column stays and the spare width earns its keep: the scorecard moves into a column of its own on the right.',
+  };
+
+  // The actual numbers, measured rather than guessed at.
+  function measure() {
+    const prose = document.querySelector('.prose');
+    const page = document.querySelector('.wt-page');
+    if (!prose || !page) return;
+    const textWidth = prose.getBoundingClientRect().width;
+    const columnWidth = page.getBoundingClientRect().width
+      - parseFloat(getComputedStyle(page).paddingLeft)
+      - parseFloat(getComputedStyle(page).paddingRight);
+    readout.textContent =
+      `body text ${Math.round(textWidth)}px of ${Math.round(columnWidth)}px column` +
+      ` — ${Math.round((textWidth / columnWidth) * 100)}%`;
+  }
+
+  function choose(option) {
+    stage.className = 'opt-' + option;
+    buttons.forEach((b) => b.classList.toggle('on', b.dataset.opt === option));
+    desc.textContent = notes[option];
+    measure();
+  }
+
+  buttons.forEach((b) => b.addEventListener('click', () => choose(b.dataset.opt)));
+  window.addEventListener('resize', measure);
+  choose('a');
+})();
+</script>

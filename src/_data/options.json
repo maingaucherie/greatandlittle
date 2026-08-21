@@ -5,10 +5,10 @@
   },
   "nav": {
     "show": true,
-    "showOnHome": false,
-    "showLabels": true,
     "sticky": true,
-    "markCurrent": true
+    "showOnHome": false,
+    "showNeighbours": true,
+    "showMarker": true
   },
   "home": {
     "showEyebrow": false,

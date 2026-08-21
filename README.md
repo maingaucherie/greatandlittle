@@ -24,6 +24,7 @@ src/
     review.njk         layout for one On Screen review (adds the scorecard)
   posts/               markdown, one file per post
   reviews/             markdown, one file per review
+  redirects.njk        forwards old addresses to new ones
   admin/               the CMS
   uploads/             images added through the CMS
   404.njk              the not-found page
@@ -99,8 +100,13 @@ title: Fixing a Z2 that wouldn't light
 date: 2026-08-20
 section: bench        # must match a key in _data/sections.json
 summary: One line, shown under the title and in the section list.
+draft: true           # optional — keeps it off the live site
 ---
 ```
+
+The file goes in `src/posts/` named `2026-08-20-fixing-the-z2.md`. The date
+at the front keeps the folder in order and doesn't appear in the URL: this
+one publishes at `/bench/fixing-the-z2/`, under the section it belongs to.
 
 A review in `src/reviews/` takes the same plus the scorecard:
 
@@ -120,6 +126,32 @@ scores:
 
 The overall figure is the mean of the axes in `_data/rubric.json`, computed
 at build time. Don't write it by hand.
+
+## Drafts
+
+Tick **Draft** in the CMS, or put `draft: true` in the front matter, and the
+entry is left out of the built site completely — no page, no listing, no feed
+entry, nothing in the sitemap. It still appears when you run `npm start`
+locally, so you can see how it looks before anyone else can.
+
+Untick it to publish. That's the whole mechanism.
+
+## Pictures
+
+Drop an image in and forget about it. Every `<img>` in the finished site —
+from the templates and from markdown alike — is swapped at build time for a
+set of resized copies in modern formats, and the browser takes the smallest
+one that suits the screen it's on.
+
+A 3840px photograph off a camera is about 900KB. The copy a phone actually
+downloads is nearer 30KB, and the page no longer jumps about as pictures
+arrive, because their dimensions are written into the HTML.
+
+The originals stay in `src/uploads` and are published untouched as well, so a
+direct link to one keeps working. The pages themselves never use them.
+
+The first build after adding pictures is slow — a few seconds each while they
+are resized. After that they're cached and builds are quick again.
 
 ## Common changes
 
@@ -141,6 +173,10 @@ dropdown when writing a post all follow automatically — the dropdown reads
 
 **Footer text, tagline, scale-bar captions.** `_data/site.json`, or CMS →
 Settings → Site details.
+
+**The picture shown when a link is shared.** Reviews use their own cover art.
+Everything else uses the default set in CMS → Settings → Site details →
+Default share picture.
 
 ## The simulation embed
 
@@ -164,6 +200,10 @@ nowhere. Fill `embedUrl` in and the CSS sizes the frame for you.
 - **Every setting has one home.** Colours in `site.json`, display switches in
   `options.json`, the bar in `scale.json`. When a setting exists in two places
   they drift apart, and the one you edit is never the one being read.
+- **Addresses don't change lightly.** `src/redirects.njk` forwards the old
+  `/reviews/…` and `/posts/…` addresses to where those pages live now. If you
+  move things again, add to it rather than replacing it — links other people
+  have saved are the one thing you can't fix later.
 - **Sveltia is pinned** to a specific version in `src/admin/index.html`
   rather than floating on `@latest`, so an upstream release can't change the
   editor without warning. It's in beta and moves fast; bump it on purpose.

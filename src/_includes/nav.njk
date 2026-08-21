@@ -1,36 +1,77 @@
 {#
-  nav.njk — the compact scale bar used as a header on every page.
+  nav.njk — the header on every page except the homepage.
 
-  Same six markers as the big bar on the homepage, squeezed into a strip.
-  The section you're currently in is drawn in full brass with its label
-  always visible; the others are dim until hovered.
+  This is deliberately not a small copy of the homepage scale bar. That bar
+  works because of its ticks, bands, end captions and lens; shrink it to a
+  strip and all of that goes, leaving unlabelled dots close enough to
+  collide. So instead of a map, the header is a statement of position:
 
-  Turn it off, or change how it behaves, in src/_data/options.json under
-  "nav". Positions and names still come from _data/sections.json — this
-  file never needs editing to add or move a section.
+    Great & Little            ← Microscopy   THE BENCH 10⁻⁰·⁹ m   Telescopy →
+
+  The wordmark goes home. The middle says where you are and, more usefully,
+  how big that is — which is the site's whole premise, repeated on every
+  page rather than only on the front one. Either side are the next sections
+  up and down the scale, so the site can be walked in order.
+
+  A hairline under it carries a single dot at the current position. One
+  marker can't overlap anything, and it keeps the family resemblance to the
+  big bar.
+
+  Order and names come from _data/sections.json; switches from
+  _data/options.json under "nav". Neither needs editing to add a section.
 #}
 {% if options.nav.show %}
-<header class="sitenav{% if options.nav.sticky %} is-sticky{% endif %}{% if not options.nav.showLabels %} no-labels{% endif %}">
+{%- set here = sections.list | scaleNeighbours(current) -%}
+<header class="sitenav{% if options.nav.sticky %} is-sticky{% endif %}">
   <div class="sitenav-inner">
 
-    {# Wordmark, doubles as the home link #}
+    {# Wordmark, doubles as the home link. #}
     <a class="sitenav-mark" href="/">Great <span class="amp">&amp;</span> Little</a>
 
-    <nav class="minirail" aria-label="Sections">
-      {# Sections on the ruled bar keep their scale position; off-scale ones
-         are pinned to either end with their own shape, matching the big bar. #}
-      {% for s in sections.list | visible %}
-      {%- set off = s.zone or "" -%}
-      <a class="minimark{% if off %} off {{ off }}{% endif %}{% if options.nav.markCurrent and s.key == current %} is-current{% endif %}"
-         href="/{{ s.key }}/"
-         style="--x:{% if off == "discrete" %}0%{% elif off == "unbound" %}100%{% else %}{{ s.at | atToPercent(scale.low, scale.high) }}{% endif %}"
-         {% if options.nav.markCurrent and s.key == current %}aria-current="page"{% endif %}>
-        <span class="minidot"></span>
-        <span class="miniflag">{{ s.name }}</span>
+    {% if here.current %}
+    <nav class="sitenav-where" aria-label="Sections, smallest to largest">
+
+      {% if options.nav.showNeighbours and here.smaller %}
+      <a class="sitenav-step" href="/{{ here.smaller.key }}/" rel="prev">
+        <span aria-hidden="true">&#8592;</span>
+        <span class="sitenav-step-name">{{ here.smaller.name }}</span>
       </a>
-      {% endfor %}
+      {% endif %}
+
+      {# On a section's own page this is just a label. On a post inside that
+         section it becomes the way back up to it. #}
+      <span class="sitenav-here{% if here.current.zone %} off{% endif %}">
+        {%- if page.url == "/" + here.current.key + "/" %}
+        <span class="sitenav-here-name" aria-current="page">{{ here.current.name }}</span>
+        {%- else %}
+        <a class="sitenav-here-name" href="/{{ here.current.key }}/">{{ here.current.name }}</a>
+        {%- endif %}
+        <span class="sitenav-here-scale">
+          {%- if here.current.zone %}off scale{% else %}{{ here.current.at | expLabel }}{% endif -%}
+        </span>
+      </span>
+
+      {% if options.nav.showNeighbours and here.larger %}
+      <a class="sitenav-step" href="/{{ here.larger.key }}/" rel="next">
+        <span class="sitenav-step-name">{{ here.larger.name }}</span>
+        <span aria-hidden="true">&#8594;</span>
+      </a>
+      {% endif %}
+
     </nav>
+    {% endif %}
 
   </div>
+
+  {% if options.nav.showMarker and here.current %}
+  {# You are here, on the same scale as the big bar. Decoration only — the
+     links above do the navigating — so it's hidden from screen readers. #}
+  <div class="sitenav-rule" aria-hidden="true">
+    <span class="sitenav-track">
+      <span class="sitenav-pin{% if here.current.zone %} off{% endif %}"
+            style="--x:{% if here.current.zone == "discrete" %}0%{% elif here.current.zone == "unbound" %}100%{% else %}{{ here.current.at | atToPercent(scale.low, scale.high) }}{% endif %}"></span>
+    </span>
+  </div>
+  {% endif %}
 </header>
 {% endif %}
