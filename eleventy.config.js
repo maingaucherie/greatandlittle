@@ -23,7 +23,16 @@ export default function (eleventyConfig) {
   // apple-touch-icon.png, robots.txt) copied straight to the site root.
   eleventyConfig.addPassthroughCopy("src/favicon.svg");
   eleventyConfig.addPassthroughCopy("src/favicon.ico");
+  eleventyConfig.addPassthroughCopy("src/favicon-96x96.png");
   eleventyConfig.addPassthroughCopy("src/apple-touch-icon.png");
+  eleventyConfig.addPassthroughCopy("src/site.webmanifest");
+  eleventyConfig.addPassthroughCopy("src/web-app-manifest-192x192.png");
+  eleventyConfig.addPassthroughCopy("src/web-app-manifest-512x512.png");
+
+  // src/admin is copied verbatim above. Without this, Eleventy would ALSO
+  // render admin/index.html as a template and write it to the same path —
+  // two writers, one file, and the CMS's own {{ }} syntax eaten in passing.
+  eleventyConfig.ignores.add("src/admin/**");
 
   // --- Collections --------------------------------------------------------
   // A "collection" is just a named list of content Eleventy builds for you.
@@ -38,6 +47,16 @@ export default function (eleventyConfig) {
   eleventyConfig.addCollection("reviews", (api) =>
     api.getFilteredByGlob("src/reviews/*.md").reverse()
   );
+
+  // How a topic name becomes a URL. The collection below and the links in
+  // post.njk/review.njk both call this, so they cannot disagree — using
+  // Eleventy's built-in `slug` in the templates meant "Café" was linked as
+  // /topics/cafe/ while the page was built at /topics/caf/.
+  const topicSlug = (name) =>
+    String(name)
+      .normalize("NFD").replace(/[̀-ͯ]/g, "")  // "Café" -> "Cafe"
+      .toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  eleventyConfig.addFilter("topicSlug", topicSlug);
 
   // Every distinct topic across posts and reviews, with its entries.
   // Drives the /topics/<name>/ pages.
@@ -56,7 +75,7 @@ export default function (eleventyConfig) {
       .sort((a, b) => a[0].localeCompare(b[0]))
       .map(([name, entries]) => ({
         name,
-        slug: name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""),
+        slug: topicSlug(name),
         entries: entries.reverse(),
         count: entries.length,
       }));
@@ -67,9 +86,12 @@ export default function (eleventyConfig) {
   //   {{ post.date | readableDate }}
 
   // 17 August 2026
+  // Dates in front matter ("2026-08-17") are read as UTC midnight, so the
+  // timeZone below is not optional: without it a build machine west of
+  // Greenwich renders the day before the one in the <time> attribute.
   eleventyConfig.addFilter("readableDate", (d) =>
     new Date(d).toLocaleDateString("en-GB", {
-      day: "numeric", month: "long", year: "numeric",
+      day: "numeric", month: "long", year: "numeric", timeZone: "UTC",
     })
   );
 
@@ -91,6 +113,9 @@ export default function (eleventyConfig) {
 
   // Exponent -> percentage along the bar.
   eleventyConfig.addFilter("atToPercent", function (at, low, high) {
+    // Number(null) is 0, not NaN — without this guard a section with no "at"
+    // lands silently on the 10^0 mark instead of the far left.
+    if (at === null || at === undefined || at === "") return "0%";
     var n = Number(at);
     if (!isFinite(n)) return "0%";
     return (((n - low) / (high - low)) * 100).toFixed(3) + "%";
@@ -148,10 +173,14 @@ export default function (eleventyConfig) {
     return match ? match.name : "Great & Little";
   });
 
-  // Average of the three review scores, to one decimal place.
-  eleventyConfig.addFilter("meanScore", (scores) => {
+  // Average of the review scores, to one decimal place. The axes come from
+  // _data/rubric.json rather than being listed here, so adding a fourth axis
+  // in the CMS actually changes the overall figure instead of being ignored.
+  eleventyConfig.addFilter("meanScore", function (scores) {
     if (!scores) return "—";
-    const vals = [scores.instrument, scores.usage, scores.plausibility]
+    const axes = this.ctx?.rubric?.axes || [];
+    const vals = axes
+      .map((a) => scores[a.key])
       .filter((n) => typeof n === "number");
     if (!vals.length) return "—";
     return (vals.reduce((a, b) => a + b, 0) / vals.length).toFixed(1);

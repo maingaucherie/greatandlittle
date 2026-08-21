@@ -134,7 +134,7 @@
   var SIG = {{ scale.lens.width }};        // lens width, in decades
   var AMP = {{ scale.lens.strength }};     // peak magnification
   var SNAP = {{ scale.lens.snap }};        // px within which a marker grabs the lens
-  var ON = {{ "true" if scale.lens.enabled else "false" }};
+  var ON = {{ "true" if (scale.lens.enabled and options.motion.enabled) else "false" }};
   var REST = {{ (site.railLeft + " — " + site.railRight) | dump | safe }};
 
   var scale = document.getElementById('scale');

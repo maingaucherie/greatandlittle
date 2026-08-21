@@ -17,7 +17,7 @@ backend:
   branch: main
   # The OAuth worker that lets "Log in with GitHub" work. See the README for
   # the ten-minute setup; without it the login button does nothing.
-  base_url: greatandlittle.maingaucherie.workers.dev   # <-- change this
+  base_url: https://greatandlittle.maingaucherie.workers.dev   # <-- change this
 
 # Lets you run the CMS against local files during development.
 # With this on, `npx eleventy --serve` plus visiting /admin/ opens a folder
@@ -55,18 +55,19 @@ collections:
       - { name: date, label: Date, widget: datetime, format: "YYYY-MM-DD",
           date_format: "DD MMMM YYYY", time_format: false }
 
-      # Which section the post files under. These values must match the
-      # "key" values in src/_data/sections.json.
+      # Which section the post files under. This reads src/_data/sections.json
+      # directly, so the dropdown always lists exactly the sections that exist:
+      # add or rename one under Settings > Sections and it appears here with no
+      # edit to this file. You pick by display name; the section's "key" is what
+      # gets written to the post.
       - name: section
         label: Section
-        widget: select
-        default: void
-        options:
-          - { label: "Optics", value: optics }
-          - { label: "The Bench", value: bench }
-          - { label: "Life", value: life }
-          - { label: "Overhead", value: sky }
-          - { label: "The Void", value: void }
+        widget: relation
+        collection: settings
+        file: sections
+        search_fields: ["list.*.name"]
+        display_fields: ["list.*.name"]
+        value_field: "list.*.key"
 
       - { name: summary, label: Summary, widget: text, required: false,
           hint: "One or two lines. Shown under the title and in section lists." }
@@ -281,6 +282,7 @@ collections:
                   - Bodoni Moda
                   - Playfair Display
                   - IBM Plex Serif
+                  - Josefin Slab
               - name: displayScale
                 label: Heading size
                 widget: number

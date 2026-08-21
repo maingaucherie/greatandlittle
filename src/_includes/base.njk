@@ -26,6 +26,7 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
 
 {# Fonts. The display face is chosen in the CMS under Settings > Appearance;
    its Google Fonts query comes from src/_data/fonts.json. Body and mono are
@@ -46,7 +47,7 @@
 </style>
 
 {% if options.entries.showFeed %}<link rel="alternate" type="application/atom+xml" href="/feed.xml" title="{{ site.title }}">{% endif %}
-{% if not options.motion.enabled %}<style>*,*::before{animation:none !important;transition:none !important;}</style>{% endif %}
+{% if not options.motion.enabled %}<style>*,*::before,*::after{animation:none !important;transition:none !important;}</style>{% endif %}
 </head>
 <body>
 

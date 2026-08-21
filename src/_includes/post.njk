@@ -29,7 +29,7 @@ eleventyComputed:
 
   {% if topics and topics.length %}
   <p class="topiclist">
-    {% for t in topics %}<a href="/topics/{{ t | slug }}/">{{ t }}</a>{% endfor %}
+    {% for t in topics %}<a href="/topics/{{ t | topicSlug }}/">{{ t }}</a>{% endfor %}
   </p>
   {% endif %}
 </article>

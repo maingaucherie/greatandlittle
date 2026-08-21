@@ -1,0 +1,12 @@
+# Dependencies — restored by `npm install`, never committed.
+node_modules/
+
+# Build output — Cloudflare runs `npm run build` and generates this itself.
+_site/
+
+# Local noise.
+.DS_Store
+Thumbs.db
+*.log
+.env
+.env.*

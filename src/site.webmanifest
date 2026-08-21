@@ -1,6 +1,8 @@
 {
-  "name": "MyWebSite",
-  "short_name": "MySite",
+  "name": "Great and Little",
+  "short_name": "Great & Little",
+  "description": "THE BOUNDLESS UNIVERSE - AS FAR TO THE INNERMOST AS TO THE OUTERMOST",
+  "start_url": "/",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",
@@ -15,7 +17,7 @@
       "purpose": "maskable"
     }
   ],
-  "theme_color": "#ffffff",
-  "background_color": "#ffffff",
+  "theme_color": "#0C080E",
+  "background_color": "#0C080E",
   "display": "standalone"
 }
