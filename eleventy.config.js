@@ -10,14 +10,54 @@
 //   src/posts/  src/reviews/  the actual content, as markdown files
 // ============================================================================
 
+import Image, { eleventyImageTransformPlugin } from "@11ty/eleventy-img";
+import { reviewSectionKey } from "./lib/content.js";
+
 export default function (eleventyConfig) {
 
+  // --- Images -------------------------------------------------------------
+  // Photographs come off a camera or phone at 3840px and several megabytes.
+  // Nothing on this site is displayed wider than about 1024px, so serving
+  // the original is sending thirty times more data than the page can use.
+  //
+  // This finds every <img> in the finished HTML — from templates and from
+  // markdown alike — and replaces it with a <picture> offering the same
+  // photograph at several widths in modern formats. The browser picks the
+  // smallest one that suits its screen. Width and height get stamped on too,
+  // so the page stops jumping about as images arrive.
+  //
+  // Write a plain <img src="/uploads/whatever.jpg" alt="..."> and forget
+  // about it; this handles the rest at build time.
+  eleventyConfig.addPlugin(eleventyImageTransformPlugin, {
+    formats: ["avif", "webp", "jpeg"],
+    // Nothing is displayed wider than the 64rem text column, so 2048 is
+    // already generous — it covers a high-density screen at full width.
+    widths: [400, 800, 1200, 1600, 2048],
+
+    // What the browser needs to know before the stylesheet arrives: images
+    // are full width on a phone, and never wider than the text column.
+    defaultAttributes: {
+      loading: "lazy",
+      decoding: "async",
+      sizes: "(max-width: 64rem) 100vw, 64rem",
+    },
+
+    // A missing or unreadable image shouldn't take the whole build down —
+    // it warns and leaves the tag alone.
+    failOnError: false,
+  });
+
   // --- Static files -------------------------------------------------------
-  // Copy these straight through without processing. Anything in src/uploads
-  // (images added via the CMS) and the stylesheet land in _site untouched.
+  // Copy these straight through without processing.
   eleventyConfig.addPassthroughCopy("src/style.css");
-  eleventyConfig.addPassthroughCopy("src/uploads");
   eleventyConfig.addPassthroughCopy("src/admin");
+
+  // The originals behind everything in src/uploads. Pages don't use these —
+  // the image step above reads them from src/ and serves resized copies from
+  // /img/ instead — so this is only here to keep a direct link to something
+  // in uploads working, a PDF or a download say. Drop the line if the deploy
+  // ever gets uncomfortably large and nothing links straight to an upload.
+  eleventyConfig.addPassthroughCopy("src/uploads");
 
   // Favicons and the web app manifest, copied straight to the site root
   // where browsers expect to find them. (robots.txt and sitemap.xml aren't
@@ -110,12 +150,33 @@ export default function (eleventyConfig) {
   // 2026-08-17 — for the <time datetime="..."> attribute
   eleventyConfig.addFilter("isoDate", (d) => new Date(d).toISOString().slice(0, 10));
 
+  // "./src/reviews/2026-08-19-sonic.md" -> "2026-08-19-sonic", the filename
+  // exactly as written. Eleventy's own page.fileSlug helpfully drops the
+  // date, but the addresses these pages used to live at kept it, so
+  // redirects.njk needs the unhelpful version.
+  eleventyConfig.addFilter("sourceSlug", (inputPath) =>
+    String(inputPath).split("/").pop().replace(/\.md$/, "")
+  );
+
   // The key of whichever section is ticked as "holds scored reviews".
   // Nothing hardcodes the name of that section, so renaming it — or moving
   // reviews somewhere else entirely — is one edit in _data/sections.json.
-  eleventyConfig.addFilter("reviewSection", (list) => {
-    const match = (list || []).find((s) => s.reviews);
-    return match ? match.key : "";
+  // Shared with the reviews data file, which needs the same answer.
+  eleventyConfig.addFilter("reviewSection", reviewSectionKey);
+
+  // The picture that shows up when a page gets shared. Link previews want
+  // something around 1200px wide, so this makes one rather than handing over
+  // a 4K photograph and hoping the other end copes. Same machinery as the
+  // images on the page, so a cover already resized costs nothing here.
+  eleventyConfig.addAsyncFilter("shareImage", async (src) => {
+    if (!src) return "";
+    const stats = await Image(`./src${src}`, {
+      widths: [1200],
+      formats: ["jpeg"],
+      outputDir: "./_site/img/",
+      urlPath: "/img/",
+    });
+    return stats.jpeg[0].url;
   });
 
   // --- Scale bar positioning ---------------------------------------------

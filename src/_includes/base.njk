@@ -19,7 +19,27 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>{% if title and title != site.title %}{{ title }} — {{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
-<meta name="description" content="{{ description or site.tagline }}">
+<meta name="description" content="{{ description or summary or site.tagline }}">
+<link rel="canonical" href="{{ site.url }}{{ page.url }}">
+
+{# What Slack, Discord, WhatsApp and the rest show when someone shares a
+   page: a title, a line of description, and a picture. Without these, a link
+   to a review arrives as a bare blue URL — a waste for a site this visual.
+   The picture is the entry's own cover art, falling back to whatever is set
+   as the site-wide share image under Settings > Site details. #}
+{%- set shareSource = cover or site.shareImage %}
+<meta property="og:site_name" content="{{ site.title }}">
+<meta property="og:type" content="{% if date %}article{% else %}website{% endif %}">
+<meta property="og:title" content="{% if title and title != site.title %}{{ title }}{% else %}{{ site.title }}{% endif %}">
+<meta property="og:description" content="{{ description or summary or site.tagline }}">
+<meta property="og:url" content="{{ site.url }}{{ page.url }}">
+{%- if shareSource %}
+<meta property="og:image" content="{{ site.url }}{{ shareSource | shareImage }}">
+<meta property="og:image:alt" content="{{ coverAlt or title or site.title }}">
+<meta name="twitter:card" content="summary_large_image">
+{%- else %}
+<meta name="twitter:card" content="summary">
+{%- endif %}
 
 {# Favicons. The SVG is what modern browsers use; the .ico is a fallback
    for older ones. Both live at the site root. #}

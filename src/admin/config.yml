@@ -28,6 +28,13 @@ local_backend: true
 media_folder: "src/uploads"
 public_folder: "/uploads"
 
+# Tidy up the names of files as they're uploaded, so "Lab opening.jpg" is
+# saved as "lab-opening.jpg". A space in a filename becomes %20 in the URL,
+# which works but is unpleasant to read and easy to mistype.
+media_libraries:
+  all:
+    slugify_filename: true
+
 # Publishing mode. "simple" commits straight to main and the site rebuilds.
 # Change to "editorial_workflow" if you'd rather posts sit as drafts in a
 # pull request until you approve them.
@@ -80,6 +87,12 @@ collections:
       - { name: topics, label: Topics, widget: list, required: false,
           hint: "Free-form tags. Each gets its own page at /topics/name/." }
 
+      # Unticked publishes it. Ticked keeps it out of the built site
+      # entirely — no page, no listing, no feed entry — while still showing
+      # up when you run the site locally, so you can see how it looks.
+      - { name: draft, label: Draft, widget: boolean, default: false, required: false,
+          hint: "Keep this out of the live site until it's ready." }
+
       - { name: body, label: Body, widget: markdown }
 
   # ==========================================================================
@@ -126,6 +139,12 @@ collections:
           - { name: plausibility, label: "Could they see that",
               widget: number, value_type: int, min: 0, max: 10, default: 5 }
 
+      # Unticked publishes it. Ticked keeps it out of the built site
+      # entirely — no page, no listing, no feed entry — while still showing
+      # up when you run the site locally, so you can see how it looks.
+      - { name: draft, label: Draft, widget: boolean, default: false, required: false,
+          hint: "Keep this out of the live site until it's ready." }
+
       - { name: body, label: Body, widget: markdown }
 
       # Stills from the production, each with its own line of commentary.
@@ -163,6 +182,8 @@ collections:
           - { name: place, label: Footer place, widget: string }
           - { name: railLeft, label: Scale bar — left caption, widget: string }
           - { name: railRight, label: Scale bar — right caption, widget: string }
+          - { name: shareImage, label: Default share picture, widget: image, required: false,
+              hint: "Shown when a page with no cover art of its own gets shared. Reviews use their own cover instead. Around 1200x630 works best." }
 
           # --- Colours. The pickers write hex values, which base.njk turns
           #     into CSS variables. Clearing a field falls back to the value

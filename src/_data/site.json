@@ -7,9 +7,8 @@
   "place": "Sol-3, Orion-Cygnus, Milky Way",
   "railLeft": "10⁻¹⁰ m - the lattice",
   "railRight": "10²⁶ m - the observable edge",
-
+  "shareImage": "",
   "_comment": "theme sets the site's colours. base.njk writes these into the page as CSS variables, overriding the fallbacks at the top of style.css. Behaviour switches (nav, motion, summaries) live in options.json, not here.",
-
   "theme": {
     "pitch": "#0C080E",
     "ground": "#160E1B",
