@@ -13,7 +13,9 @@ because of its ticks, bands, captions and lens; shrink it to a strip and all
 of that goes, leaving unlabelled dots close enough to collide. So it says
 where you are instead of showing the whole map:
 
-    Great & Little        ← Microscopy   THE BENCH 10⁻⁰·⁹ m   Telescopy →
+    Great & Little           ← Microscopy   THE BENCH 10⁻⁰·⁹ m   Telescopy →
+
+(the middle group sits centred on the header)
 
 The wordmark goes home. The middle names the section and, more to the point,
 gives its size — the site's premise, on every page rather than only the front
@@ -28,7 +30,6 @@ nothing below it and leaves the link out.
 | `showOnHome` | `false` | Also show it on the homepage, above the full-size bar. Slightly redundant, but try it. |
 | `sticky` | `true` | Header follows you as you scroll. `false` = scrolls away. |
 | `showNeighbours` | `true` | The two links either side. `false` leaves only the section you're in. |
-| `showMarker` | `true` | The single dot on the hairline below, at this section's place on the scale. |
 
 ### home — the front page
 

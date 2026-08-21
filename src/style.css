@@ -927,14 +927,21 @@ body.no-centre .wrap{justify-content:flex-start;}
   max-width:var(--measure);
   margin:0 auto;
   padding:0 clamp(1.25rem,5vw,3rem);
-  display:flex;
-  align-items:center;
-  gap:clamp(1rem,4vw,3rem);
   height:3.75rem;
+
+  /* Three columns so the middle group is centred on the header itself,
+     rather than on whatever space the wordmark happens to leave. The third
+     column is empty and exists only to balance the first. */
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+  gap:clamp(1rem,4vw,2rem);
 }
 
 /* Wordmark on the left, doubles as the home link. */
 .sitenav-mark{
+  grid-column:1;
+  justify-self:start;
   font-family:var(--font-display);
   font-variation-settings:var(--font-axes),"opsz" 24;
   font-size:1.05rem;
@@ -950,7 +957,8 @@ body.no-centre .wrap{justify-content:flex-start;}
 /* Smaller, here, larger — kept together on the right so they read as one
    ordered run rather than three separate controls. */
 .sitenav-where{
-  margin-left:auto;
+  grid-column:2;
+  justify-self:center;
   min-width:0;
   display:flex;
   align-items:center;
@@ -1010,34 +1018,6 @@ a.sitenav-here-name:focus-visible{outline:2px solid var(--brass);outline-offset:
   color:var(--violet);
   letter-spacing:0.12em;
   text-transform:uppercase;
-}
-
-/* The hairline and its single marker. The rule has no height of its own —
-   it hangs on the header's existing bottom border. */
-.sitenav-rule{
-  max-width:var(--measure);
-  margin:0 auto;
-  padding:0 clamp(1.25rem,5vw,3rem);
-  height:0;
-}
-.sitenav-track{display:block;position:relative;height:0;}
-
-.sitenav-pin{
-  position:absolute;
-  left:var(--x);
-  top:0;
-  width:0.42rem;
-  height:0.42rem;
-  border-radius:50%;
-  background:var(--brass);
-  transform:translate(-50%,-50%);
-  box-shadow:0 0 0.5rem rgba(201,162,78,0.55);
-}
-/* Off-scale sections keep the square/violet language of the big bar. */
-.sitenav-pin.off{
-  border-radius:0;
-  background:var(--violet);
-  box-shadow:0 0 0.5rem rgba(185,140,224,0.55);
 }
 
 /* Posts and reviews name their section in the header now, and it links

@@ -13,10 +13,6 @@
   page rather than only on the front one. Either side are the next sections
   up and down the scale, so the site can be walked in order.
 
-  A hairline under it carries a single dot at the current position. One
-  marker can't overlap anything, and it keeps the family resemblance to the
-  big bar.
-
   Order and names come from _data/sections.json; switches from
   _data/options.json under "nav". Neither needs editing to add a section.
 #}
@@ -63,15 +59,5 @@
 
   </div>
 
-  {% if options.nav.showMarker and here.current %}
-  {# You are here, on the same scale as the big bar. Decoration only — the
-     links above do the navigating — so it's hidden from screen readers. #}
-  <div class="sitenav-rule" aria-hidden="true">
-    <span class="sitenav-track">
-      <span class="sitenav-pin{% if here.current.zone %} off{% endif %}"
-            style="--x:{% if here.current.zone == "discrete" %}0%{% elif here.current.zone == "unbound" %}100%{% else %}{{ here.current.at | atToPercent(scale.low, scale.high) }}{% endif %}"></span>
-    </span>
-  </div>
-  {% endif %}
 </header>
 {% endif %}

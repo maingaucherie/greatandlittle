@@ -306,8 +306,6 @@ collections:
               - { name: showNeighbours, label: "Show the next sections up and down the scale", widget: boolean,
                   default: true,
                   hint: "The two links either side of where you are. Off leaves just the section you're in." }
-              - { name: showMarker, label: "Show the position dot", widget: boolean, default: true,
-                  hint: "The single dot on the hairline under the header, showing where this section sits on the scale." }
 
           - name: home
             label: Homepage

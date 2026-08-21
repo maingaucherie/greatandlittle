@@ -1,11 +1,10 @@
 ---
 # ============================================================================
 # TEMPORARY — a side-by-side of the three ways of handling text width.
-# Visit /width-test/ and use the buttons at the top to switch between them.
+# Visit /width-test/ and press the buttons at the top, or the 1 2 3 keys.
 #
-# Nothing else on the site links here, it's left out of the sitemap and the
-# feed, and none of the CSS below touches style.css — it all lives on this
-# page. Delete this file once you've picked one.
+# Nothing links here, it's out of the sitemap and the feed, and none of the
+# CSS below touches style.css. Delete this file once you've picked one.
 # ============================================================================
 permalink: /width-test/
 eleventyExcludeFromCollections: true
@@ -16,15 +15,13 @@ wide: true
 {%- set review = collections.reviews[0] -%}
 
 <style>
-  /* This page manages its own width, so the usual container gets out of
-     the way. Everything in here is scoped to /width-test/ only. */
+  /* This page manages its own width, so the usual container steps aside. */
   .wrap{max-width:none;padding:0;}
 
-  /* --- the control strip ------------------------------------------------ */
+  /* --- controls --------------------------------------------------------- */
   .wt-bar{
     position:sticky; top:0; z-index:60;
-    background:var(--ground);
-    border-bottom:1px solid var(--rule);
+    background:var(--ground); border-bottom:1px solid var(--rule);
     padding:0.9rem clamp(1.25rem,5vw,3rem);
     display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center;
   }
@@ -32,63 +29,64 @@ wide: true
     font-family:var(--font-mono); font-size:0.7rem; letter-spacing:0.12em;
     text-transform:uppercase; cursor:pointer;
     background:none; color:var(--ink-soft);
-    border:1px solid var(--rule); border-radius:2px;
-    padding:0.5rem 0.85rem;
+    border:1px solid var(--rule); border-radius:2px; padding:0.5rem 0.85rem;
   }
   .wt-bar button:hover{color:var(--ink); border-color:var(--brass);}
   .wt-bar button.on{background:var(--brass); border-color:var(--brass); color:var(--pitch);}
-  .wt-readout{
-    font-family:var(--font-mono); font-size:0.7rem; color:var(--ink-soft);
-    margin-left:auto;
+  .wt-readout{font-family:var(--font-mono); font-size:0.7rem; color:var(--ink-soft); margin-left:auto;}
+
+  .wt-intro{
+    max-width:60ch; margin:0 auto;
+    padding:2.5rem clamp(1.25rem,5vw,3rem) 0;
+    color:var(--ink-soft); font-size:0.9rem;
+  }
+  .wt-intro strong{color:var(--ink); font-weight:500;}
+  .wt-desc{
+    min-height:3.2em; margin:1.25rem 0 0; padding:1rem 1.15rem;
+    border-left:2px solid var(--brass); background:var(--brass-wash);
+    color:var(--ink); font-size:0.9rem;
   }
   .wt-caption{
     font-family:var(--font-mono); font-size:0.7rem; letter-spacing:0.1em;
     text-transform:uppercase; color:var(--brass);
-    padding:2.5rem clamp(1.25rem,5vw,3rem) 0;
+    max-width:60ch; margin:0 auto; padding:3.5rem clamp(1.25rem,5vw,3rem) 0;
   }
-  .wt-desc{
-    color:var(--ink-soft); font-size:0.9rem; max-width:60ch;
-    padding:0.5rem clamp(1.25rem,5vw,3rem) 0; margin:0;
-  }
-  .wt-rule{border:0; border-top:1px dashed var(--rule); margin:4.5rem 0 0;}
+  .wt-rule{border:0; border-top:1px dashed var(--rule); margin:4rem 0 0;}
 
-  /* A dotted outline showing where the page column actually ends, so it's
-     obvious how much room the text is or isn't using. */
+  /* A dotted outline marking where the page column ends, so it's obvious how
+     much room the text is or isn't taking up. */
   .wt-page{
-    margin:0 auto;
-    padding:2.5rem clamp(1.25rem,5vw,3rem);
-    outline:1px dotted var(--violet-rule);
-    outline-offset:-1px;
+    margin:0 auto; padding:2rem clamp(1.25rem,5vw,3rem);
+    outline:1px dotted var(--violet-rule); outline-offset:-1px;
   }
+
+  /* Pictures capped for this page only, so a 4K screenshot doesn't swamp the
+     thing being compared. On the real pages they keep their proportions. */
+  .wt-page .cover img{max-height:17rem; object-fit:cover;}
+  .wt-page .gallery-grid img{max-height:9rem; object-fit:cover;}
 
   /* ====================================================================== */
-  /* OPTION A — reading column of 46rem; pictures and the bar break out.    */
+  /* A — reading column of 46rem; pictures and the bar break out past it.    */
   /* ====================================================================== */
   .opt-a .wt-page{max-width:46rem;}
   .opt-a .lede{max-width:none;}
   .opt-a .prose{max-width:none;}
-  .opt-a .wt-wide{
-    width:64rem; max-width:calc(100vw - 3rem);
-    margin-left:50%; transform:translateX(-50%);
-  }
+  .opt-a .wt-wide{width:64rem; max-width:calc(100vw - 3rem); margin-left:50%; transform:translateX(-50%);}
 
   /* ====================================================================== */
-  /* OPTION B — keep the 64rem column, let the text run wider.              */
+  /* B — keep the 64rem column, let the text run wider.                     */
   /* ====================================================================== */
   .opt-b .wt-page{max-width:64rem;}
   .opt-b .lede{max-width:60ch;}
   .opt-b .prose{max-width:70ch;}
 
   /* ====================================================================== */
-  /* OPTION C — keep 64rem, put the scorecard in the spare width.           */
+  /* C — keep 64rem, put the scorecard in the spare width.                  */
   /* ====================================================================== */
   .opt-c .wt-page{max-width:64rem;}
   .opt-c .lede{max-width:46ch;}
   .opt-c .prose{max-width:60ch;}
-  .opt-c .wt-split{
-    display:grid; grid-template-columns:minmax(0,1fr) 17rem; gap:3.5rem;
-    align-items:start;
-  }
+  .opt-c .wt-split{display:grid; grid-template-columns:minmax(0,1fr) 17rem; gap:3.5rem; align-items:start;}
   .opt-c .wt-aside{position:sticky; top:5rem;}
   .opt-c .wt-aside .scorecard{margin-top:0;}
   @media (max-width:60rem){
@@ -104,31 +102,31 @@ wide: true
   <span class="wt-readout" id="wt-readout"></span>
 </div>
 
+<div class="wt-intro">
+  <p>Three ways of handling the gap between the page column and the text inside
+  it. Press the buttons above, or the <strong>1</strong> <strong>2</strong>
+  <strong>3</strong> keys. The dotted outline shows where the column ends.</p>
+  <p>Worth looking at: whether the text looks like it's <em>meant</em> to stop
+  where it stops, and whether headings, lists and quotes still hold together.</p>
+  <p class="wt-desc" id="wt-desc"></p>
+</div>
+
 <div id="wt-stage" class="opt-a">
 
-  <p class="wt-caption">1 &middot; the homepage masthead</p>
-  <p class="wt-desc" id="wt-desc"></p>
-
+  <p class="wt-caption">1 &middot; the homepage</p>
   <div class="wt-page">
     <header class="masthead">
       <h1>Great <span class="amp">&amp;</span> Little</h1>
       <p class="lede">{{ site.tagline }}</p>
     </header>
-
     <div class="wt-wide">
-      <p class="wt-desc" style="padding-left:0">The scale bar, at full width in every option &mdash; it's the thing that needs the room.</p>
-      <div class="rail" style="margin-top:1.5rem"><div class="ticks">
-        {%- for i in range(0, 37) -%}
-        <i class="tick{% if i % 6 == 0 %} major{% endif %}" style="--x:{{ (i / 36 * 100) | round(3) }}%"></i>
-        {%- endfor -%}
-      </div></div>
+      {% include "scalebar.njk" %}
     </div>
   </div>
 
   <hr class="wt-rule">
 
   <p class="wt-caption">2 &middot; a review</p>
-
   <div class="wt-page">
     <div class="wt-split">
       <div>
@@ -142,17 +140,52 @@ wide: true
         {% if review.data.cover %}
         <figure class="cover wt-wide">
           <img src="{{ review.data.cover }}" alt="{{ review.data.title }}">
-          {% if review.data.coverCaption %}<figcaption>{{ review.data.coverCaption }}</figcaption>{% endif %}
+          <figcaption>{{ review.data.coverCaption }}</figcaption>
         </figure>
         {% endif %}
 
+        {# Real sentences from the review, but with the headings, list and
+           quote a post would normally carry — the actual body happens to be
+           unbroken paragraphs, which tells you nothing about how the rest of
+           the prose styles behave at each width. #}
         <div class="prose">
-          {{ review.templateContent | safe }}
+          <p>Only two things are certain in this world: no evil lab is complete
+          without at least one microscope, and Dr. Ivo "Eggman" Robotnik, tech
+          genius and moustache aficionado, would never settle for the bare
+          minimum.</p>
+
+          <h2>Right instrument</h2>
+
+          <p>Dr. Robotnik's microscopes of choice are both from
+          <a href="#">Vision Engineering</a>, a manufacturer specializing in
+          'eyepiece-less' systems. If you use a microscope regularly, you know
+          the strain of holding one position in front of a pair of small
+          eyepieces. Both of these systems solve that, not with a digital
+          display, but with optics alone.</p>
+
+          <ul>
+            <li>The Mantis is low magnification, up to 20&times; but typically lower.</li>
+            <li>The Lynx reaches 120&times;, and cheats to keep a wide viewing cone.</li>
+            <li>Neither appears to be fitted with a camera.</li>
+          </ul>
+
+          <h2>Could they see that</h2>
+
+          <blockquote>A Mantis-sized viewing cone at 120&times; rather than
+          20&times; would mean roughly six times the aperture diameter,
+          thirty-six times the glass area, and worse than that in volume,
+          weight and cost.</blockquote>
+
+          <p>So it has to cheat. It projects the magnified image onto a spinning
+          disk carrying millions of micron-scale lenslets, which re-emit it
+          across a far wider viewing cone. The cost is brightness, but
+          blindingly bright modern LEDs fix that. You can actually see the
+          arrays of lenslets when the disk is still, much like the screen door
+          effect. Spinning the disk eliminates this for a clearer image.</p>
         </div>
       </div>
 
-      {# In A and B this simply follows the text. In C it moves into the
-         column of spare width on the right. #}
+      {# Follows the text in A and B; moves into the spare width in C. #}
       <div class="wt-aside">
         <div class="scorecard">
           <div class="score-total">
@@ -181,6 +214,21 @@ wide: true
         {% endif %}
       </div>
     </div>
+
+    {% if review.data.gallery and review.data.gallery.length %}
+    <section class="gallery wt-wide">
+      <h2 class="gallery-heading">Stills</h2>
+      <div class="gallery-grid">
+        {% for shot in review.data.gallery %}
+        <figure>
+          <img src="{{ shot.image }}" alt="{{ shot.alt or shot.caption or '' }}"
+               sizes="(max-width: 40rem) 100vw, 20rem">
+          {% if shot.caption %}<figcaption>{{ shot.caption }}</figcaption>{% endif %}
+        </figure>
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
   </div>
 </div>
 
@@ -192,23 +240,22 @@ wide: true
   const buttons = [...document.querySelectorAll('.wt-bar button')];
 
   const notes = {
-    a: 'Reading column of 46rem. The text nearly fills it; the scale bar and the cover deliberately break out past it. Everything is either reading width or full width.',
-    b: 'The 64rem column stays. The intro is widened to match the body, and the body to 70ch. Quick to do, but the text still stops short of the pictures beside it.',
-    c: 'The 64rem column stays and the spare width earns its keep: the scorecard moves into a column of its own on the right.',
+    a: 'A — reading column of 46rem. The text nearly fills it; the scale bar, cover and stills deliberately break out past it. Everything on the page is either reading width or full width, nothing in between.',
+    b: 'B — the 64rem column stays. The intro widens to match the body, the body to 70ch. Quickest to do, but the text still stops short of the pictures beside it.',
+    c: 'C — the 64rem column stays and the spare width earns its keep: the scorecard moves into a column of its own alongside the text.',
   };
 
-  // The actual numbers, measured rather than guessed at.
+  // Measured, not guessed at.
   function measure() {
     const prose = document.querySelector('.prose');
     const page = document.querySelector('.wt-page');
     if (!prose || !page) return;
-    const textWidth = prose.getBoundingClientRect().width;
-    const columnWidth = page.getBoundingClientRect().width
-      - parseFloat(getComputedStyle(page).paddingLeft)
-      - parseFloat(getComputedStyle(page).paddingRight);
-    readout.textContent =
-      `body text ${Math.round(textWidth)}px of ${Math.round(columnWidth)}px column` +
-      ` — ${Math.round((textWidth / columnWidth) * 100)}%`;
+    const style = getComputedStyle(page);
+    const text = prose.getBoundingClientRect().width;
+    const column = page.getBoundingClientRect().width
+      - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+    readout.textContent = `body text ${Math.round(text)}px of ${Math.round(column)}px `
+      + `— ${Math.round((text / column) * 100)}%`;
   }
 
   function choose(option) {
@@ -216,9 +263,16 @@ wide: true
     buttons.forEach((b) => b.classList.toggle('on', b.dataset.opt === option));
     desc.textContent = notes[option];
     measure();
+    // The scale bar sizes itself to its container and only listens for
+    // resize, so tell it the container just changed.
+    window.dispatchEvent(new Event('resize'));
   }
 
   buttons.forEach((b) => b.addEventListener('click', () => choose(b.dataset.opt)));
+  document.addEventListener('keydown', (e) => {
+    const option = { 1: 'a', 2: 'b', 3: 'c' }[e.key];
+    if (option) choose(option);
+  });
   window.addEventListener('resize', measure);
   choose('a');
 })();
