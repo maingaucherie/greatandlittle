@@ -1351,5 +1351,6 @@ a.sitenav-here-name:focus-visible{outline:2px solid var(--brass);outline-offset:
 }
 
 /* Keeps the line breaks written in the template, so the source reads as the
-   verse it is. The lines must stay flush left or the indentation shows up. */
+   verse it is. Indent the lines however suits the template — spaces sitting
+   next to a kept line break are dropped, so they never reach the page. */
 .verse{white-space:pre-line;}
