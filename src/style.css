@@ -1349,3 +1349,7 @@ a.sitenav-here-name:focus-visible{outline:2px solid var(--brass);outline-offset:
      list below covers the same links. Ruled bar only. */
   .zone,.zone-band,.axis-break,.axis-break-spacer{display:none;}
 }
+
+/* Keeps the line breaks written in the template, so the source reads as the
+   verse it is. The lines must stay flush left or the indentation shows up. */
+.verse{white-space:pre-line;}
